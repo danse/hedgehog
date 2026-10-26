@@ -1,0 +1,20 @@
+-- Transitions. Eval one line at a time; the commented ones are cues.
+
+-- Fade a new pattern into orbit 4 over 8 cycles (crossfade).
+-- xfadeIn 4 8 $ air
+
+-- Fade orbit 6 out by crossfading to silence.
+-- xfadeIn 6 8 $ silence
+
+-- Noise riser: hold for ~4 cycles, then silence it.
+-- d9 $ riser
+
+-- Stop just the riser.
+-- d9 $ silence
+
+-- Emergency: stop every orbit immediately.
+-- hush
+
+-- Restart cleanly after a mistake.
+-- hush
+-- setbpm 72

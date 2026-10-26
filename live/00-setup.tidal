@@ -1,0 +1,23 @@
+-- Hedgehog — ambient live set
+-- 72 BPM, D minor. Eval this block first (C-RET).
+
+setbpm 72
+
+-- Layers. Each definition is one paragraph: eval once after boot.
+-- Re-eval a definition only when you want to change that instrument.
+
+let bed = slow 8 $ s "padlong" # gain 0.5 # room 0.95 # size 1.8 # lpf 1400
+
+let drone = slow 8 $ s "hedge_sine" # note "d2" # sustain 12 # gain 0.5 # lpf 240 # room 0.8
+
+let air = slow 4 $ s "wind:4" # speed 0.65 # pan rand # gain 0.35 # room 0.95 # size 1.6 # lpf 900
+
+let birds = slow 4 $ s "birds:2" # speed (range 0.7 1.05 rand) # pan rand # gain 0.45 # room 0.9 # size 1.6 # lpf 3400
+
+let tick = slow 2 $ s "click:2(3,16,2)" # gain 0.3 # pan 0.3 # room 0.6 # size 0.8 # lpf 2400
+
+let pad = slow 4 $ note "[d3,f3,a3,c4,e4] [c3,e3,g3,b3] [bb2,d3,f3,a3] [a2,c3,e3,g3]" # s "hedge_pad" # sustain 4 # gain 0.45 # room 0.95 # size 1.6
+
+let pluck = slow 4 $ n "d5 ~ ~ f5 ~ a5 ~ ~" # s "pluck" # gain 0.45 # delay 0.7 # delaytime 0.375 # room 0.9 # size 1.4 # lpf 2600
+
+let riser = s "hedge_noise" # sustain 4 # gain (range 0.02 0.3 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9

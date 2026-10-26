@@ -1,0 +1,22 @@
+# runtime
+logs/
+recordings/*
+!recordings/.gitkeep
+samples/*
+!samples/README.md
+
+# haskell / ghci
+.ghc.environment.*
+*.hi
+*.o
+
+# emacs
+custom.el
+*~
+\#*\#
+.\#*
+
+# audio scratch
+*.wav
+*.flac
+*.mp3

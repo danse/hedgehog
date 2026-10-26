@@ -1,0 +1,12 @@
+-- d5 — soft pulse. Starts the clock without turning it into a beat.
+
+d5 $ tick
+
+-- Lift it gently.
+-- d5 $ tick # gain 0.38 # lpf 3200
+
+-- Half-time feel.
+-- d5 $ slow 4 $ tick
+
+-- Drop it out again.
+-- d5 $ silence
