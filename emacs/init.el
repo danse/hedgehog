@@ -18,6 +18,14 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+;; haskell-mode 20230511 does a top-level
+;;   (add-to-list 'flymake-allowed-file-name-masks ...)
+;; Emacs 30 removed that variable (it was only obsolete in 29), so the
+;; require aborts before tidal.el loads. This project does not use
+;; flymake, so just give the symbol a value.
+(unless (boundp 'flymake-allowed-file-name-masks)
+  (defvar flymake-allowed-file-name-masks nil))
+
 (require 'haskell-mode)
 (require 'tidal)
 
