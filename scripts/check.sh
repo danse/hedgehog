@@ -75,6 +75,40 @@ else
   warn "UDP 57120 closed"
 fi
 
+echo "[set]"
+# SuperDirt's dirt_reverb maps size through linexp(0, 1, 0.01, 0.98); above
+# ~0.9 the loop gain passes unity and the orbit rings forever, even after hush.
+bad_size=""
+for f in live/*.tidal; do
+  [ -f "$f" ] || continue
+  for n in $(grep -oE '\bsize[[:space:]]+[0-9]*\.?[0-9]+' "$f" | awk '{print $2}'); do
+    if awk -v n="$n" 'BEGIN { exit !(n + 0 > 0.9) }'; then
+      bad_size="$bad_size $(basename "$f"):$n"
+    fi
+  done
+done
+if [ -n "$bad_size" ]; then
+  bad "reverb size > 0.9 self-oscillates:$bad_size"
+else
+  ok "reverb size within 0..0.9"
+fi
+
+echo "[realtime]"
+pid=$(pgrep -x scsynth | head -1)
+if [ -n "$pid" ]; then
+  pol=$(chrt -p "$pid" 2>/dev/null | sed -n 's/.*scheduling policy: //p')
+  prio=$(chrt -p "$pid" 2>/dev/null | sed -n 's/.*scheduling priority: //p')
+  case "$pol" in
+    SCHED_FIFO|SCHED_RR) ok "scsynth $pol priority $prio" ;;
+    *) warn "scsynth ${pol:-unknown} — no RT (log out/in or reboot after limits change)" ;;
+  esac
+  if grep -qiE 'real.?time|scheduling priority' logs/superdirt.log 2>/dev/null; then
+    warn "RT warning in logs/superdirt.log"
+  fi
+else
+  warn "scsynth not running"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "All blocking checks passed."
