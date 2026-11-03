@@ -53,10 +53,10 @@ async function setupAudio() {
 async function loadSketch(n) {
   currentSketch = n;
   try {
-    const mod = await import(`./sketches/0${n}.js`);
+    const mod = await import(`../sketches/0${n}.js`);
     if (typeof mod.default === 'function') {
       mod.default({ hydra, smooth, Motion });
-      hudSketch.textContent = `sketch: 0${n}-${mod.name || ''}`.replace(/-$/, '');
+      hudSketch.textContent = `sketch: 0${n}${mod.name ? '-' + mod.name : ''}`;
     } else if (typeof mod.run === 'function') {
       mod.run({ hydra, smooth, Motion });
       hudSketch.textContent = `sketch: 0${n}`;
