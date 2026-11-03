@@ -13,9 +13,15 @@ setbpm 72
 --  2. `gain` is not linear: amp = amp * gain^4. gain 0.5 is -24 dB, not
 --     "half". Keep layers in 0.75..1.0 and trim with `amp` (linear) instead.
 -- Baseline is gain 1.0, so these numbers are the whole mix balance.
-let bed = slow 8 $ s "padlong" # gain 0.88 # room 0.95 # size 0.9 # lpf 1400
+let
+  bed = slow 8 $ bedStudy # gain 0.88 # room 0.95 # size 0.9 # lpf 1400
+  bedStudy = s "padlong"
 
-let drone = slow 8 $ s "hedge_sine" # note "d3" # sustain 28 # gain 0.88 # lpf 240 # room 0.8
+let
+  droneStudy n = s "hedge_sine" # note n # gain 0.88 # room 0.8
+  droneS n s = droneStudy n # sustain s
+  drone n = slow 8 $ droneS n 28 # lpf 240
+  d n = d2 $ droneS n 28
 
 let air = slow 4 $ s "wind:4" # speed 0.65 # pan rand # gain 0.8 # room 0.95 # size 0.9 # lpf 900
 

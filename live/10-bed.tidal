@@ -4,7 +4,7 @@
 d1 $ bed
 
 -- d2: sub drone, D2. Long sustain, very little top end.
-d2 $ drone
+d2 $ drone "d3"
 
 -- optional d8: air / wind, barely there
 -- d8 $ air

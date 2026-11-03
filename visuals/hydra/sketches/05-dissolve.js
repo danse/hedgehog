@@ -1,4 +1,4 @@
-// 5 - Dissolve (13:00–16:00) | d1,d2 only
+// 5 - Dissolve (13:00-16:00) | d1,d2 only
 // Wispy trails, slow to near-static
 export const name = 'dissolve';
 export default function run({ Motion }){

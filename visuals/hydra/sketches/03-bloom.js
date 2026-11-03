@@ -1,4 +1,4 @@
-// 3 - Bloom (6:00–10:00) | +d6,d7
+// 3 - Bloom (6:00-10:00) | +d6,d7
 // Gentle folds/morphs, warmer hues creep in
 export const name = 'bloom';
 export default function run({ Motion }){

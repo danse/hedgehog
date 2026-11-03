@@ -1,4 +1,4 @@
-// 2 - Slow pulse (3:00–6:00) | +d5
+// 2 - Slow pulse (3:00-6:00) | +d5
 // Barely visible pulses, mid-low driven
 export const name = 'pulse';
 export default function run({ Motion }){

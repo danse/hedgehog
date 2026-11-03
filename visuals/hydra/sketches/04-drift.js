@@ -1,4 +1,4 @@
-// 4 - Drift (10:00–13:00) | stripped back
+// 4 - Drift (10:00-13:00) | stripped back
 // Foggy, desaturated, slow rotation
 export const name = 'drift';
 export default function run({ Motion }){

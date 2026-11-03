@@ -1,4 +1,4 @@
-// 1 - Emergence (0:00–3:00) | d1,d2 only
+// 1 - Emergence (0:00-3:00) | d1,d2 only
 // Very subtle, low-frequency driven, cool tones
 export const name = 'emergence';
 export default function run({ Motion }){
