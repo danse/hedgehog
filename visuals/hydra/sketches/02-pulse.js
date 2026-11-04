@@ -2,7 +2,7 @@
 // Barely visible pulses, mid-low driven
 export const name = 'pulse';
 export default function run({ Motion }){
-  const mb = (Motion && Motion.budget) ? Motion.budget : 0.6;
+  const mb = (Motion && Motion.budget) ? Motion.budget : 0.9;
   voronoi(6, 0.02)
     .rotate(() => time*0.002)
     .modulate(osc(10, 0.015), () => Math.max(0.002, (a.fft[1]||0)*0.03)*mb)

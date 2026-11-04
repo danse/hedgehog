@@ -87,7 +87,7 @@ async function loadSketch(n) {
 
 function bindKeys() {
   window.addEventListener('keydown', (e) => {
-    if (e.key >= '1' && e.key <= '5') {
+    if (e.key >= '1' && e.key <= '9') {
       loadSketch(parseInt(e.key));
       return;
     }
