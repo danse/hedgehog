@@ -22,7 +22,16 @@ function boot() {
     width: window.innerWidth,
     height: window.innerHeight
   });
-  // Try to prefer virtual mic if present later via getUserMedia
+  // Try to explicitly get audio
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      console.log('[hydra] got audio stream', stream.getAudioTracks());
+      hudAudio.textContent = 'audio: mic-ok';
+    }).catch(e => {
+      console.error('[hydra] getUserMedia error', e);
+      hudAudio.textContent = 'audio: err';
+    });
+  }
   setupAudio();
   loadSketch(currentSketch);
   bindKeys();
@@ -33,11 +42,17 @@ async function setupAudio() {
   try {
     // Enumerate devices and prefer Hydra-Virtual-Mic if available
     const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log('[hydra] all devices:', devices);
     const mics = devices.filter(d => d.kind === 'audioinput');
-    const virt = mics.find(d => /hydra.*virt|virtual.*mic/i.test(d.label));
+    console.log('[hydra] mics:', mics.map(m=>({label:m.label, id:m.deviceId})));
+    const virt = mics.find(d => /hydra|loopback|virt|input\.hydra|pw-loopback/i.test(d.label));
     if (virt) {
       console.log('[hydra] Found virtual mic:', virt.label);
-      hudAudio.textContent = 'audio: Hydra-Virtual-Mic';
+      hudAudio.textContent = 'audio: Hydra-Virtual';
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: virt.deviceId } } });
+        console.log('[hydra] got stream from virt');
+      } catch(e) { console.warn('virt err', e); }
     } else if (mics.length > 0) {
       console.log('[hydra] Using mic:', mics[0].label);
       hudAudio.textContent = `audio: ${mics[0].label.slice(0,28)}`;
