@@ -3,18 +3,19 @@
 export const name = 'dissolve';
 export default function run({ Motion }){
   const mb = (Motion && Motion.budget) ? Motion.budget : 0.6;
-  osc(9, 0.006, 0.7)
-    .rotate(0, 0.0004)
-    .modulate(noise(3, 0.006), () => (a.fft[0]||0)*0.0004*mb)
-    .color(0.42, 0.58, 0.92)
-    .brightness(-0.22)
-    .contrast(1.05)
+  voronoi(3, 0.01)
+    .rotate(() => time*0.0006)
+    .modulate(osc(7, 0.008), () => Math.max(0.001, (a.fft[0]||0)*0.015)*mb)
+    .kaleid(2)
+    .color(() => 0.42 + (a.fft[0]||0)*0.0001, 0.58, 0.92)
+    .brightness(0.3)
+    .contrast(1.2)
     .out(o0);
   src(o0)
-    .scale(1.004)
-    .rotate(0.0003)
-    .modulate(voronoi(2, 0.004), () => (a.fft[1]||0)*0.0003*mb)
-    .blend(o0, 0.01)
+    .scale(() => 1.006 + (a.fft[1]||0)*0.00002)
+    .rotate(0.0006)
+    .modulate(noise(2, 0.008), () => Math.max(0.0005, (a.fft[2]||0)*0.01)*mb)
+    .blend(o0, 0.025)
     .out(o1);
   render(o1);
 }

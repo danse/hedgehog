@@ -5,11 +5,11 @@ export default function run({ Motion }){
   const mb = (Motion && Motion.budget) ? Motion.budget : 0.6;
   voronoi(5, 0.015)
     .rotate(() => time*0.0008)
-    .modulate(osc(8, 0.01), () => (a.fft[1]||0)*0.0015*mb)
+    .modulate(osc(8, 0.01), () => Math.max(0.001, (a.fft[1]||0)*0.02)*mb)
     .kaleid(3)
-    .color(() => 0.5 + (a.fft[0]||0)*0.00001, 0.6, 0.9)
-    .brightness(-0.08)
-    .saturate(1.1)
+    .color(() => 0.5 + (a.fft[0]||0)*0.0001, 0.6, 0.9)
+    .brightness(0.3)
+    .saturate(1.2)
     .out(o0);
   src(o0)
     .scale(1.012)
