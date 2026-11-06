@@ -13,6 +13,14 @@ let smooth = Object.create(Smooth);
 smooth.init(96); // heavy smoothing
 initOsc();
 
+function setHydraResolution() {
+  if (!hydra || !hydra.setResolution) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.max(1, Math.floor((canvas.clientWidth || window.innerWidth) * dpr));
+  const h = Math.max(1, Math.floor((canvas.clientHeight || window.innerHeight) * dpr));
+  hydra.setResolution(w, h);
+}
+
 // Boot Hydra
 function boot() {
   hydra = new Hydra({
@@ -21,6 +29,11 @@ function boot() {
     enableStreamCapture: false,
     width: window.innerWidth,
     height: window.innerHeight
+  });
+  // Sync backing resolution after layout (avoids first-load blur)
+  requestAnimationFrame(() => {
+    setHydraResolution();
+    requestAnimationFrame(setHydraResolution);
   });
   // Try to explicitly get audio
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -68,7 +81,7 @@ async function setupAudio() {
 async function loadSketch(n) {
   currentSketch = n;
   try {
-    const mod = await import(`../sketches/0${n}.js`);
+    const mod = await import(`../sketches/0${n}.js?t=${Date.now()}`);
     if (typeof mod.default === 'function') {
       mod.default({ hydra, smooth, Motion });
       hudSketch.textContent = `sketch: 0${n}${mod.name ? '-' + mod.name : ''}`;
@@ -126,9 +139,11 @@ function loop() {
 }
 
 window.addEventListener('resize', () => {
-  if (hydra && hydra.setResolution) {
-    hydra.setResolution(window.innerWidth, window.innerHeight);
-  }
+  setHydraResolution();
 });
 
-boot();
+if (document.readyState === 'complete') {
+  requestAnimationFrame(boot);
+} else {
+  window.addEventListener('load', () => requestAnimationFrame(boot), { once: true });
+}

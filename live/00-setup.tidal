@@ -1,3 +1,6 @@
+
+import Data.String (fromString)
+
 -- Hedgehog — ambient live set
 -- 72 BPM, D minor. Eval this block first (C-RET).
 
@@ -13,24 +16,72 @@ setbpm 72
 --  2. `gain` is not linear: amp = amp * gain^4. gain 0.5 is -24 dB, not
 --     "half". Keep layers in 0.75..1.0 and trim with `amp` (linear) instead.
 -- Baseline is gain 1.0, so these numbers are the whole mix balance.
+
+-- 1
 let
   bed = slow 8 $ bedStudy # gain 0.88 # room 0.95 # size 0.9 # lpf 1400
   bedStudy = s "padlong"
 
+-- 2
 let
   droneStudy n = s "hedge_sine" # note n # gain 0.88 # room 0.8
-  droneS n s = droneStudy n # sustain s
-  drone n = slow 8 $ droneS n 28 # lpf 240
+  droneS n s = slow 8 $ droneStudy n # sustain s
+  drone n = droneS n 28 # lpf 240
   d n = d2 $ droneS n 28
 
+-- 3
 let air = slow 4 $ s "wind:4" # speed 0.65 # pan rand # gain 0.8 # room 0.95 # size 0.9 # lpf 900
 
+-- 4
 let birds = slow 4 $ s "birds:2" # speed (range 0.7 1.05 rand) # pan rand # gain 0.85 # room 0.9 # size 0.85 # lpf 3400
 
+-- 5
 let tick = slow 2 $ s "click:2(3,16,2)" # gain 0.76 # pan 0.3 # room 0.6 # size 0.7 # lpf 2400
 
-let pad = slow 4 $ note "[d4,f4,a4,c5,e5] [c4,e4,g4,b4] [bb3,d4,f4,a4] [a3,c4,e4,g4]" # s "hedge_pad" # sustain 4 # gain 0.85 # room 0.95 # size 0.85
+-- 6
+let
+  harmony :: Pattern Note
+  harmony = fromString $ unlines [
+    "[d4,f4,a4,c5,e5] ~ ~ [c4,e4,g4,b4] [bb3,d4,f4,a4] [a3,c4,e4,g4] ~ ~",
+    "[d4,f4,a5,c6] ~ [c4,e4,g4,b4] ~ ~ [a3,c4,e4,a4] ~",
+    "d4 ~ a4 ~ ~ e4",
+    "[d4,f4,a4,c5,e5] ~ ~ [c4,e4,g4,b4] [bb3,d4,f4,a4] [a3,c4,e4,g4] ~ ~"]
+  plain = fromString $ unlines [
+    "d4 ~ ~ c4 bb3 a3 ~ ~",
+    "d4 ~ c4 ~ ~ a3 ~",
+    "d4 ~ a4 ~ ~ e4",
+    "d4 ~ ~ c4 bb3 a3 ~ ~"]
+  plain2 = fromString $ unlines [
+    "~ ~ d4 bb3 a3 c4 ~ ~",
+    "c4 ~ d4 ~ ~ a3 ~",
+    "a4 ~ d4 ~ ~ e4",
+    "c4 ~ ~ d4 bb3 a3 ~ ~"]
+  pad n = slow 16 $ note harmony # s "hedge_pad" # sustain 4 # gain 0.85
+    # room 0.95 # size 0.85
+  padS n s' = slow 16 $ note harmony # s "hedge_pad" # sustain s' # gain 0.85
+    # room 0.95 # size 0.85
+  padDeg = degradeBy 0.5 $ padS harmony 4
 
+-- 7
 let pluck = slow 4 $ note "d5 ~ ~ f5 ~ a5 ~ ~" # s "pluck" # gain 0.85 # delay 0.7 # delaytime 0.375 # room 0.9 # size 0.8 # lpf 2600
 
+-- 9
 let riser = s "hedge_noise" # sustain 4 # gain (range 0.5 0.88 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9
+
+a=
+  [
+    -- bed
+    1, -- bed
+    2, -- drone
+    -- texture
+    3, -- birds
+    4, -- air
+    -- pulse
+    5, -- tick
+    -- harmony
+    6, -- pad
+    -- melody
+    7, -- pluck
+    -- transitions
+    9 -- riser
+  ]
