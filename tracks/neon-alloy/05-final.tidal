@@ -11,18 +11,25 @@ d3 $ stack [hats, hatsOpen]
 
 d8 $ stack [bassMain, bassOct # gain 0.76]
 
-d4 $ stack [chords, arp # gain 0.75]
+d4 $ stack [chords, arp # gain 0.75] -- noticeable
 
 d5 $ hook
 
 d6 $ stab
 
 -- outro: fade elements
--- xfadeIn 5 8 $ silence
--- xfadeIn 6 8 $ silence
--- xfadeIn 4 16 $ chords # lpf 900 # gain 0.72
--- xfadeIn 3 8 $ silence
--- xfadeIn 2 8 $ silence
--- xfadeIn 8 16 $ bassMain # lpf 280
--- xfadeIn 1 16 $ silence
--- hush
+xfadeIn 5 8 $ silence
+
+xfadeIn 6 8 $ silence
+
+xfadeIn 4 16 $ chords # lpf 900 # gain 0.72
+
+xfadeIn 3 8 $ silence
+
+xfadeIn 2 8 $ silence
+
+xfadeIn 8 16 $ bassMain # lpf 280
+
+xfadeIn 1 16 $ silence
+
+hush

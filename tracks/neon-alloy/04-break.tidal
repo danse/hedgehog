@@ -7,11 +7,13 @@ d2 $ silence
 
 xfadeIn 3 8 $ hats # gain 0.62
 
-d4 $ chords # lpf 1000 # gain 0.78
+d4 $ chords # lpf 1000 # gain 0.78 -- noticeable
 
 d6 $ hoover # gain 0.72
 
 d8 $ bassMain # lpf 350 # gain 0.86
+
+-- meditative at this point, and complex enough
 
 -- fx / build
 -- d7 $ riser
