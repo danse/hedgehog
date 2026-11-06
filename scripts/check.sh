@@ -79,14 +79,13 @@ echo "[set]"
 # SuperDirt's dirt_reverb maps size through linexp(0, 1, 0.01, 0.98); above
 # ~0.9 the loop gain passes unity and the orbit rings forever, even after hush.
 bad_size=""
-for f in live/*.tidal; do
-  [ -f "$f" ] || continue
+while IFS= read -r -d '' f; do
   for n in $(grep -oE '\bsize[[:space:]]+[0-9]*\.?[0-9]+' "$f" | awk '{print $2}'); do
     if awk -v n="$n" 'BEGIN { exit !(n + 0 > 0.9) }'; then
-      bad_size="$bad_size $(basename "$f"):$n"
+      bad_size="$bad_size ${f#"$root"/}:$n"
     fi
   done
-done
+done < <(find "$root/tracks" -name '*.tidal' -print0 2>/dev/null)
 if [ -n "$bad_size" ]; then
   bad "reverb size > 0.9 self-oscillates:$bad_size"
 else

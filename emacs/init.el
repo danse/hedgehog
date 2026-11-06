@@ -81,9 +81,12 @@ Adjacent top-level statements are sent separately to avoid GHCi parse issues."
     (when (null groups)
       (user-error "No statements to send"))
     (dolist (stmt groups)
-      (tidal-send-string ":{")
-      (tidal-send-string stmt)
-      (tidal-send-string ":}"))))
+      (if (string-match-p "\n" stmt)
+          (progn
+            (tidal-send-string ":{")
+            (tidal-send-string stmt)
+            (tidal-send-string ":}"))
+        (tidal-send-string stmt)))))
 
 (defun hedgehog-eval-block ()
   "Evaluate the blank-line-separated block around point."
