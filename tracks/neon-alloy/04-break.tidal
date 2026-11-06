@@ -3,7 +3,7 @@
 -- mute the voice
 -- xfadeIn 4 8 silence
 -- or xFade the following in
--- d4 $ chords # lpf 800 # gain 0.68 -- supporting bed
+-- xfadeIn 4 8 $ chords # lpf 800 # gain 0.68 -- supporting bed
 
 -- thin the drums
 xfadeIn 1 4 $ silence

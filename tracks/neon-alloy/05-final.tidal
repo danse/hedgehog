@@ -15,7 +15,7 @@ d5 $ hook
 
 d6 $ stab
 
-d4 $ stack [chords # gain 0.66, arp # gain 0.68] -- supporting (drop arp if still prominent)
+xfadeIn 4 8 $ stack [chords # gain 0.66, arp # gain 0.68] -- supporting (drop arp if still prominent)
 
 -- outro: fade elements
 xfadeIn 5 8 $ silence

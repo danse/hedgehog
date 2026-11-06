@@ -37,7 +37,7 @@
 (setq tidal-boot-script-path
       (expand-file-name "boot/BootTidal.hs" hedgehog-root))
 
-;; Start ghci from the project root, not from live/.
+;; Start ghci from the project root, not from tracks/.
 (defun hedgehog-start ()
   "Start (or restart) the Tidal ghci process from the project root."
   (interactive)

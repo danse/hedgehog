@@ -1,9 +1,10 @@
 # Hedgehog
 
-A live-coded ambient set. TidalCycles → SuperDirt → PipeWire JACK, edited in a
+Live-coded tracks. TidalCycles → SuperDirt → PipeWire JACK, edited in a
 project-contained Emacs.
 
-72 BPM, D minor, ~16 minutes, five movements. See [notes/set-plan.md](notes/set-plan.md).
+Tracks live in `tracks/`; each folder has its own tiny README and a `00-setup.tidal`
+to evaluate first. See `tracks/hedgehog/README.md` for the main ambient set.
 
 ## Status
 
@@ -20,7 +21,8 @@ project-contained Emacs.
 
 ```sh
 scripts/check.sh        # verify binaries, audio, Tidal, samples, disk
-scripts/up.sh           # start SuperDirt + Emacs on the set
+scripts/up.sh           # start SuperDirt
+scripts/edit.sh         # open Emacs on tracks/
 ```
 
 `up.sh --no-emacs` starts only SuperCollider. `scripts/down.sh` stops it.
@@ -28,7 +30,8 @@ Logs go to `logs/superdirt.log`.
 
 ## Playing
 
-Open a file in `live/` and evaluate paragraph by paragraph.
+Open a track under `tracks/` and evaluate its `00-setup.tidal` first, then work
+through the numbered section files (each track README lists the order).
 
 | Key | Action |
 |---|---|
@@ -40,15 +43,12 @@ Open a file in `live/` and evaluate paragraph by paragraph.
 | `C-c C-i` | interrupt the REPL |
 | `C-c C-v` | show the Tidal output buffer |
 
-Set order: `00-setup` → `10-bed` → `20-texture` → `30-pulse` → `40-harmony`
-→ `50-melody` → `60-transitions`.
-
 ## Layout
 
 ```
 boot/     BootTidal.hs, BootSuperDirt.scd (SuperDirt + project synths)
 emacs/    init.el, lisp/tidal.el — self-contained editor config
-live/     the set, one file per layer
+tracks/   one folder per track; each has README + 00-setup + sections
 scripts/  up, down, edit, record, checks
 notes/    set plan, cue sheet, recovery
 samples/  optional extra samples (not loaded until uncommented)
