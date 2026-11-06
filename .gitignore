@@ -21,3 +21,4 @@ emacs/eln-cache/
 *.wav
 *.flac
 *.mp3
+eln-cache/
