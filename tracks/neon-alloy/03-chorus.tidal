@@ -1,0 +1,25 @@
+-- 3. Chorus — full lift
+
+d1 $ kick
+
+d2 $ stack [snare, clap # gain 0.74]
+
+d3 $ stack [hats, hatsOpen, perc # gain 0.66]
+
+d8 $ stack [bassMain, bassOct # gain 0.76]
+
+d4 $ stack [chords, arp # gain 0.74]
+
+d5 $ hook
+
+d6 $ stack [stab, shimmer # gain 0.64]
+
+-- drive variation
+-- d1 $ kickDrive
+-- d8 $ bassDrive
+-- d4 $ stack [chords, arp, chordsStab # gain 0.7]
+
+-- pull back
+-- d5 $ lead
+-- d1 $ kick
+-- d8 $ stack [bassMain, bassOct # gain 0.74]

@@ -1,0 +1,19 @@
+-- 2. Verse — groove settles, hook teases
+
+d1 $ kick
+
+d2 $ snare
+
+d3 $ stack [hats, hatsOpen]
+
+d8 $ stack [bassMain, bassOct # gain 0.74]
+
+d4 $ chordsStab
+
+d6 $ degradeBy 0.2 $ shimmer
+
+-- tease the hook
+-- d5 $ hook # gain 0.78 # lpf 2800
+
+-- add accent
+-- d6 $ stack [shimmer, stab # gain 0.7]

@@ -1,0 +1,19 @@
+-- 1. Intro — beat + bass + filtered synths
+-- Eval 00-setup.tidal first.
+
+setbpm 118
+
+d1 $ kick
+
+d3 $ hats # gain 0.7
+
+d8 $ bassMain # lpf 320
+
+d4 $ chords # lpf 900 # gain 0.76
+
+-- bring in snare/clap
+-- d2 $ snare # gain 0.78
+
+-- open filter
+-- d4 $ chords # lpf (range 900 2400 $ slow 8 sine)
+-- d8 $ stack [bassMain, bassOct # gain 0.72]

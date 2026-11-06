@@ -1,0 +1,22 @@
+-- 4. Break — tension, strip back
+
+-- thin the drums
+xfadeIn 1 4 $ silence
+
+d2 $ silence
+
+xfadeIn 3 8 $ hats # gain 0.62
+
+d4 $ chords # lpf 1000 # gain 0.78
+
+d6 $ hoover # gain 0.72
+
+d8 $ bassMain # lpf 350 # gain 0.86
+
+-- fx / build
+-- d7 $ riser
+-- d3 $ stack [hats # gain 0.7, s "~ ~ 808oh ~" # gain 0.78]
+
+-- drop riser before chorus
+-- d7 $ silence
+-- d7 $ impact
