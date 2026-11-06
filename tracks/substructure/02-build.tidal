@@ -1,0 +1,20 @@
+-- 2. Build — layer bass complexity, add harmony stabs and pulse
+
+-- open bass filter slowly
+d8 $ bassMain # lpf (range 180 520 $ slow 16 sine)
+
+-- structural anchor + ghost detail
+d9 $ bassAnchor
+d10 $ bassGhost # gain 0.74
+
+-- harmony stabs + texture fragments (no sustained beds)
+d4 $ chordStab
+d5 $ stack [glitchTex # gain 0.7, degradeBy 0.2 $ spaceTex # gain 0.6]
+
+-- light pulse (no heavy kick yet)
+d2 $ click
+-- or: d2 $ hats # gain 0.7
+
+-- transition swell into main
+-- d7 $ riser
+-- d7 $ silence
