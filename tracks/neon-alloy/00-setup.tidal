@@ -34,13 +34,13 @@ let
   bassDrive = fast 2 $ note "<a1 f1 g1 e1>" # s "hedge_sine"
     # sustain 0.14 # gain 0.9 # lpf (range 300 1200 $ fast 2 saw) # lpq 0.22 # shape 0.25
   --
-  -- d4 chords / synth bed (shimmering, glam)
+  -- d4 chords / synth bed (supporting, kept under bass/drums/hook)
   chords = slow 2 $ n "<[a3,c4,e4] [f3,a3,c4] [g3,b3,d4] [e3,gs3,b3]>" # s "hedge_pad"
-    # sustain 1.6 # gain 0.82 # lpf (range 1200 3200 $ slow 8 sine) # room 0.55 # size 0.75
-  chordsStab = n "<[a4,c5,e5] ~ [f4,a4,c5] ~ [g4,b4,d5] ~ [e4,gs4,b4] ~>" # s "moog"
-    # gain 0.8 # legato 0.35 # lpf 2800 # room 0.3 # size 0.4
+    # sustain 1.3 # gain 0.72 # lpf (range 700 1800 $ slow 8 sine) # room 0.32 # size 0.5
+  chordsStab = degradeBy 0.15 $ n "<[a4,c5,e5] ~ [f4,a4,c5] ~ [g4,b4,d5] ~ [e4,gs4,b4] ~>" # s "moog"
+    # gain 0.7 # legato 0.3 # lpf 1700 # room 0.22 # size 0.3
   arp = fast 2 $ n "a4 c5 e5 a5 e5 c5" # s "arpy"
-    # gain 0.79 # legato 0.5 # speed (choose [1,1,1,2]) # lpf (range 1800 4500 $ slow 4 sine) # room 0.35 # size 0.45
+    # gain 0.72 # legato 0.45 # speed (choose [1,1,1,2]) # lpf (range 1400 3200 $ slow 4 sine) # room 0.25 # size 0.35
   --
   -- d5 lead / hook
   hook = slow 2 $ n "<a5 ~ c6 b5 ~ a5 g5 ~ e5 ~ g5 a5 ~ ~ ~ ~>" # s "arpy"

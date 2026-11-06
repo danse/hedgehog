@@ -8,11 +8,11 @@ d3 $ stack [hats, hatsOpen, perc # gain 0.66]
 
 d8 $ stack [bassMain, bassOct # gain 0.76]
 
---d4 $ stack [chords, arp # gain 0.74] -- juggler vibe
-
 d5 $ hook -- very subtle i think it might be enjoyable even with more prominence
 
 d6 $ stack [stab, shimmer # gain 0.64]
+
+d4 $ stack [chords, arp # gain 0.74] -- juggler vibe
 
 -- drive variation
 -- d1 $ kickDrive

@@ -11,11 +11,11 @@ d3 $ stack [hats, hatsOpen]
 
 d8 $ stack [bassMain, bassOct # gain 0.76]
 
-d4 $ stack [chords, arp # gain 0.75] -- noticeable
-
 d5 $ hook
 
 d6 $ stab
+
+d4 $ stack [chords # gain 0.66, arp # gain 0.68] -- supporting (drop arp if still prominent)
 
 -- outro: fade elements
 xfadeIn 5 8 $ silence

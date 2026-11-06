@@ -1,13 +1,16 @@
 -- 4. Break — tension, strip back
 
+-- mute the voice
+-- xfadeIn 4 8 silence
+-- or xFade the following in
+-- d4 $ chords # lpf 800 # gain 0.68 -- supporting bed
+
 -- thin the drums
 xfadeIn 1 4 $ silence
 
 d2 $ silence
 
 xfadeIn 3 8 $ hats # gain 0.62
-
-d4 $ chords # lpf 1000 # gain 0.78 -- noticeable
 
 d6 $ hoover # gain 0.72
 
