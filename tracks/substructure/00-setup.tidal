@@ -42,9 +42,10 @@ let
 let kick = slow 2 $ s "808bd(3,8,<0 2 5>)" # gain 0.86 # lpf 180 # room 0.08 # size 0.2
 
 -- 2 hats/clicks: texture pulse
-let hats = degradeBy 0.25 $ s "hh*8?" # gain (range 0.62 0.78 $ slow 4 rand) # pan (range 0.3 0.7 rand)
+let
+  hats = degradeBy 0.25 $ s "hh*8?" # gain (range 0.62 0.78 $ slow 4 rand) # pan (range 0.3 0.7 rand)
     # lpf (range 3500 7000 $ slow 8 sine) # room 0.15 # size 0.25
-let click = slow 2 $ s "click:2(3,16,2)" # gain 0.74 # pan 0.35 # room 0.5 # size 0.6 # lpf 2400
+  click = slow 2 $ s "click:2(3,16,2)" # gain 0.74 # pan 0.35 # room 0.5 # size 0.6 # lpf 2400
 
 -- 3 perc: occasional movement
 let perc = degradeBy 0.55 $ slow 2 $ s "~ [clak*2?] ~ [hand? ~]" # gain 0.76 # pan rand # room 0.35 # size 0.45 # lpf 2200
