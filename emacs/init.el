@@ -44,14 +44,46 @@
   (let ((default-directory hedgehog-root))
     (tidal-start-haskell)))
 
+(defun hedgehog--statement-start-p (line)
+  "Return non-nil if LINE starts a new top-level Tidal statement."
+  (and (string-match-p "\\`[^ \t\n]" line)
+       (not (string-match-p "\\`[ \t]*--" line))
+       (not (string-match-p "\\`[ \t]*$" line))))
+
+(defun hedgehog--group-statements (text)
+  "Split TEXT into statement groups, keeping indented continuation lines together."
+  (let ((lines (split-string text "\n"))
+        groups current)
+    (dolist (line lines)
+      (cond
+       ((hedgehog--statement-start-p line)
+        (when current
+          (push (string-join (nreverse current) "\n") groups))
+        (setq current (list line)))
+       (current
+        (push line current))
+       ((not (string-match-p "\\`[ \t]*$" line))
+        (push (list line) nil) ;; ignored; shouldn't happen
+        (setq current (list line)))))
+    (when current
+      (push (string-join (nreverse current) "\n") groups))
+    (seq-filter (lambda (s) (not (string-match-p "\\`[ \t]*\\(--.*\\)?[ \t]*\\'" s)))
+                (nreverse groups))))
+
 (defun hedgehog-send-region (beg end)
-  "Send BEG..END to Tidal as a single `:{ ... :}' block."
+  "Send BEG..END to Tidal, grouping multi-line statements.
+Adjacent top-level statements are sent separately to avoid GHCi parse issues."
   (interactive "r")
   (when (= beg end)
     (user-error "Empty region"))
-  (tidal-send-string ":{")
-  (tidal-send-string (buffer-substring-no-properties beg end))
-  (tidal-send-string ":}"))
+  (let* ((text (buffer-substring-no-properties beg end))
+         (groups (hedgehog--group-statements text)))
+    (when (null groups)
+      (user-error "No statements to send"))
+    (dolist (stmt groups)
+      (tidal-send-string ":{")
+      (tidal-send-string stmt)
+      (tidal-send-string ":}"))))
 
 (defun hedgehog-eval-block ()
   "Evaluate the blank-line-separated block around point."
