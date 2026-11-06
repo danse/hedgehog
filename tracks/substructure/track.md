@@ -11,7 +11,7 @@ No sustained pad beds or drones in this track — harmony/texture use fragmented
 | d1 | kick | `kick` |
 | d2 | hats/click | `hats` / `click` |
 | d3 | percussion | `perc` |
-| d4 | harmony stabs | `chordStab` / `chordStabAlt` / `stabHit` |
+| d4 | harmony (continuous) | `chordFlow` / `chordStab` / `chordStabAlt` / `chordPulse` / `stabHit` |
 | d5 | texture fragments | `glitchTex` / `spaceTex` / `metalTex` |
 | d6 | motif | `motif` / `motifArp` |
 | d7 | fx | `riser` / `burst` |
