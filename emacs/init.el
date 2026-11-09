@@ -44,31 +44,100 @@
   (let ((default-directory hedgehog-root))
     (tidal-start-haskell)))
 
-(defun hedgehog--statement-start-p (line)
-  "Return non-nil if LINE starts a new top-level Tidal statement."
-  (and (string-match-p "\\`[^ \t\n]" line)
-       (not (string-match-p "\\`[ \t]*--" line))
-       (not (string-match-p "\\`[ \t]*$" line))))
+(defun hedgehog--line-indent (line)
+  "Return the indentation width of LINE.
+Tabs advance to the next multiple of 8 columns."
+  (let ((col 0)
+        (i 0)
+        (len (length line))
+        done)
+    (while (and (< i len) (not done))
+      (let ((ch (aref line i)))
+        (cond
+         ((eq ch ?\s) (setq col (1+ col)))
+         ((eq ch ?\t) (setq col (+ col 8 (- (mod col 8)))))
+         (t (setq done t))))
+      (setq i (1+ i)))
+    col))
+
+(defun hedgehog--blank-line-p (line)
+  "Return non-nil if LINE is empty or contains only whitespace."
+  (string-match-p "\\`[ \t]*\\'" line))
+
+(defun hedgehog--comment-line-p (line)
+  "Return non-nil if LINE is a comment-only line."
+  (string-match-p "\\`[ \t]*--" line))
+
+(defun hedgehog--continuation-start-p (line)
+  "Return non-nil if LINE begins with a continuation operator.
+Continuation lines stay with the preceding statement even when they are
+not indented, for example a leading `#' operator."
+  (string-match-p
+   "\\`[ \t]*\\(?:#\\|\\$\\|\\.\\||\\|,\\|[][(){}]\\|>\\|=\\|<-\\)"
+   line))
+
+(defun hedgehog--strong-statement-start-p (line)
+  "Return non-nil if LINE clearly begins a new Tidal top-level action.
+This splits consecutive, inconsistently indented orbit/xfade lines even
+when they sit deeper than the region's base indentation."
+  (string-match-p
+   "\\`[ \t]*\\(?:d[0-9]+\\|xfadeIn\\|xfade\\|fadeIn\\|fadeOut\\|setbpm\\|hush\\)\\(?:[ \t]\\|\\'\\)"
+   line))
+
+(defun hedgehog--base-indent (lines)
+  "Return the smallest indentation among the code lines in LINES."
+  (let (base)
+    (dolist (line lines)
+      (unless (or (hedgehog--blank-line-p line)
+                  (hedgehog--comment-line-p line))
+        (let ((n (hedgehog--line-indent line)))
+          (setq base (if base (min base n) n)))))
+    (or base 0)))
 
 (defun hedgehog--group-statements (text)
-  "Split TEXT into statement groups, keeping indented continuation lines together."
-  (let ((lines (split-string text "\n"))
-        groups current)
+  "Split TEXT into top-level Tidal statement groups.
+Indented lines normally continue the current statement, while lines at
+the region's base indentation (or clear `dN'/`xfade... actions) begin a
+new one.  Blank lines are ignored.  Comments stay with the statement
+they describe."
+  (let* ((lines (split-string text "\n"))
+         (base (hedgehog--base-indent lines))
+         (groups nil)
+         (current nil)          ; reversed lines of the current group
+         (pending-comments nil) ; reversed comments before the next group
+         in-let)
     (dolist (line lines)
       (cond
-       ((hedgehog--statement-start-p line)
+       ((hedgehog--blank-line-p line)
+        nil)
+       ((hedgehog--comment-line-p line)
+        ;; A comment indented inside the current statement belongs to it
+        ;; (notably inside a `let' block); a comment at base level is a
+        ;; header for the next statement.
+        (if (and current
+                 (or in-let
+                     (> (hedgehog--line-indent line) base)))
+            (push line current)
+          (push line pending-comments)))
+       ((and (not (hedgehog--continuation-start-p line))
+             (or (<= (hedgehog--line-indent line) base)
+                 (and (not in-let)
+                      (hedgehog--strong-statement-start-p line))))
         (when current
           (push (string-join (nreverse current) "\n") groups))
-        (setq current (list line)))
+        (setq current (cons line pending-comments)
+              pending-comments nil
+              in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line)))
        (current
         (push line current))
-       ((not (string-match-p "\\`[ \t]*$" line))
-        (push (list line) nil) ;; ignored; shouldn't happen
-        (setq current (list line)))))
+       (t
+        ;; Orphan indented line: start a group with it anyway.
+        (setq current (cons line pending-comments)
+              pending-comments nil
+              in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line)))))
     (when current
       (push (string-join (nreverse current) "\n") groups))
-    (seq-filter (lambda (s) (not (string-match-p "\\`[ \t]*\\(--.*\\)?[ \t]*\\'" s)))
-                (nreverse groups))))
+    (nreverse groups)))
 
 (defun hedgehog-send-region (beg end)
   "Send BEG..END to Tidal, grouping multi-line statements.
@@ -106,7 +175,10 @@ Adjacent top-level statements are sent separately to avoid GHCi parse issues."
 (defun hedgehog-tidal-keys ()
   (local-set-key (kbd "C-c C-s") #'hedgehog-start)
   (local-set-key (kbd "C-c C-c") #'tidal-run-line)
-  (local-set-key (kbd "C-RET")   #'hedgehog-eval-block)
+  ;; tidal.el binds `C-<return>' to tidal-run-multiple-lines.  `C-RET' is a
+  ;; different event, so bind both physical forms to the project sender.
+  (local-set-key (kbd "C-<return>") #'hedgehog-eval-block)
+  (local-set-key (kbd "C-RET")      #'hedgehog-eval-block)
   (local-set-key (kbd "C-c C-e") #'hedgehog-eval-block)
   (local-set-key (kbd "C-c C-r") #'hedgehog-send-region)
   (local-set-key (kbd "C-c C-h") #'hedgehog-hush)

@@ -16,6 +16,22 @@ for c in sclang scsynth ghci emacs ffmpeg; do
   if command -v "$c" >/dev/null 2>&1; then ok "$c -> $(command -v "$c")"; else bad "$c missing"; fi
 done
 
+echo "[emacs]"
+if command -v emacs >/dev/null 2>&1; then
+  sender_log=$(mktemp)
+  if emacs --batch -q --init-directory "$root/emacs" \
+       -l "$root/emacs/init.el" -l "$root/scripts/check-sender.el" \
+       >"$sender_log" 2>&1; then
+    ok "sender statement grouping"
+  else
+    bad "sender statement grouping"
+    sed 's/^/        /' "$sender_log" | tail -20
+  fi
+  rm -f "$sender_log"
+else
+  warn "emacs missing — sender checks skipped"
+fi
+
 echo "[audio]"
 if command -v pw-jack >/dev/null 2>&1; then ok "pw-jack present"; else bad "pw-jack missing (apt install pipewire-jack)"; fi
 if command -v pw-cli >/dev/null 2>&1 && pw-cli info 0 >/dev/null 2>&1; then

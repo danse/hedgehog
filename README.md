@@ -43,6 +43,11 @@ through the numbered section files (each track README lists the order).
 | `C-c C-i` | interrupt the REPL |
 | `C-c C-v` | show the Tidal output buffer |
 
+`C-RET` and `C-c C-r` split adjacent top-level expressions (blocks of `dN`,
+`xfadeIn`, `fadeSilence`, bindings, etc.) and send them one at a time. A
+multi-line single expression or a `let` block is wrapped in `:{ ... :}`.
+Indented statements and continuation lines are handled.
+
 ## Layout
 
 Each area documents itself:
