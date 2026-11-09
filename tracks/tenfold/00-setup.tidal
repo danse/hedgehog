@@ -22,7 +22,7 @@ let
   --
   -- d2 low pad (i–VI–III–VII, one chord every 4 cycles)
   lowPad = slow 4 $ n "<[bf2,df3,f3] [gf2,bf2,df3] [df2,f2,af2] [af2,c3,ef3]>" # s "hedge_pad"
-    # sustain 6 # gain 0.88 # lpf (range 380 1100 $ slow 16 sine)
+    # sustain 6 # lpf (range 380 1100 $ slow 16 sine)
     # room 0.55 # size 0.75
   --
   -- d3 high pad (same harmonic rhythm, colour above the low pad)
@@ -88,5 +88,6 @@ let
   --
   -- convenience: fade several orbits to silence at once, e.g.
   -- fadeSilence 8 [4,5,6,9]
-  fadeSilence n = mapM (\d -> xfadeIn d n $ silence)
+  fadeSilence n = mapM (\d -> xfadeIn d n silence)
   allOrbits = [1..9]
+  fadeMulti t = mapM (\(d, p) -> xfadeIn d t p)

@@ -2,9 +2,8 @@
 -- Eval 00-setup.tidal first.
 
 d1 $ subDrone # gain 0.82
-
 -- the low pad appears under the drone
-xfadeIn 2 16 $ lowPad # gain 0.72 # lpf 520
+xfadeIn 2 16 $ lowPad # lpf 520
 
 -- let the room breathe before adding anything else
 -- xfadeIn 7 24 $ noiseBed # gain 0.45

@@ -1,14 +1,11 @@
 -- 4. Suspension — harmony floats, the pulse loosens
 
-setbpm 125
+d1 subDrone
 
-d1 $ subDrone
-
-xfadeIn 2 16 $ lowPad # gain 0.82 # lpf 900
-
-xfadeIn 3 16 $ highPad # gain 0.78 # lpf 2000
-
-xfadeIn 4 16 $ arp # gain 0.7 # lpf 2400
+fadeMulti 16 [
+  (2, lowPad # gain 0.82 # lpf 900),
+  (3, highPad # gain 0.78 # lpf 2000),
+  (4, arp # gain 0.7 # lpf 2400)]
 
 -- the bass pulse gives way to long roots
 xfadeIn 8 16 $ bassLong # gain 0.8
@@ -16,11 +13,10 @@ xfadeIn 8 16 $ bassLong # gain 0.8
 -- the lower lead gives way to the higher, sparser melody
 xfadeIn 5 16 $ melody # gain 0.74
 
-xfadeIn 6 16 $ bell # gain 0.68
-
-xfadeIn 7 16 $ noiseBed # gain 0.6
-
-xfadeIn 9 16 $ shimmer # gain 0.58
+fadeMulti 16 [
+  (6, bell # gain 0.68),
+  (7, noiseBed # gain 0.6),
+  (9, shimmer # gain 0.58)]
 
 -- optional: let the arp drift further back
 -- xfadeIn 4 24 $ arp # gain 0.6 # lpf 1800

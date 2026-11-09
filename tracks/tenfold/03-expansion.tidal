@@ -1,22 +1,17 @@
 -- 3. Expansion — full synth palette (still no drums)
 
 d1 subDrone
+fadeMulti 8 [
+  (2, lowPad),
+  (3, highPad),
+  (4, arp),
+  (8, bassPulse)]
 
-xfadeIn 2 8 lowPad
-
-xfadeIn 3 8 highPad
-
-xfadeIn 4 8 arp
-
-xfadeIn 8 8 bassPulse
-
-xfadeIn 5 16 lead
-
-xfadeIn 6 16 $ bell # gain 0.7
-
-xfadeIn 7 16 noiseBed
-
-xfadeIn 9 16 $ shimmer # gain 0.6
+fadeMulti 16 [
+  (5, lead),
+  (6, bell # gain 0.7),
+  (7, noiseBed),
+  (9, shimmer # gain 0.6)]
 
 -- longer melody option instead of the lead
 -- xfadeIn 5 16 melody
