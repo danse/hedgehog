@@ -1,0 +1,92 @@
+-- Tenfold — synthapella-inspired ambient (separate track)
+-- 125 BPM, B♭ minor. No drums/percussion: drones, pads, arp, lead,
+-- bell, filtered noise and shimmer only.
+-- Inspired by the synth-only version of Stephan Bodzin's "Powers of Ten".
+-- Eval this whole file at once (the `let` below is one block).
+-- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4 (trim with amp if needed).
+
+setbpm 125
+
+-- ---------------------------------------------------------------------------
+-- Voices / patterns. One `let` block: eval all at once (C-RET).
+-- Progression: i–VI–III–VII in B♭ minor (bfm – gf – df – af).
+-- Harmonic rhythm: one chord every 4 cycles; the full form is 16 cycles.
+-- Orbits: d1 sub, d2 low pad, d3 high pad, d4 arp, d5 lead,
+--         d6 bell, d7 noise, d8 bass, d9 shimmer.
+-- ---------------------------------------------------------------------------
+let
+  -- d1 sub drone (one root per chord)
+  subDrone = slow 4 $ note "<bf1 gf1 df2 af1>" # s "hedge_sine"
+    # sustain 6 # gain 0.86 # lpf 160 # lpq 0.1
+    # room 0.3 # size 0.5
+  --
+  -- d2 low pad (i–VI–III–VII, one chord every 4 cycles)
+  lowPad = slow 4 $ n "<[bf2,df3,f3] [gf2,bf2,df3] [df2,f2,af2] [af2,c3,ef3]>" # s "hedge_pad"
+    # sustain 6 # gain 0.88 # lpf (range 380 1100 $ slow 16 sine)
+    # room 0.55 # size 0.75
+  --
+  -- d3 high pad (same harmonic rhythm, colour above the low pad)
+  highPad = slow 4 $ n "<[bf4,df5,f5,af5] [gf4,bf4,df5,f5] [df4,f4,af4,c5] [af4,c5,ef5,g5]>" # s "hedge_pad"
+    # sustain 6 # gain 0.8 # hpf 260 # lpf (range 900 2400 $ slow 12 sine)
+    # room 0.7 # size 0.8
+  --
+  -- d4 arpeggio (16 notes per chord; follows the progression)
+  arpSeq :: Pattern Note
+  arpSeq = cat [
+    "bf4 df5 f5 df5 bf4 f5 df5 f5 bf4 df5 af5 f5 df5 bf4 f5 df5",
+    "gf4 bf4 df5 bf4 gf4 df5 bf4 df5 gf4 bf4 f5 df5 bf4 gf4 df5 bf4",
+    "df4 f4 af4 f4 df4 af4 f4 af4 df4 f4 c5 af4 f4 df4 af4 f4",
+    "af4 c5 ef5 c5 af4 ef5 c5 ef5 af4 c5 g5 ef5 c5 af4 ef5 c5" ]
+  arp = slow 4 $ n arpSeq # s "arpy"
+    # gain 0.8 # legato 0.6 # speed (choose [1,1,1,2])
+    # lpf (range 1300 3600 $ slow 8 sine)
+    # delay 0.32 # delaytime (3/16) # delayfb 0.28
+    # room 0.45 # size 0.55
+  --
+  -- d5 lead (one note per cycle; follows the four chords)
+  leadSeq :: Pattern Note
+  leadSeq = "bf4 df5 f5 df5 gf4 bf4 df5 bf4 df4 f4 af4 f4 af4 c5 ef5 c5"
+  lead = slow 16 $ n leadSeq # s "casio"
+    # gain 0.8 # legato 0.85 # speed 1
+    # lpf (range 1800 4200 $ slow 16 sine)
+    # delay 0.28 # delaytime (3/16) # delayfb 0.35
+    # room 0.55 # size 0.65
+  melodySeq :: Pattern Note
+  melodySeq = "bf5 ~ df6 ~ gf5 ~ bf5 ~ df5 ~ f5 ~ af5 ~ c6 ~"
+  melody = slow 16 $ n melodySeq # s "casio"
+    # gain 0.76 # legato 0.9 # lpf (range 1400 3200 $ slow 24 sine)
+    # delay 0.35 # delaytime (3/16) # delayfb 0.4
+    # room 0.65 # size 0.75
+  --
+  -- d6 bell / counter line (one note per cycle, chord tones)
+  bellSeq :: Pattern Note
+  bellSeq = "bf6 f6 df6 f6 gf6 df6 bf5 df6 df6 af5 f6 af5 af6 ef6 c6 ef6"
+  bell = slow 16 $ note bellSeq # s "pluck"
+    # gain 0.74 # delay 0.6 # delaytime (3/16) # delayfb 0.45
+    # lpf 3200 # room 0.7 # size 0.8
+  --
+  -- d7 filtered noise bed / slow air
+  noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.6
+    # lpf (range 220 1400 $ slow 24 sine) # room 0.85 # size 0.85
+  --
+  -- d8 soft synth bass (8ths; one bar per chord, no percussion)
+  bassSeq :: Pattern Note
+  bassSeq = cat [
+    "bf2 ~ bf2 ~ df3 ~ bf2 ~ f2 ~ bf2 ~ df3 ~ bf2 ~",
+    "gf2 ~ gf2 ~ bf2 ~ gf2 ~ df3 ~ gf2 ~ bf2 ~ gf2 ~",
+    "df2 ~ df2 ~ f2 ~ df2 ~ af2 ~ df2 ~ f2 ~ df2 ~",
+    "af2 ~ af2 ~ c3 ~ af2 ~ ef3 ~ af2 ~ c3 ~ af2 ~" ]
+  bassPulse = slow 4 $ n bassSeq # s "hedge_sine"
+    # sustain 0.32 # gain 0.9 # lpf (range 180 560 $ slow 12 sine)
+    # lpq 0.12 # shape 0.12 # room 0.15 # size 0.3
+  bassLong = slow 4 $ note "<bf2 gf2 df2 af2>" # s "hedge_sine"
+    # sustain 3 # gain 0.88 # lpf 240 # lpq 0.1 # room 0.35 # size 0.55
+  --
+  -- d9 sample shimmer (synthapella sparkle, no rhythm)
+  shimmer = degradeBy 0.5 $ slow 4 $ s "space:2*8?" # speed (range 0.8 2 $ rand)
+    # gain 0.66 # hpf 1200 # lpf 7000 # room 0.7 # size 0.75
+  --
+  -- convenience: fade several orbits to silence at once, e.g.
+  -- fadeSilence 8 [4,5,6,9]
+  fadeSilence n = mapM (\d -> xfadeIn d n $ silence)
+  allOrbits = [1..9]

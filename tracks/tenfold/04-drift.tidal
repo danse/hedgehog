@@ -1,0 +1,16 @@
+-- 4. Drift — strip lead/bell/arp, keep pads, texture and slow bass
+
+-- fade several orbits at once
+fadeSilence 16 [4,5,6,9]
+
+xfadeIn 3 16 $ highPad # gain 0.74 # lpf 1200
+
+xfadeIn 7 16 $ noiseBed # gain 0.66 # lpf 900
+
+xfadeIn 8 16 $ bassLong # gain 0.82
+
+-- keep the low pad but darker
+xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700
+
+-- optional: leave a single arp note drifting
+-- xfadeIn 4 24 $ degradeBy 0.6 $ arp # gain 0.56
