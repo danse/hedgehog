@@ -7,7 +7,7 @@ xfadeIn 4 8 $ chords # lpf (range 850 1400 $ slow 8 sine) # gain 0.78
 -- thin the drums
 xfadeIn 1 4 $ silence
 
-d2 $ silence
+d2 silence
 
 -- the hook carries over from the chorus; fade it if the break should be bare
 -- xfadeIn 5 8 $ silence

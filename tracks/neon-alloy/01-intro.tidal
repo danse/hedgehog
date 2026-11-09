@@ -9,7 +9,7 @@ d3 $ hats # gain 0.7
 
 d8 $ bassMain # lpf 320
 
-xfadeIn 4 8 $ chords # lpf 700 # gain 0.68
+xfadeIn 4 8 $ chords # lpf 700 # gain 0.88
 
 -- bring in snare/clap
 -- d2 $ snare # gain 0.78
@@ -17,4 +17,4 @@ xfadeIn 4 8 $ chords # lpf 700 # gain 0.68
 -- open filter
 -- xfadeIn 4 8 $ chords # lpf (range 700 1600 $ slow 8 sine)
 --
--- d8 $ stack [bassMain, bassOct # gain 0.72]
+d8 $ stack [bassMain, bassOct]
