@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Turn blank-line-separated .tidal blocks into GHCi :{ ... :} commands.
 
-Used by scripts/check.sh to syntax-check the whole set without a running
-SuperDirt: expressions are evaluated (and their OSC is simply dropped).
+Lets you syntax-check a track without a running SuperDirt: pipe the output into
+ghci and the expressions evaluate while their OSC is dropped.
 """
 import sys
 

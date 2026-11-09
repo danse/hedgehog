@@ -1,6 +1,7 @@
 # Hedgehog Visuals (Hydra)
 
-This directory will contain a self-contained Hydra setup for live-coded, audio-reactive visuals that pair with the Hedgehog TidalCycles set.
+This directory contains a self-contained Hydra setup for live-coded,
+audio-reactive visuals that pair with the Hedgehog TidalCycles set.
 
 ## Philosophy
 - **Audio-first**: Sync primarily to the SuperDirt monitor (same source as `scripts/record.sh`). Use `a.fft[]`/RMS for texture and motion.
@@ -8,7 +9,7 @@ This directory will contain a self-contained Hydra setup for live-coded, audio-r
 - **Slow fluid**: Restraint over flash. Prioritize breathy motion, gentle morphing fields, and low-frequency response for a D minor ambient set.
 - **Non-invasive**: Visuals must not interfere with `pw-jack`/SuperCollider/JACK routing. All routing is reversible.
 
-## Quick Plan
+## Setup
 
 ### Tools
 - **Hydra** (browser-based, WebGL) - Live-coding feel akin to Tidal. Supports audio input and can receive OSC for scene changes.
@@ -17,56 +18,37 @@ This directory will contain a self-contained Hydra setup for live-coded, audio-r
 ### Audio routing (PipeWire)
 Hydra reads system audio via microphone input. Feed it the USB monitor without touching scsynth/JACK:
 
-Option A (recommended): `pw-loopback`
+Option A (recommended): `pw-loopback` + `pw-link`
 ```bash
-pw-loopback \
-  --capture-props='media.class=Audio/Sink node.name=hydra-virt-sink device.description=Hydra-Virtual-Sink' \
-  --playback-props='media.class=Audio/Source node.name=hydra-virt-src device.description=Hydra-Virtual-Mic'
+./scripts/vis-audio-route.sh start
 ```
-In browser mic selection choose `Hydra-Virtual-Mic`.
+This creates `Hydra-Virtual-Mic`, links the **current default sink's monitor**
+into the loopback (so the USB device profile can change across reboots), and
+makes the virtual mic the default source. `stop` restores the previous default
+source. `status` shows the current routing.
 
-Option B: `pactl` module-null-sink + module-loopback routing `alsa_output.usb-GeneralPlus_USB_Audio_Device-00.analog-stereo.monitor` to it.
+The page detects `Hydra-Virtual-Mic` at boot and forces Hydra's audio request to
+use it when present, so a saved per-site mic choice cannot silently fall back to
+the physical USB mic. Chromium and Firefox both work.
 
-Scripts will live in `scripts/` (see below). Kill loopbacks to revert instantly.
+Option B: `pactl` module-null-sink + module-loopback routing the USB monitor to it.
 
-### Project layout
-```text
-visuals/
-├── hydra/
-│   ├── index.html
-│   ├── css/style.css
-│   ├── js/
-│   │   ├── main.js
-│   │   ├── osc.js      # optional (hybrid OSC later)
-│   │   └── utils.js
-│   └── sketches/
-│       ├── 00-base.js
-│       ├── 01-emergence.js
-│       ├── 02-pulse.js
-│       ├── 03-bloom.js
-│       ├── 04-drift.js
-│       └── 05-dissolve.js
-└── README.md
-```
+Helpers live in `../scripts/` (see [../scripts/README.md](../scripts/README.md)).
+Kill the loopback to revert instantly.
 
-### Scripts (to be added)
-```text
-scripts/
-├── vis-audio-route.sh  # start/stop/status for loopback
-├── vis-hydra-up.sh     # start local server + open browser
-└── vis-hydra-swap.sh   # swap sketches to match cues (1-5)
-```
+### Where things live
 
-### Movement cues (mirror set-plan.md)
-| # | Movement | Sketch | Notes |
-|---|----------|---------|-------|
-| 1 | Emergence (0:00–3:00) | `01-emergence.js` | d1,d2 only. Very subtle, low-frequency driven. |
-| 2 | Slow pulse (3:00–6:00) | `02-pulse.js` | +d5. Barely visible pulses, keep scaling low. |
-| 3 | Bloom (6:00–10:00) | `03-bloom.js` | +d6,d7. Gentle folds/morphs, warmer hues creep in. |
-| 4 | Drift (10:00–13:00) | `04-drift.js` | stripped back. Foggy, desaturated. |
-| 5 | Dissolve (13:00–16:00) | `05-dissolve.js` | d1,d2 only. Wispy trails, slow to near-static, pairs with tail. |
+- `hydra/` — the app itself; see [hydra/README.md](hydra/README.md) for boot,
+  audio input, and usage.
+- `hydra/sketches/` — cue and test sketches; see
+  [hydra/sketches/README.md](hydra/sketches/README.md) for the catalog.
+- `../scripts/` — routing, serving, and swap helpers; see
+  [../scripts/README.md](../scripts/README.md).
 
-Manual swap first (script or hotkeys 1-5). OSC bridge optional later for automatic triggers.
+### Cues
+Sketch catalog and movement mapping:
+[hydra/sketches/README.md](hydra/sketches/README.md). Swap manually with keys
+`1`-`9` or `./scripts/vis-hydra-swap.sh <n>`; OSC triggers are optional later.
 
 ### Tuning guidelines
 - Heavy FFT smoothing / lerping to avoid jitter
@@ -75,11 +57,15 @@ Manual swap first (script or hotkeys 1-5). OSC bridge optional later for automat
 - Test on Celeron N4020 with upgrade running; lower resolution/FPS if needed
 - Avoid many stacked `out()` feedback chains
 
-### Getting started (when implemented)
-1. `./scripts/vis-audio-route.sh start` (create virtual mic)
-2. `./scripts/vis-hydra-up.sh` (serve + open browser)
-3. In browser select `Hydra-Virtual-Mic`, allow access
-4. Play set, swap with `./scripts/vis-hydra-swap.sh <num>` or hotkeys 1-5
+### Getting started
+1. `./scripts/vis-hydra-up.sh` (creates/links the virtual mic, serves, opens browser)
+2. Confirm the HUD says `Hydra-Virtual-Mic · live` (if it says `silent?`, check
+   `./scripts/vis-audio-route.sh status` and reload after fixing routing)
+3. Play set, swap with `./scripts/vis-hydra-swap.sh <num>` or hotkeys `1`-`9`
+
+Debug hints: `./scripts/vis-audio-route.sh status`, `pw-link -l | grep hydra`,
+and the page's `d` debug overlay (`a.fft` values). HUD `silent?` means the
+analyser is receiving zeros — usually the wrong browser input or no monitor link.
 
 ## References
 - Hydra: https://hydra.ojack.xyz/

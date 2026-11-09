@@ -5,19 +5,34 @@ This folder contains the local Hydra setup for the Hedgehog set.
 ## Files
 - `index.html` - Loads Hydra synth and boots our app
 - `css/style.css` - Fullscreen, minimal UI
-- `js/main.js` - Boot, audio input selection, sketch loader, hotkeys (1-5)
+- `js/main.js` - Boot, virtual-mic selection, sketch loader, hotkeys (1-9)
 - `js/utils.js` - Helpers for slow-fluid motion (smoothing, lerp, motion budget)
 - `js/osc.js` - Optional OSC receiver for hybrid cues (off by default)
-- `sketches/` - Movement sketches mirroring `notes/set-plan.md`
+- `sketches/` - Cue and test sketches; see [sketches/README.md](sketches/README.md)
 
 ## Audio input
-Hydra uses `getUserMedia`. Use `scripts/vis-audio-route.sh` to create `Hydra-Virtual-Mic` from the USB monitor. Select it in the browser dropdown.
+`scripts/vis-audio-route.sh start` creates `Hydra-Virtual-Mic`, links the default
+sink's monitor into it, and makes it the default source. `vis-hydra-up.sh` calls
+this automatically, so routing survives a reboot in one command.
+
+Browsers remember a per-site microphone choice, which can survive reboots and
+point back at the physical USB mic. To make this robust, the page probes for
+`Hydra-Virtual-Mic` at boot and forces Hydra's audio request to use it whenever
+it exists (falling back to the browser default only if routing is down). No
+manual mic selection is normally needed; both Chromium and Firefox work.
+
+If the HUD says `silent?`, check `scripts/vis-audio-route.sh status` and that the
+monitor links exist. If it shows the USB mic, routing was not running when the
+page loaded — start routing and reload.
 
 ## Usage
-1. Route audio: `../../scripts/vis-audio-route.sh start`
-2. Serve: `../../scripts/vis-hydra-up.sh` (starts local server, opens browser)
-3. Select `Hydra-Virtual-Mic` in the page
-4. Swap sketches with keys `1-5` or `../../scripts/vis-hydra-swap.sh <n>`
+1. Serve + route: `../../scripts/vis-hydra-up.sh` (starts server, opens browser)
+2. Confirm the HUD says `Hydra-Virtual-Mic · live`
+3. Swap sketches with keys `1-9` or `../../scripts/vis-hydra-swap.sh <n>`
+   (the script also writes `current.txt`, so a reload starts on that cue)
+
+Routing manually: `../../scripts/vis-audio-route.sh {start|status|stop}`.
+`stop` also restores the previous default source.
 
 ## Notes
 - Keep motion restrained. Default smoothing should be high.

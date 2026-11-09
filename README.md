@@ -45,15 +45,16 @@ through the numbered section files (each track README lists the order).
 
 ## Layout
 
-```
-boot/     BootTidal.hs, BootSuperDirt.scd (SuperDirt + project synths)
-emacs/    init.el, lisp/tidal.el — self-contained editor config
-tracks/   one folder per track; each has README + 00-setup + sections
-scripts/  up, down, edit, record, checks
-notes/    set plan, cue sheet, recovery
-samples/  optional extra samples (not loaded until uncommented)
-recordings/  gitignored takes
-```
+Each area documents itself:
+
+- `tracks/` — one folder per track, each with its own README
+- `scripts/` — see `scripts/README.md`
+- `visuals/` — see `visuals/README.md`
+- `notes/` — see `notes/set-plan.md`
+- `samples/` — see `samples/README.md`
+
+`boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config,
+and `recordings/` the gitignored takes.
 
 ## Sound check
 

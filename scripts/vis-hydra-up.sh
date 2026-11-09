@@ -7,6 +7,13 @@ cd "$root/visuals/hydra"
 PORT="${PORT:-8000}"
 URL="http://localhost:$PORT/"
 
+# Ensure the virtual mic exists, is fed by the default sink, and is the default
+# source. This makes the setup survive reboots in one command.
+if [ "${AUTO_ROUTE:-1}" = "1" ]; then
+  "$root/scripts/vis-audio-route.sh" start || \
+    echo "[vis-hydra-up] warning: audio routing failed (see above)" >&2
+fi
+
 echo "[vis-hydra-up] Serving $(pwd) on $URL"
 
 # Try common servers

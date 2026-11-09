@@ -8,7 +8,6 @@ const hud = document.getElementById('hud');
 const debugEl = document.getElementById('debug');
 
 let hydra = null;
-let currentSketch = 1;
 let smooth = Object.create(Smooth);
 smooth.init(96); // heavy smoothing
 initOsc();
@@ -21,8 +20,46 @@ function setHydraResolution() {
   hydra.setResolution(w, h);
 }
 
+// Browsers remember a per-site microphone choice, which survives reboots and can
+// silently point Hydra at the physical USB mic (often silent). Hydra always asks
+// for `audio: true` with no device, so we probe for the virtual mic first and
+// rewrite Hydra's request to use it whenever it exists.
+async function preferVirtualMic() {
+  const md = navigator.mediaDevices;
+  if (!md || !md.getUserMedia || !md.enumerateDevices) return;
+  const orig = md.getUserMedia.bind(md);
+  let virtId = null;
+  try {
+    // Labels are only visible after permission has been granted.
+    const probe = await orig({ audio: true });
+    probe.getTracks().forEach((t) => t.stop());
+    await new Promise((r) => setTimeout(r, 80)); // let the device release
+    const devices = await md.enumerateDevices();
+    const mics = devices.filter((d) => d.kind === 'audioinput');
+    console.log('[hydra] inputs:', mics.map((m) => ({ label: m.label, id: m.deviceId })));
+    const virt = mics.find((m) => /hydra|loopback|virt|pw-loopback/i.test(m.label));
+    if (virt) virtId = virt.deviceId;
+    else console.warn('[hydra] no Hydra-Virtual-Mic found; using browser default');
+  } catch (e) {
+    console.warn('[hydra] audio probe failed:', e);
+    return;
+  }
+  if (!virtId) return;
+  md.getUserMedia = (constraints = {}) => {
+    if (constraints && constraints.audio && !constraints.video) {
+      const a = typeof constraints.audio === 'object' ? constraints.audio : {};
+      if (!a.deviceId) {
+        constraints = { ...constraints, audio: { ...a, deviceId: { exact: virtId } } };
+      }
+    }
+    return orig(constraints);
+  };
+  console.log('[hydra] forcing Hydra audio input to Hydra-Virtual-Mic');
+}
+
 // Boot Hydra
-function boot() {
+async function boot() {
+  await preferVirtualMic();
   hydra = new Hydra({
     canvas: canvas,
     detectAudio: true,
@@ -35,66 +72,103 @@ function boot() {
     setHydraResolution();
     requestAnimationFrame(setHydraResolution);
   });
-  // Try to explicitly get audio
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      console.log('[hydra] got audio stream', stream.getAudioTracks());
-      hudAudio.textContent = 'audio: mic-ok';
-    }).catch(e => {
-      console.error('[hydra] getUserMedia error', e);
-      hudAudio.textContent = 'audio: err';
-    });
-  }
-  setupAudio();
-  loadSketch(currentSketch);
+  // Hydra requests the default mic in its constructor (detectAudio). Report the
+  // device it actually got and warn if the analyser stays silent.
+  reportAudio();
+  watchAudio();
+  loadSketch(await initialSketch());
   bindKeys();
   loop();
 }
 
-async function setupAudio() {
-  try {
-    // Enumerate devices and prefer Hydra-Virtual-Mic if available
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    console.log('[hydra] all devices:', devices);
-    const mics = devices.filter(d => d.kind === 'audioinput');
-    console.log('[hydra] mics:', mics.map(m=>({label:m.label, id:m.deviceId})));
-    const virt = mics.find(d => /hydra|loopback|virt|input\.hydra|pw-loopback/i.test(d.label));
-    if (virt) {
-      console.log('[hydra] Found virtual mic:', virt.label);
-      hudAudio.textContent = 'audio: Hydra-Virtual';
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: virt.deviceId } } });
-        console.log('[hydra] got stream from virt');
-      } catch(e) { console.warn('virt err', e); }
-    } else if (mics.length > 0) {
-      console.log('[hydra] Using mic:', mics[0].label);
-      hudAudio.textContent = `audio: ${mics[0].label.slice(0,28)}`;
-    } else {
-      hudAudio.textContent = 'audio: (none)';
+function audioTrack() {
+  const aud = hydra && hydra.synth && hydra.synth.a;
+  return (aud && aud.stream) ? aud.stream.getAudioTracks()[0] : null;
+}
+
+function audioLabel() {
+  const t = audioTrack();
+  return t ? (t.label || 'input') : '';
+}
+
+// Hydra creates its own analyser, so we cannot force a device here. We can
+// however report which input it picked and whether a signal is arriving.
+function reportAudio() {
+  let tries = 0;
+  const timer = setInterval(() => {
+    const t = audioTrack();
+    if (t) {
+      clearInterval(timer);
+      const s = t.getSettings ? t.getSettings() : {};
+      console.log('[hydra] audio input:', t.label, s);
+      hudAudio.textContent = `audio: ${(t.label || 'input').slice(0, 26)}`;
+      if (!/hydra|loopback|virt|pw-loopback/i.test(t.label || '')) {
+        console.warn('[hydra] not using Hydra-Virtual-Mic; select it in browser mic settings');
+      }
+      return;
     }
-  } catch (e) {
-    console.warn('[hydra] enumerateDevices failed:', e);
-    hudAudio.textContent = 'audio: err';
-  }
+    if (++tries > 40) {
+      clearInterval(timer);
+      hudAudio.textContent = 'audio: no input (permission/routing?)';
+    }
+  }, 100);
+}
+
+function watchAudio() {
+  let live = 0;
+  let silent = 0;
+  setInterval(() => {
+    const aud = hydra && hydra.synth && hydra.synth.a;
+    if (!aud || !aud.fft) return;
+    const peak = Math.max(...Array.from(aud.fft).map(Number));
+    if (peak > 0.001) { live += 1; silent = 0; }
+    else { silent += 1; live = 0; }
+    const label = audioLabel() || 'input';
+    if (live > 3) {
+      hudAudio.textContent = `audio: ${label.slice(0, 26)} · live`;
+    } else if (silent > 40) {
+      hudAudio.textContent = `audio: ${label.slice(0, 26)} · silent? (wrong mic?)`;
+    }
+  }, 250);
+}
+
+// Browsers may start the AudioContext suspended until a user gesture.
+function resumeAudio() {
+  const ctx = hydra && hydra.synth && hydra.synth.a && hydra.synth.a.context;
+  if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+}
+window.addEventListener('pointerdown', resumeAudio);
+window.addEventListener('keydown', resumeAudio);
+
+async function initialSketch() {
+  try {
+    const res = await fetch('./sketches/current.txt', { cache: 'no-store' });
+    if (res.ok) {
+      const n = parseInt((await res.text()).trim(), 10);
+      if (n >= 1 && n <= 9) return n;
+    }
+  } catch (e) {}
+  return 1;
 }
 
 async function loadSketch(n) {
-  currentSketch = n;
+  const base = `0${n}`;
+  const file = `${base}.js`;
   try {
-    const mod = await import(`../sketches/0${n}.js?t=${Date.now()}`);
+    const mod = await import(`../sketches/${file}?t=${Date.now()}`);
     if (typeof mod.default === 'function') {
       mod.default({ hydra, smooth, Motion });
-      hudSketch.textContent = `sketch: 0${n}${mod.name ? '-' + mod.name : ''}`;
+      hudSketch.textContent = `sketch: ${base}${mod.name ? '-' + mod.name : ''}`;
     } else if (typeof mod.run === 'function') {
       mod.run({ hydra, smooth, Motion });
-      hudSketch.textContent = `sketch: 0${n}`;
+      hudSketch.textContent = `sketch: ${base}`;
     } else {
-      hudSketch.textContent = `sketch: 0${n}`;
+      hudSketch.textContent = `sketch: ${base}`;
     }
-    console.log(`[hydra] loaded sketch 0${n}`);
+    console.log(`[hydra] loaded sketch ${file}`);
   } catch (e) {
-    console.error('[hydra] failed to load sketch', n, e);
-    hudSketch.textContent = `sketch: 0${n} (err)`;
+    console.error('[hydra] failed to load sketch', file, e);
+    hudSketch.textContent = `sketch: ${base} (err)`;
   }
 }
 

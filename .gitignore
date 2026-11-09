@@ -4,6 +4,8 @@ recordings/*
 !recordings/.gitkeep
 samples/*
 !samples/README.md
+visuals/hydra/sketches/current.txt
+visuals/hydra/sketches/current.js
 
 # haskell / ghci
 .ghc.environment.*
