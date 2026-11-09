@@ -22,16 +22,14 @@ xfadeIn 5 8 $ silence
 
 xfadeIn 6 8 $ silence
 
-xfadeIn 4 16 $ chords # lpf 900 # gain 0.72
+xfadeIn 4 16 $ chords # lpf (range 900 1400 $ slow 8 sine) # gain 0.78
 
 xfadeIn 3 8 $ silence
 
 xfadeIn 2 8 $ silence
 
-xfadeIn 8 16 $ bassMain # lpf 280
+xfadeIn 8 16 $ stack [bassMain # gain 0.94, bassOct # gain 0.6] # lpf 400
 
 xfadeIn 1 16 $ silence
-
--- TODO: orbits that are not silenced here yet are too low volume
 
 hush

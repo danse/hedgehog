@@ -1,24 +1,22 @@
 -- 4. Break — tension, strip back
 
--- mute the voice
--- xfadeIn 4 8 silence
--- or xFade the following in
--- xfadeIn 4 8 $ chords # lpf 800 # gain 0.68 -- supporting bed
+-- keep the harmony present, just darker; mute instead if it feels too lush
+-- xfadeIn 4 8 $ silence
+xfadeIn 4 8 $ chords # lpf (range 850 1400 $ slow 8 sine) # gain 0.78
 
 -- thin the drums
 xfadeIn 1 4 $ silence
 
 d2 $ silence
 
+-- the hook carries over from the chorus; fade it if the break should be bare
+-- xfadeIn 5 8 $ silence
+
 xfadeIn 3 8 $ hats # gain 0.62
 
-d6 $ hoover # gain 0.72
+d6 $ hoover # gain 0.78 # lpf 2400
 
-d8 $ bassMain # lpf 350 # gain 0.86
-
--- TODO: some bass that made the music interesting at this point has
--- now faded away too much. Maybe d4, d6 and some others are too soft
--- now
+d8 $ stack [bassMain # gain 0.9, bassOct # gain 0.64] # lpf (range 350 520 $ slow 8 sine)
 
 -- meditative at this point, and complex enough
 
