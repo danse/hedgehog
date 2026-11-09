@@ -5,6 +5,7 @@ drones, pads, arp, lead, bell, filtered noise and shimmer only.
 
 Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 
-`01-emergence` → `02-ascent` → `03-expansion` → `04-drift` → `05-dissolve`
+`01-emergence` → `02-ascent` → `03-expansion` → `04-suspension` →
+`05-drift` → `06-dissolve`
 
 Orbit map, structure, and notes: [track.md](track.md).

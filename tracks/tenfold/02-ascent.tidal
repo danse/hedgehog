@@ -1,8 +1,8 @@
 -- 2. Ascent — high pad, soft bass, first arp hint
 
-d1 $ subDrone
+d1 subDrone
 
-xfadeIn 2 8 $ lowPad
+xfadeIn 2 8 lowPad
 
 xfadeIn 3 16 $ highPad # gain 0.76 # lpf 1500
 

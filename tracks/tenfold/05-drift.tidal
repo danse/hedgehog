@@ -1,4 +1,4 @@
--- 4. Drift — strip lead/bell/arp, keep pads, texture and slow bass
+-- 5. Drift — strip lead/bell/arp, keep pads, texture and long bass
 
 fadeSilence 16 [4,5,6,9]
 
@@ -6,7 +6,7 @@ xfadeIn 3 16 $ highPad # gain 0.74 # lpf 1200
 
 xfadeIn 7 16 $ noiseBed # gain 0.66 # lpf 900
 
-xfadeIn 8 16 $ bassLong # gain 0.82
+xfadeIn 8 16 $ bassLong # gain 0.78 # lpf 220
 
 -- keep the low pad but darker
 xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700

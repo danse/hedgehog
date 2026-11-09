@@ -1,6 +1,6 @@
--- 5. Dissolve — pads and drone only, then silence
+-- 6. Dissolve — pads and drone only, then silence
 
--- fade the moving layers together (keep d1/d2/d3 for the tail)
+-- fade the remaining moving layers together (keep d1/d2/d3 for the tail)
 fadeSilence 24 [4,5,6,7,8,9]
 
 -- leave the low pad and sub

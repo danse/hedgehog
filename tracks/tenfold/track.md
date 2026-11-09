@@ -18,17 +18,19 @@ Bodzin's "Powers of Ten": slow melodic/ambient evolution, no drums.
 | d8 | synth bass | `bassPulse` / `bassLong` |
 | d9 | shimmer | `shimmer` |
 
-## Structure (~6–8 min)
+## Structure (~7–9 min)
 1. **Emergence** (`01-emergence.tidal`) — sub drone and low pad only.
 2. **Ascent** (`02-ascent.tidal`) — high pad, soft bass, first arp hint.
 3. **Expansion** (`03-expansion.tidal`) — full palette: arp, lead, bell, texture.
-4. **Drift** (`04-drift.tidal`) — lead/bell/arp fade out; pads, noise, slow bass.
-5. **Dissolve** (`05-dissolve.tidal`) — pads/drone only, then silence.
+4. **Suspension** (`04-suspension.tidal`) — pulse loosens to long bass; lead
+   becomes the higher, sparser melody; pads and bells float.
+5. **Drift** (`05-drift.tidal`) — lead/bell/arp fade out; pads, noise, long bass.
+6. **Dissolve** (`06-dissolve.tidal`) — pads/drone only, then silence.
 
 ## How to run
 1. Start SuperDirt/audio (`scripts/up.sh`) and open Tidal in Emacs.
 2. Eval `tracks/tenfold/00-setup.tidal` (one `let` block, all at once).
-3. Work through `01`→`05`, using `fadeSilence n [orbits]` for group fades.
+3. Work through `01`→`06`, using `fadeSilence n [orbits]` for group fades.
 
 ## Notes
 - No percussion: motion comes from the arp, bass pulse and slow filter moves.
