@@ -15,5 +15,5 @@ xfadeIn 4 8 $ chordsStab -- noticeable
 -- tease the hook
 -- d5 $ hook # gain 0.78 # lpf 2800
 
--- add accent
+-- add accents
 -- d6 $ stack [shimmer, stab # gain 0.7]

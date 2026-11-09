@@ -16,6 +16,10 @@ d6 $ hoover # gain 0.72
 
 d8 $ bassMain # lpf 350 # gain 0.86
 
+-- TODO: some bass that made the music interesting at this point has
+-- now faded away too much. Maybe d4, d6 and some others are too soft
+-- now
+
 -- meditative at this point, and complex enough
 
 -- fx / build

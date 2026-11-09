@@ -3,9 +3,9 @@
 export const name = 'pulse';
 export default function run({ Motion }){
   const mb = Motion?.budget ?? 0.9;
-  voronoi(() => 5+a.fft[1], 0.2) // scale
+  //voronoi(() => 5+a.fft[1], 0.2) // scale
   //voronoi(6, () => a.fft[1]*0.005) // speed
-  //voronoi(6, 0.2, () => 0.1 + a.fft[1]) // blending
+  voronoi(6, 0.2, () => 0.1 + a.fft[1]) // blending
     //.rotate(() => time*0.002)
     //.modulate(osc(10, 0.15), () => (a.fft[1]||0)*0.03*mb)
     .color(() => 0.45 + a.fft[0]*0.2, 0.65, 0.95)

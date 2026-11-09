@@ -13,7 +13,8 @@ export default function run({ Motion }){
   src(o0)
     .scale(1.012)
     .rotate(0.0015)
-    .modulate(voronoi(5, 0.15))
+    .modulate(voronoi(6, () => a.fft[1]*0.005)) // speed
+    //.modulate(voronoi(5, 0.15))
     //.modulate(noise(3, 0.01), () => (a.fft[2]||0)*0.0008*mb)
     //.blend(o0, 0.035)
     .hue(() => (a.fft[1]||0)*0.000015)
