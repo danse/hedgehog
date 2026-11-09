@@ -1,7 +1,5 @@
 -- 2. Ascent — high pad, soft bass, first arp hint
 
-setbpm 125
-
 d1 $ subDrone
 
 xfadeIn 2 8 $ lowPad

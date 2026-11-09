@@ -1,8 +1,6 @@
 -- 1. Emergence — sub drone and low pad only
 -- Eval 00-setup.tidal first.
 
-setbpm 125
-
 d1 $ subDrone # gain 0.82
 
 -- the low pad appears under the drone
