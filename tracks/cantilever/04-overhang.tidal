@@ -1,7 +1,7 @@
 -- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
 -- ~40 cycles (~98 s at 98 BPM).
 
-setbpm 98
+glideBpm 98 16
 
 d1 kickSoft
 d2 brush

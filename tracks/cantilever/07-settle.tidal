@@ -1,7 +1,7 @@
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
 
-setbpm 92
+glideBpm 92 16
 
 -- clear the snap's trumpet and metal sparkles
 fadeSilence 8 [8,9]

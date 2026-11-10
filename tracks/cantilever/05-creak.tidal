@@ -1,7 +1,7 @@
 -- 5. Creak — the structure complains. Tempo drops; the room takes over.
 -- ~32 cycles (~89 s at 86 BPM).
 
-setbpm 86
+glideBpm 86 16
 
 -- the kit and the trumpet fall away; a cymbal rub remains
 fadeSilence 8 [1,2,8]

@@ -1,7 +1,7 @@
 -- 2. Span — the beam extends. Ride, comping, and a 3-against-4 woodblock.
 -- ~40 cycles (~104 s at 92 BPM).
 
-setbpm 92
+glideBpm 92 16
 
 d6 bassWalk
 xfadeIn 2 12 brush

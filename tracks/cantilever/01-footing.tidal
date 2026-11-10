@@ -2,7 +2,7 @@
 -- Eval 00-setup.tidal first.
 -- ~32 cycles (~84 s at 92 BPM).
 
-setbpm 92
+glideBpm 92 16
 
 d6 bassFoot
 

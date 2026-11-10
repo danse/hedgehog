@@ -47,7 +47,8 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 
 1. Start SuperDirt/audio (`scripts/up.sh`) and open Tidal in Emacs.
 2. Eval `tracks/cantilever/00-setup.tidal` as one block.
-3. Work through `01`→`08`. The tempo changes are already in each section file.
+3. Work through `01`→`08`. Each section glides to its tempo over 16 s
+   (`glideBpm` in `boot/BootTidal.hs`), rather than jumping.
 4. `06-snap` is performed in three gestures: the break, then the commented
    "hole" (everything drops except a trumpet stab), then bass alone into
    `07-settle`.
@@ -75,5 +76,10 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 - **Levels** — `gain` is non-linear (`amp * gain^4`); reverb `size <= 0.9`.
   The trumpet is deliberately quiet and distant — it should be a sparkle,
   never a featured voice.
+- **Tempo glides** — `setbpm` jumps the clock, so section boundaries use
+  `glideBpm target 16` (defined in `boot/BootTidal.hs`). It forks and steps the
+  tempo 10×/s, so the sender is not blocked; each glide starts from the tempo
+  current at call time. Overlapping glides are not cancelled, so leave a
+  section playing long enough for its 16 s glide to finish.
 - **Trumpet** — `trumpetOver` and `trumpetAfter` use `slow 16`, so each written
   note lands once every 16 cycles. Expect long silences between stabs.

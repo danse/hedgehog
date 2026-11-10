@@ -1,7 +1,7 @@
 -- 6. Snap — the beam breaks. A short, hard release, then the hole.
 -- ~24 cycles (~60 s at 96 BPM).
 
-setbpm 96
+glideBpm 96 16
 
 -- Step 1: the break
 d1 kickSoft

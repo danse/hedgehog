@@ -1,7 +1,7 @@
 -- 8. Afterimage — open coda. The room keeps the shape after the sound.
 -- ~40+ cycles at 92 BPM; open-ended.
 
-setbpm 92
+glideBpm 92 16
 
 -- strip the rhythm and most of the harmony
 fadeSilence 16 [1,2,3,4,5,6,7,8,9]
