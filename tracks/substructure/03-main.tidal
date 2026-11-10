@@ -1,21 +1,18 @@
 -- 3. Main — full groove, bass remains the complex center
 
 d1 $ kick
-
 d2 $ hats
-
 d3 $ degradeBy 0.2 $ perc
-
 d4 $ stack [chordFlow, sometimes (const chordStabAlt) $ chordStab # gain 0.74]
-
 d5 $ stack [glitchTex, metalTex # gain 0.66]
 
--- bass: main form + anchor; bring ghost in/out for movement
+-- bass: main form + anchor
 d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
-
 d9 $ bassAnchor
+
+-- bring ghost in/out for movement
 -- d10 $ bassGhost # gain 0.76
--- d10 $ silence
+d10 $ silence
 
 -- melodic answer (sparse)
 d6 $ motif

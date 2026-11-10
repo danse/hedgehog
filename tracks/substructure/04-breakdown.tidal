@@ -3,22 +3,18 @@
 -- pull drums and detail
 fadeSilence 8 [1,2,3]
 
-d6 $ silence
-
-d10 $ silence
+d6 silence
+d10 silence
 
 -- simplified, dark bass
-d8 $ bassBreak
-
+d8 bassBreak
 d9 $ bassAnchor # gain 0.82 # lpf 240
 
 -- keep harmony continuity, thinner (no pads/drones)
 d4 $ chordFlow # lpf 1300 # gain 0.76
-
 d5 $ spaceTex # gain 0.62
-
 d7 $ burst # gain 0.7
 
 -- rebuild cue
--- d7 $ riser
--- d7 $ silence
+-- d7 riser
+-- d7 silence
