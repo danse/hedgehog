@@ -1,6 +1,10 @@
 -- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
 -- ~40 cycles (~98 s at 98 BPM).
 
+-- you get here with a very present reedCall on a main downbeat
+-- xfadeIn 7 16 silence
+-- if it's silenced we can listen to the rest of the texture for a bit
+
 glideBpm 98 16
 d1 kickSoft
 d2 brush
@@ -12,11 +16,11 @@ xfadeIn 5 24 colourOver
 -- two distant trumpet stabs, never a solo
 d8 trumpetOver
 
--- breathe
+-- breathe. This rings enough to keep adding phrases over time, but
+-- it's a very gentle development
 
 -- tiny 5-against-4 shime shimmer
 d9 shime
-
 -- let the piano high voice ring
 d5 $ pianoHi $ slow 3 hOver |+ 12
 

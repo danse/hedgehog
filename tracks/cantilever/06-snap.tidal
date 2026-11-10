@@ -17,6 +17,6 @@ xfadeIn 9 8 (stack [metalSpark, wood])
 -- Step 2 (after ~8 cycles): the hole — everything but the trumpet drops out
 fadeSilence 4 [1,2,3,4,5,6,7,9]
 xfadeIn 8 8 trumpetSnap
--- keep them together or not
+-- together it's a sharp transition
 -- Step 3 (after the stab): bass alone, then Settle
 xfadeIn 6 8 bassSettle

@@ -12,7 +12,7 @@ xfadeIn 9 24 metalSpark
 xfadeIn 10 32 (stack [air, windBed])
 
 -- the bass returns once, very low
-xfadeIn 6 24 bassAfter
+xfadeIn 6 24 $ bassAfter # gain 0.82
 
 -- breathe
 

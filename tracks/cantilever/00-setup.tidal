@@ -99,7 +99,7 @@ let
     # sustain 0.8 # release 0.3 # gain 0.9 # lpf 720 # lpq 0.2
     # room 0.3 # size 0.46
   bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~" # loop 0
-    # sustain 1.8 # release 0.9 # gain 0.82 # lpf 540
+    # sustain 1.8 # release 0.9 # lpf 540
     # room 0.52 # size 0.7
   -- --- brushes / ride: gretsch acoustic kit -------------------------------
   kickSoft = s "~ gretsch ~ gretsch" # n 13 # gain 0.8 # sustain 0.5 # release 0.15 # loop 0

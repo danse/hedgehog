@@ -2,7 +2,6 @@
 -- ~40 cycles (~104 s at 92 BPM).
 
 glideBpm 92 16
-
 xfadeIn 2 12 brush
 xfadeIn 3 24 ride
 xfadeIn 4 24 compSpan
