@@ -171,6 +171,92 @@ Adjacent top-level statements are sent separately to avoid GHCi parse issues."
   (tidal-hush)
   (message "hush"))
 
+;; Tidal REPL completion ---------------------------------------------------
+(defconst hedgehog-tidal-orbit-names
+  (append (mapcar (lambda (n) (format "d%d" n)) (number-sequence 1 16))
+          (mapcar (lambda (n) (format "d%d_" n)) (number-sequence 1 16)))
+  "Orbit names defined by BootTidal.hs.")
+
+(defun hedgehog--tidal-source-buffer-p (buffer)
+  "Return non-nil if BUFFER contains Tidal source."
+  (with-current-buffer buffer
+    (or (derived-mode-p 'tidal-mode)
+        (and buffer-file-name
+             (string-match-p "\\.\\(?:l\\)?tidal\\'" buffer-file-name)))))
+
+(defun hedgehog--tidal-buffer-words ()
+  "Collect identifiers from all open Tidal source buffers."
+  (let (words)
+    (dolist (buffer (buffer-list))
+      (when (and (buffer-live-p buffer)
+                 (hedgehog--tidal-source-buffer-p buffer))
+        (with-current-buffer buffer
+          (save-excursion
+            (goto-char (point-min))
+            (while (re-search-forward "[[:alpha:]_][[:alnum:]_']*" nil t)
+              ;; Keep words from commented-out code too: they are useful
+              ;; when uncommenting an alternative.
+              (push (match-string-no-properties 0) words))))))
+    words))
+
+(defun hedgehog--tidal-history-words ()
+  "Collect words from the current comint input history."
+  (let (words)
+    (when (bound-and-true-p comint-input-ring)
+      (dolist (entry (ring-elements comint-input-ring))
+        (dolist (word (split-string entry "[^[:alnum:]_']+" t))
+          (push word words))))
+    words))
+
+(defun hedgehog--tidal-completion-bounds ()
+  "Return the bounds of the Tidal identifier at point, or nil.
+Unlike `bounds-of-thing-at-point', this treats a trailing apostrophe
+as part of the name (for example `substruct'')."
+  (let ((beg (save-excursion
+               (skip-chars-backward "[:alnum:]_'")
+               (point)))
+        (end (save-excursion
+               (skip-chars-forward "[:alnum:]_'")
+               (point))))
+    (when (< beg end)
+      (cons beg end))))
+
+(defun hedgehog-tidal-completion-at-point ()
+  "Complete Tidal identifiers from open Tidal buffers and the REPL history."
+  (let ((bounds (hedgehog--tidal-completion-bounds)))
+    (when bounds
+      (let* ((beg (car bounds))
+             (end (cdr bounds))
+             (prefix (buffer-substring-no-properties beg end)))
+        (when (and (> (length prefix) 0)
+                   ;; Leave GHCi :commands and comint history alone.
+                   (not (eq (char-before beg) ?:)))
+          (let* ((candidates
+                  (delete-dups
+                   (append hedgehog-tidal-orbit-names
+                           (hedgehog--tidal-buffer-words)
+                           (hedgehog--tidal-history-words))))
+                 (matches (all-completions prefix candidates)))
+            (when matches
+              (list beg end (sort matches #'string<)))))))))
+
+(defun hedgehog--tidal-repl-setup ()
+  "Use `completion-at-point' for Tab in the *tidal* REPL."
+  (when (and (boundp 'tidal-buffer)
+             (string= (buffer-name) tidal-buffer))
+    (setq-local completion-at-point-functions
+                '(hedgehog-tidal-completion-at-point
+                  comint-completion-at-point))
+    ;; `local-set-key' edits the shared `comint-mode-map', which would
+    ;; change Tab in every comint buffer.  Give this buffer its own map
+    ;; with the normal comint map as parent instead.
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map (current-local-map))
+      (use-local-map map)
+      (local-set-key (kbd "TAB") #'completion-at-point))))
+
+(add-hook 'comint-mode-hook #'hedgehog--tidal-repl-setup)
+
 ;; Keys --------------------------------------------------------------------
 (defun hedgehog-tidal-keys ()
   (local-set-key (kbd "C-c C-s") #'hedgehog-start)
