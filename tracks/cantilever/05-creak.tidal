@@ -12,10 +12,10 @@ xfadeIn 10 32 air
 -- bass becomes a long pedal; piano turns to low clusters
 d6 bassCreak
 d4 pianoCreak
-xfadeIn 5 32 (pianoHi ((slow 4 hCreak) |+ 12) # gain 0.42 # lpf 1400)
+xfadeIn 5 32 $ pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400
 
 -- the reed stretches out
-xfadeIn 7 32 reedCreak
+d7 reedCreak
 
 -- optional: a single metal creak answers the piano
 -- xfadeIn 9 24 (degradeBy 0.7 metalSpark)

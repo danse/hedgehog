@@ -7,13 +7,13 @@ setbpm 92
 d6 bassFoot
 
 -- brushes arrive like a foot keeping time, not a drum kit
-xfadeIn 2 16 brushFoot
+d2 brushFoot
 
 -- a low piano pedal appears under the bass
-xfadeIn 4 24 pianoPedal
+d4 pianoPedal
 
 -- first hint of the room: a single breath
--- xfadeIn 10 16 air
+-- d10 air
 
 -- the bass starts to walk
 -- xfadeIn 6 16 bassWalk

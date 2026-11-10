@@ -106,7 +106,7 @@ let
     # lpf 360 # room 0.16 # size 0.28
   kickSparse = slow 2 $ s "gretsch" # n 13 # gain 0.82 # sustain 0.5 # release 0.18 # loop 0
     # lpf 320 # room 0.18 # size 0.3
-  brushFoot = s "~ ~ gretsch ~" # n 3 # gain 0.44 # sustain 0.3 # release 0.15 # loop 0
+  brushFoot = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15 # loop 0
     # lpf 2600 # room 0.35 # size 0.5
   brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # gain 0.68 # sustain 0.3 # release 0.16 # loop 0
     # lpf 3000 # room 0.28 # size 0.42
@@ -134,7 +134,7 @@ let
   metalSpark = degradeBy 0.55 $ slow 4 $ s "metal" # n (irand 10) # loop 0 # sustain 1
     # speed (range 0.6 1.2 $ slow 8 rand) # gain 0.34 # pan rand
     # hpf 300 # lpf 3600 # room 0.55 # size 0.72
-  air = slow 8 $ s "breath" # n 0 # gain 0.16 # loop 0 # sustain 0.5 # hpf 500 # lpf 2400
+  air = slow 8 $ s "breath" # n 0 # loop 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8 # loop 1
     # gain 0.12 # hpf 400 # lpf 1500 # room 0.7 # size 0.85

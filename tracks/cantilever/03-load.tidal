@@ -11,10 +11,10 @@ xfadeIn 4 16 compLoad
 xfadeIn 5 24 colourLoad
 
 -- the reed joins from the back of the room
-xfadeIn 7 32 reedCall
+d7 $ reedCall # gain 0.7
 
 -- keep the 3-against-4 shadow
-xfadeIn 9 16 wood3
+d9 $ wood3 # gain 1
 
 -- add a little ride bell for lift
--- xfadeIn 3 16 (stack [ride, rideBell])
+-- d3 $ stack [ride, rideBell]

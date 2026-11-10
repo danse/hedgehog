@@ -13,9 +13,9 @@ d6 bassSettle
 xfadeIn 4 16 compSettle
 
 -- a bluesy piano answer, sparse
-xfadeIn 5 32 motifSettle
+d5 motifSettle
 
 -- the reed returns for one phrase
-xfadeIn 7 32 reedCall
+d7 reedCall
 
 -- no trumpet here; let the room do the sparkle
