@@ -1,8 +1,6 @@
 -- 3. Load — the span takes weight. The full ensemble, still lazy.
 -- ~40 cycles (~104 s at 92 BPM).
 
-setbpm 92
-
 d1 kickSoft
 d2 brush
 d3 ride

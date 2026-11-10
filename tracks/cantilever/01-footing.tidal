@@ -8,7 +8,6 @@ d6 bassFoot
 
 -- brushes arrive like a foot keeping time, not a drum kit
 d2 brushFoot
-
 -- a low piano pedal appears under the bass
 d4 pianoPedal
 
