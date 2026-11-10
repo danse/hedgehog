@@ -2,7 +2,6 @@
 -- ~24 cycles (~60 s at 96 BPM).
 
 glideBpm 96 16
-
 -- Step 1: the break
 d1 kickSoft
 d2 brushSnap

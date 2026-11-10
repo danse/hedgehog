@@ -16,7 +16,7 @@ xfadeIn 10 32 (stack [air, windBed])
 xfadeIn 6 24 bassAfter
 
 -- the last chord: let it ring
-xfadeIn 4 32 (pianoLo (slow 8 hAfter) # gain 0.5 # lpf 1200 # room 0.8 # size 0.85)
+xfadeIn 4 32 (pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85)
 
 -- hush when the room has decayed
 hush

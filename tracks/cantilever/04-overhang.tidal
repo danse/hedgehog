@@ -2,7 +2,6 @@
 -- ~40 cycles (~98 s at 98 BPM).
 
 glideBpm 98 16
-
 d1 kickSoft
 d2 brush
 d3 (stack [ride, rideBell])
