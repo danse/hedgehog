@@ -5,7 +5,7 @@
 xfadeIn 4 8 $ chords # lpf (range 850 1400 $ slow 8 sine) # gain 0.78
 
 -- thin the drums
-xfadeIn 1 4 $ silence
+xfadeIn 1 4 silence
 
 d2 silence
 
@@ -21,9 +21,9 @@ d8 $ stack [bassMain # gain 0.9, bassOct # gain 0.64] # lpf (range 350 520 $ slo
 -- meditative at this point, and complex enough
 
 -- fx / build
--- d7 $ riser
+-- d7 riser
 -- d3 $ stack [hats # gain 0.7, s "~ ~ 808oh ~" # gain 0.78]
 
 -- drop riser before chorus
--- d7 $ silence
--- d7 $ impact
+-- d7 silence
+-- d7 impact

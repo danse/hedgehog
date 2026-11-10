@@ -1,35 +1,30 @@
 -- 5. Final — last chorus and outro
 
 -- impact back in
--- d7 $ impact
+-- d7 impact
 
+-- wake up again
 d1 kick
-
 d2 $ stack [snare, clap # gain 0.74]
-
 d3 $ stack [hats, hatsOpen]
-
 d8 $ stack [bassMain, bassOct]
-
 d5 hook
-
 d6 stab
 
 xfadeIn 4 8 $ stack [chords # gain 0.66, arp # gain 0.68] -- supporting (drop arp if still prominent)
 
 -- outro: fade elements
 xfadeIn 5 8 silence
-
 xfadeIn 6 8 silence
-
 xfadeIn 4 16 $ chords # lpf (range 900 1400 $ slow 8 sine) # gain 0.78
 
 xfadeIn 3 8 silence
-
 xfadeIn 2 8 silence
 
 xfadeIn 8 16 $ stack [bassMain # gain 0.94, bassOct # gain 0.6] # lpf 400
 
-xfadeIn 1 16 $ silence
+xfadeIn 1 16 silence
+
+-- a couple of main orbits can still be listened here
 
 hush

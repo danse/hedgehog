@@ -1,13 +1,9 @@
 -- 2. Verse — groove settles, hook teases
 
-d1 $ kick
-
-d2 $ snare
-
+d1 kick
+d2 snare
 d3 $ stack [hats, hatsOpen]
-
 d8 $ stack [bassMain, bassOct]
-
 d6 $ degradeBy 0.2 $ shimmer
 
 xfadeIn 4 8 chordsStab -- noticeable
