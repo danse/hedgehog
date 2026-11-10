@@ -1,0 +1,23 @@
+-- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
+-- ~40 cycles (~98 s at 98 BPM).
+
+setbpm 98
+
+d1 kickSoft
+d2 brush
+d3 (stack [ride, rideBell])
+d6 bassLoad
+xfadeIn 4 16 compOver
+xfadeIn 5 24 colourOver
+
+-- two distant trumpet stabs, never a solo
+xfadeIn 8 32 trumpetOver
+
+-- a brief 5-against-4 shime shimmer (fade it if too busy)
+xfadeIn 9 24 shime
+
+-- the reed answers once
+xfadeIn 7 24 reedCall
+
+-- let the piano high voice ring
+-- xfadeIn 5 32 (pianoHi ((slow 3 hOver) |+ 12))

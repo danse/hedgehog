@@ -1,0 +1,20 @@
+-- 3. Load — the span takes weight. The full ensemble, still lazy.
+-- ~40 cycles (~104 s at 92 BPM).
+
+setbpm 92
+
+d1 kickSoft
+d2 brush
+d3 ride
+d6 bassWalk4
+xfadeIn 4 16 compLoad
+xfadeIn 5 24 colourLoad
+
+-- the reed joins from the back of the room
+xfadeIn 7 32 reedCall
+
+-- keep the 3-against-4 shadow
+xfadeIn 9 16 wood3
+
+-- add a little ride bell for lift
+-- xfadeIn 3 16 (stack [ride, rideBell])

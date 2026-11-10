@@ -1,13 +1,13 @@
+-- Expose tidal-core so the chord helpers are importable.
+:set -package tidal-core
 :set -fno-warn-orphans -Wno-type-defaults -XMultiParamTypeClasses -XOverloadedStrings
 :set prompt ""
 
 -- Import all the boot functions and aliases.
 import Sound.Tidal.Boot
 
--- Chord helpers are available but hidden by default. To use them, add:
---   :set -package tidal-core
---   import Sound.Tidal.Chords
--- above this line and eval `chord "d" "min9" []` style patterns.
+-- Tidal Chords (e.g. chord "d4" "min7" []).
+import Sound.Tidal.Chords
 
 default (Rational, Integer, Double, Pattern String)
 

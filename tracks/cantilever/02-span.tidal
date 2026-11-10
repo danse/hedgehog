@@ -1,0 +1,16 @@
+-- 2. Span — the beam extends. Ride, comping, and a 3-against-4 woodblock.
+-- ~40 cycles (~104 s at 92 BPM).
+
+setbpm 92
+
+d6 bassWalk
+xfadeIn 2 12 brush
+xfadeIn 3 24 ride
+xfadeIn 4 24 compSpan
+xfadeIn 5 32 colourSpan
+
+-- implied polymeter: three woodblock hits per cycle against the 4/4 pulse
+xfadeIn 9 32 wood3
+
+-- the bass phrase starts stretching over four cycles
+-- xfadeIn 6 16 bassWalk4

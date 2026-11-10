@@ -1,0 +1,21 @@
+-- 7. Settle — the structure comes to rest. Tempo back to 92.
+-- ~40 cycles (~104 s at 92 BPM).
+
+setbpm 92
+
+-- clear the snap's trumpet and metal sparkles
+fadeSilence 8 [8,9]
+
+d1 kickSoft
+d2 brush
+d3 ride
+d6 bassSettle
+xfadeIn 4 16 compSettle
+
+-- a bluesy piano answer, sparse
+xfadeIn 5 32 motifSettle
+
+-- the reed returns for one phrase
+xfadeIn 7 32 reedCall
+
+-- no trumpet here; let the room do the sparkle

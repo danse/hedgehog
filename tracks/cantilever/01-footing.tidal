@@ -1,0 +1,19 @@
+-- 1. Footing — the anchor is set. Solo double bass, room, a foot tap.
+-- Eval 00-setup.tidal first.
+-- ~32 cycles (~84 s at 92 BPM).
+
+setbpm 92
+
+d6 bassFoot
+
+-- brushes arrive like a foot keeping time, not a drum kit
+xfadeIn 2 16 brushFoot
+
+-- a low piano pedal appears under the bass
+xfadeIn 4 24 pianoPedal
+
+-- first hint of the room: a single breath
+-- xfadeIn 10 16 air
+
+-- the bass starts to walk
+-- xfadeIn 6 16 bassWalk
