@@ -15,6 +15,7 @@ visuals/hydra/sketches/current.js
 # emacs
 custom.el
 emacs/eln-cache/
+emacs/projects
 *~
 \#*\#
 .\#*

@@ -12,9 +12,9 @@ d4 $ stack [chordFlow # gain 0.78, chordStab # gain 0.76]
 d5 $ stack [glitchTex # gain 0.7, degradeBy 0.2 $ spaceTex # gain 0.6]
 
 -- light pulse (no heavy kick yet)
-d2 $ click
+d2 click
 -- or: d2 $ hats # gain 0.7
 
 -- transition swell into main
--- d7 $ riser
--- d7 $ silence
+d7 riser
+d7 silence

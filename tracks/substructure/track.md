@@ -19,17 +19,19 @@ No sustained pad beds or drones in this track — harmony/texture use fragmented
 | d9 | bass (anchor) | `bassAnchor` |
 | d10 | bass (ghost/detail) | `bassGhost` |
 
-## Structure (~5–7 min sketch, extend by repeating sections)
+## Structure (~6–8 min sketch, extend by repeating sections)
 1. **Intro** (`01-intro.tidal`) — sparse texture + bass enters (main, dark filter), establish the 8-cycle form.
 2. **Build** (`02-build.tidal`) — add anchor/ghost bass layers, harmony stabs, light pulse/texture.
 3. **Main** (`03-main.tidal`) — full groove: kick/hats, stabs/texture, motif answers bass; optional drive.
 4. **Breakdown** (`04-breakdown.tidal`) — remove drums/detail, `bassBreak`/dark bass + sparse stabs/texture.
-5. **Outro** (`05-outro.tidal`) — dissolve to bass fragments and sparse texture, then silence.
+5. **Rebuild** (`05-rebuild.tidal`) — pulse and detail return: `bassDrive`/anchor/ghost, pulsing
+   harmony, metal/space texture and `motifArp`; optional kick for the last wave.
+6. **Outro** (`06-outro.tidal`) — dissolve to bass fragments and sparse texture, then silence.
 
 ## How to run
 1. Start SuperDirt/audio as usual (`scripts/up.sh` from repo root) and open Tidal in Emacs.
 2. Eval `tracks/substructure/00-setup.tidal`.
-3. Work through `01`→`05` in order, or improvise using orbit map.
+3. Work through `01`→`06` in order, or improvise using orbit map.
 
 ## Notes
 - Bass is intentionally complex: two 4-cycle phrases (`bassA/B`) concatenated into an 8-cycle form, patterned sustain, and moving filter. Anchor/ghost layers add rhythmic structure without cluttering the low root.

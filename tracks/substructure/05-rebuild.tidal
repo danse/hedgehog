@@ -1,0 +1,27 @@
+-- 5. Rebuild — pulse and detail resurface, bass takes the lead
+
+-- clear the breakdown burst smoothly
+xfadeIn 7 8 silence
+
+-- pulse returns, lighter than Main
+xfadeIn 2 8 $ click # gain 0.7
+xfadeIn 3 8 $ degradeBy 0.45 perc # gain 0.7
+
+-- driven bass + anchor, ghost answering above
+xfadeIn 8 8 $ bassDrive # gain 0.86
+xfadeIn 9 8 $ bassAnchor # gain 0.84 # lpf 280
+xfadeIn 10 8 $ bassGhost # gain 0.72
+
+-- alternate harmony colour: pulsing casio + moog stabs (no pads)
+xfadeIn 4 8 $ stack [chordPulse # gain 0.74, chordStabAlt # gain 0.72]
+xfadeIn 5 8 $ stack [metalTex # gain 0.66, degradeBy 0.25 $ spaceTex # gain 0.6]
+
+-- higher, more active motif
+xfadeIn 6 8 $ motifArp # gain 0.76
+
+-- optional: add the kick for the last wave
+-- xfadeIn 1 8 $ kick # gain 0.8
+
+-- transition into the outro: ride the riser, then clear it
+-- d7 riser
+-- d7 silence
