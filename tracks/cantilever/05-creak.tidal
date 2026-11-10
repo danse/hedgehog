@@ -18,4 +18,4 @@ xfadeIn 5 32 $ pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400
 d7 reedCreak
 
 -- optional: a single metal creak answers the piano
--- xfadeIn 9 24 (degradeBy 0.7 metalSpark)
+xfadeIn 9 24 (degradeBy 0.7 metalSpark)

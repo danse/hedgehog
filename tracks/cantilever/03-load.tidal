@@ -17,4 +17,4 @@ d7 $ reedCall # gain 0.7
 d9 $ wood3 # gain 1
 
 -- add a little ride bell for lift
--- d3 $ stack [ride, rideBell]
+d3 $ stack [ride, rideBell]

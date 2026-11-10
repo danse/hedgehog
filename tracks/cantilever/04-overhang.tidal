@@ -17,4 +17,4 @@ d8 trumpetOver
 d9 shime
 
 -- let the piano high voice ring
-d5  $ pianoHi $ slow 3 hOver |+ 12
+d5 $ pianoHi $ slow 3 hOver |+ 12

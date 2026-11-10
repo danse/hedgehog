@@ -13,4 +13,4 @@ xfadeIn 5 32 colourSpan
 xfadeIn 9 32 wood3
 
 -- the bass phrase starts stretching over four cycles
--- xfadeIn 6 16 bassWalk4
+xfadeIn 6 16 bassWalk4
