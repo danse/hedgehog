@@ -1,0 +1,20 @@
+-- 5. Transfer — props eased out; the load moves into the abutment. It holds.
+-- ~36 cycles (~94 s at 92 BPM).
+
+glideBpm 92 16
+
+d1 kickSparse
+d2 brush
+d3 ride
+d6 bassTrans
+xfadeIn 4 16 compTrans
+xfadeIn 5 24 colourTrans
+
+-- the reed holds one long note
+d7 reedTrans
+
+-- tools withdraw
+fadeSilence 12 [9]
+
+-- air returns
+xfadeIn 10 24 (stack [air, windBed])
