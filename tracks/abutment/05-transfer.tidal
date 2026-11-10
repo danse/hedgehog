@@ -2,7 +2,6 @@
 -- ~36 cycles (~94 s at 92 BPM).
 
 glideBpm 92 16
-
 d1 kickSparse
 d2 brush
 d3 ride

@@ -2,7 +2,6 @@
 -- ~36 cycles (~96 s at 90 BPM).
 
 glideBpm 90 16
-
 -- the load returns to the abutment
 d6 bassShore
 xfadeIn 4 16 compShore

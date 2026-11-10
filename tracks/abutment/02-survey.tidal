@@ -8,9 +8,9 @@ d6 bassSurvey
 xfadeIn 4 16 compSurvey
 
 -- plumb-line ticks and a cautious swing
-xfadeIn 9 12 (stack [plumb, woodTick])
+xfadeIn 9 12 $ stack [plumb, woodTick]
 xfadeIn 2 24 brushSoft
 xfadeIn 3 24 rideSoft
 
 -- first colour above
-xfadeIn 5 24 (pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200)
+xfadeIn 5 24 $ pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200

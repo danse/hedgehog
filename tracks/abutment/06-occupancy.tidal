@@ -2,7 +2,6 @@
 -- under the approach. ~40 cycles (~107 s at 90 BPM).
 
 glideBpm 90 16
-
 d1 kickSoft
 d2 brush
 d3 (stack [ride, rideBell])
@@ -15,5 +14,5 @@ d7 reedOcc
 xfadeIn 8 32 trumpetOcc
 
 -- a little hand-work and room
-xfadeIn 9 24 (degradeBy 0.5 wood)
-xfadeIn 10 32 (stack [air, gravel])
+xfadeIn 9 24 $ degradeBy 0.5 wood
+xfadeIn 10 32 $ stack [air, gravel]

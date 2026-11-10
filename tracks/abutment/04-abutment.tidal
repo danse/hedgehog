@@ -2,17 +2,16 @@
 -- ~40 cycles (~102 s at 94 BPM).
 
 glideBpm 94 16
-
-d1 kickSoft
 d2 brush
-d3 (stack [ride, rideBell])
+d3 $ stack [ride, rideBell]
+xfadeIn 5 24 colourAbut
+-- light swing
 d6 bassAbut
 xfadeIn 4 16 compAbut
-xfadeIn 5 24 colourAbut
 
 -- the reed enters properly
 xfadeIn 7 24 reedAbut
 
 -- the new mass: wood, metal and site air
-xfadeIn 9 16 (degradeBy 0.4 (stack [woodTick, metalTool]))
-xfadeIn 10 32 (stack [air, gravel])
+xfadeIn 9 16 $ degradeBy 0.4 (stack [woodTick, metalTool])
+xfadeIn 10 32 $ stack [air, gravel]

@@ -2,14 +2,13 @@
 -- ~40+ cycles (~112 s+ at 86 BPM; open-ended).
 
 glideBpm 86 16
-
 -- strip the rhythm and the high projection
 fadeSilence 16 [1,2,3,7,8,9]
 
--- the abutment remains: low piano, bass and air
+-- sharp slowdown. The abutment remains: low piano, bass and air
 d4 pianoSteady
 d6 bassSteady
-xfadeIn 10 24 (stack [air, windBed, gravel])
+xfadeIn 10 24 $ stack [air, windBed, gravel]
 
 -- a last high shadow
 xfadeIn 5 24 pianoAfter
