@@ -1,8 +1,5 @@
 -- 5. Final — last chorus and outro
 
--- impact back in
--- d7 impact
-
 -- wake up again
 d1 kick
 d2 $ stack [snare, clap # gain 0.74]
@@ -11,7 +8,8 @@ d8 $ stack [bassMain, bassOct]
 d5 hook
 d6 stab
 
-xfadeIn 4 8 $ stack [chords # gain 0.66, arp # gain 0.68] -- supporting (drop arp if still prominent)
+-- supporting (drop arp if still prominent)
+xfadeIn 4 8 $ stack [chords # gain 0.66, arp # gain 0.68]
 
 -- outro: fade elements
 xfadeIn 5 8 silence
