@@ -12,8 +12,12 @@ xfadeIn 5 24 colourOver
 -- two distant trumpet stabs, never a solo
 d8 trumpetOver
 
--- a brief 5-against-4 shime shimmer (fade it if too busy)
+-- breathe
+
+-- tiny 5-against-4 shime shimmer
 d9 shime
 
 -- let the piano high voice ring
 d5 $ pianoHi $ slow 3 hOver |+ 12
+
+-- gives another break to prepare `creak`

@@ -52,8 +52,8 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 4. `06-snap` is performed in three gestures: the break, then the commented
    "hole" (everything drops except a trumpet stab), then bass alone into
    `07-settle`.
-5. `08-afterimage` is open-ended. Leave the last chord ringing, then `hush`
-   when the room has decayed.
+5. `08-afterimage` is open-ended. Leave the last chord ringing; a 24-cycle
+   `fadeSilence` fades everything still sounding before `hush`.
 
 ## Notes
 

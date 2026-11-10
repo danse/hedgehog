@@ -12,7 +12,7 @@ d2 brushFoot
 d4 pianoPedal
 
 -- first hint of the room: a single breath
-d10 air
+d10 $ slow 2 air
 
 -- the bass starts to walk
-xfadeIn 6 16 bassWalk
+d6 bassWalk

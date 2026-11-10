@@ -5,7 +5,6 @@ glideBpm 92 16
 
 -- strip the rhythm and most of the harmony
 fadeSilence 16 [1,2,3,4,5,6,7,8,9]
-
 -- leave a high piano shadow, filtered trumpet, metal and air
 xfadeIn 5 24 pianoAfter
 xfadeIn 8 32 trumpetAfter
@@ -15,8 +14,13 @@ xfadeIn 10 32 (stack [air, windBed])
 -- the bass returns once, very low
 xfadeIn 6 24 bassAfter
 
+-- breathe
+
 -- the last chord: let it ring
 xfadeIn 4 32 (pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85)
+
+-- final fade: everything still sounding (piano, bass, trumpet, metal, air)
+fadeSilence 24 [4,5,6,8,9,10]
 
 -- hush when the room has decayed
 hush

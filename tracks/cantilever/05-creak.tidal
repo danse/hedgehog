@@ -13,6 +13,8 @@ d6 bassCreak
 d4 pianoCreak
 xfadeIn 5 32 $ pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400
 
+-- breathe
+
 -- the reed stretches out
 d7 reedCreak
 

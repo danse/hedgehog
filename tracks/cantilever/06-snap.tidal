@@ -1,8 +1,10 @@
 -- 6. Snap — the beam breaks. A short, hard release, then the hole.
 -- ~24 cycles (~60 s at 96 BPM).
 
+-- creak is interesting at this point
+
+-- this adds rhythm
 glideBpm 96 16
--- Step 1: the break
 d1 kickSoft
 d2 brushSnap
 d3 ride
@@ -10,9 +12,11 @@ d6 bassSnap
 xfadeIn 4 8 compSnap
 xfadeIn 9 8 (stack [metalSpark, wood])
 
+-- breathe
+
 -- Step 2 (after ~8 cycles): the hole — everything but the trumpet drops out
 fadeSilence 4 [1,2,3,4,5,6,7,9]
 xfadeIn 8 8 trumpetSnap
-
+-- keep them together or not
 -- Step 3 (after the stab): bass alone, then Settle
 xfadeIn 6 8 bassSettle

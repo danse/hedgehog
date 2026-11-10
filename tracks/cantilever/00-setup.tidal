@@ -134,13 +134,13 @@ let
   metalSpark = degradeBy 0.55 $ slow 4 $ s "metal" # n (irand 10) # loop 0 # sustain 1
     # speed (range 0.6 1.2 $ slow 8 rand) # gain 0.34 # pan rand
     # hpf 300 # lpf 3600 # room 0.55 # size 0.72
-  air = slow 8 $ s "breath" # n 0 # loop 0 # sustain 0.5 # hpf 500 # lpf 2400
+  air = s "breath" # n 0 # loop 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8 # loop 1
     # gain 0.12 # hpf 400 # lpf 1500 # room 0.7 # size 0.85
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedCall = slow 2 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~" # loop 0
-    # sustain 1.6 # release 0.7 # gain 0.42 # hpf 150 # lpf 1500 # lpq 0.25
+  reedCall = s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~" # loop 0
+    # release 0.7 # gain 0.42 # hpf 150 # lpf 1500 # lpq 0.25
     # room 0.62 # size 0.8
   reedLong = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~" # loop 0
     # sustain 2.4 # release 1.1 # gain 0.4 # hpf 140 # lpf 1200 # lpq 0.2

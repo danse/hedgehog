@@ -4,7 +4,6 @@
 d1 kickSoft
 d2 brush
 d3 ride
-d6 bassWalk4
 xfadeIn 4 16 compLoad
 xfadeIn 5 24 colourLoad
 

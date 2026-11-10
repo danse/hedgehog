@@ -3,14 +3,13 @@
 
 glideBpm 92 16
 
-d6 bassWalk
 xfadeIn 2 12 brush
 xfadeIn 3 24 ride
 xfadeIn 4 24 compSpan
 xfadeIn 5 32 colourSpan
 
 -- implied polymeter: three woodblock hits per cycle against the 4/4 pulse
-xfadeIn 9 32 wood3
+d9 wood3
 
--- the bass phrase starts stretching over four cycles
-xfadeIn 6 16 bassWalk4
+-- the bass phrase stretches over four cycles
+d6 bassWalk4
