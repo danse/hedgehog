@@ -27,7 +27,5 @@ d2 $ slow 4 $ s "hit" # n 1 # loop 0 # hpf 400 # lpf 8000
   # room 0.5 # size 0.65 # amp 0.3
 
 -- let the ceremony ring, then take the room down
-d8 $ silence
-d2 $ silence
-fadeSilence 16 [1,4,5,6,7,9]
+fadeSilence 16 [1,2,4,5,6,7,8,9]
 xfadeIn 10 24 $ stack [air, windBed]

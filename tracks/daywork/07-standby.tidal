@@ -4,17 +4,17 @@
 -- Leave the last chord and air ringing; `fadeSilence` and `hush` are separate
 -- steps, evaluated in that order after the room has decayed.
 
--- sharp drop
+-- sharp drop, let the fadesilence decay before
 
 glideBpm 84 16
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [1,2,4,7,8,9]
 d6 bassStand
-xfadeIn 5 24 pianoCoda
+xfadeIn 5 16 pianoCoda
 -- the last low chord, very sparse
-xfadeIn 4 32 $ slow 8 $ pianoPedal (slow 8 hStand)
+xfadeIn 4 24 $ slow 8 $ pianoPedal (slow 8 hStand)
 d3 switchOff
-xfadeIn 10 24 $ stack [air, windBed]
+xfadeIn 10 16 $ stack [air, windBed]
 
 -- the mains hum dies
 xfadeIn 3 32 mainsDown
