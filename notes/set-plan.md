@@ -6,7 +6,7 @@ One cycle = 4 beats ≈ 3.33 s. `slow 4` = a chord every 13 s, `slow 8` ≈ 27 s
 
 ## Movements
 
-| # | Movement | Time | Orbits | Action |
+| # | Movement | Time | Streams | Action |
 |---|---|---|---|---|
 | 1 | Emergence | 0:00–3:00 | d1, d2 | Pads and sub only. No pulse. Let the room hear the drone. |
 | 2 | Slow pulse | 3:00–6:00 | + d5 | Add `tick`. Add air (d4) quietly at 5:00. |
@@ -61,8 +61,8 @@ Finally `hush` and let the room/hall tail ring.
 
 ## Transitions available
 
-- `xfadeIn ORBIT CYCLES $ pattern` — crossfade a new pattern in.
-- `xfadeIn ORBIT CYCLES $ silence` — crossfade out.
+- `xfadeIn STREAM CYCLES $ pattern` — crossfade a new pattern in.
+- `xfadeIn STREAM CYCLES $ silence` — crossfade out.
 - `d9 $ riser` / `d9 $ silence` — noise swell into a new section.
 - `hush` — emergency stop.
 

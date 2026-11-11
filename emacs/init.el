@@ -78,7 +78,7 @@ not indented, for example a leading `#' operator."
 
 (defun hedgehog--strong-statement-start-p (line)
   "Return non-nil if LINE clearly begins a new Tidal top-level action.
-This splits consecutive, inconsistently indented orbit/xfade lines even
+This splits consecutive, inconsistently indented stream/xfade lines even
 when they sit deeper than the region's base indentation."
   (string-match-p
    "\\`[ \t]*\\(?:d[0-9]+\\|xfadeIn\\|xfade\\|fadeIn\\|fadeOut\\|setbpm\\|hush\\)\\(?:[ \t]\\|\\'\\)"
@@ -166,7 +166,7 @@ Adjacent top-level statements are sent separately to avoid GHCi parse issues."
     (pulse-momentary-highlight-region (region-beginning) (region-end))))
 
 (defun hedgehog-hush ()
-  "Silence all Tidal orbits."
+  "Silence all Tidal streams."
   (interactive)
   (tidal-hush)
   (message "hush"))
@@ -175,7 +175,7 @@ Adjacent top-level statements are sent separately to avoid GHCi parse issues."
 (defconst hedgehog-tidal-orbit-names
   (append (mapcar (lambda (n) (format "d%d" n)) (number-sequence 1 16))
           (mapcar (lambda (n) (format "d%d_" n)) (number-sequence 1 16)))
-  "Orbit names defined by BootTidal.hs.")
+  "Stream names defined by BootTidal.hs.")
 
 (defun hedgehog--tidal-source-buffer-p (buffer)
   "Return non-nil if BUFFER contains Tidal source."

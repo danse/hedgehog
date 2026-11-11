@@ -9,7 +9,7 @@ import Sound.Tidal.Boot
 -- Tidal Chords (e.g. chord "d4" "min7" []).
 import Sound.Tidal.Chords
 
--- Orbit IDs, for the shared fade helpers.
+-- Stream IDs, for the shared fade helpers.
 import Sound.Tidal.ID (ID)
 
 -- Concurrency, for gentle tempo changes (glideBpm).
@@ -72,7 +72,7 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     chordAt :: Pattern Note -> Pattern String -> Pattern Note
     chordAt r q = chord r q []
     --
-    -- Convenience fades: crossfade one or more orbits to silence.
+    -- Convenience fades: crossfade one or more streams to silence.
     fadeSilence :: Time -> [ID] -> IO ()
     fadeSilence n = mapM_ (\d -> xfadeIn d n silence)
     fadeMulti :: Time -> [(ID, ControlPattern)] -> IO ()

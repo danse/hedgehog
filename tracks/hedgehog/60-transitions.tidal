@@ -1,12 +1,12 @@
 -- Transitions. Eval one line at a time; the commented ones are cues.
 
--- Fade a new pattern into orbit 4 over 8 cycles (crossfade).
+-- Fade a new pattern into stream 4 over 8 cycles (crossfade).
 -- xfadeIn 4 8 $ air
 
--- Fade orbit 6 out by crossfading to silence.
+-- Fade stream 6 out by crossfading to silence.
 -- xfadeIn 6 8 $ silence
 
--- Fade several orbits out over 8 cycles (shared helper).
+-- Fade several streams out over 8 cycles (shared helper).
 -- fadeSilence 8 [4,6]
 
 -- Noise riser: hold for ~4 cycles, then silence it.
@@ -15,7 +15,7 @@
 -- Stop just the riser.
 -- d9 $ silence
 
--- Emergency: stop every orbit immediately.
+-- Emergency: stop every stream immediately.
 -- hush
 
 -- Restart cleanly after a mistake.

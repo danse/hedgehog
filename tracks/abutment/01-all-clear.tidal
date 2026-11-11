@@ -3,7 +3,7 @@
 -- ~28 cycles (~75 s at 90 BPM).
 
 glideBpm 90 16
--- clear the previous piece's working orbits
+-- clear the previous piece's working streams
 fadeSilence 8 [1,2,3,7,8,9]
 
 -- the surviving mass: a low D pedal and a sus2 piano

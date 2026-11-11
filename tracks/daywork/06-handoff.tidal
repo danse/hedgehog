@@ -20,8 +20,7 @@ d2 handoffPop
 xfadeIn 7 24 reedHand
 
 -- the handover itself: one pling
-once $ orbit 1 # s "hit" # n 1 # hpf 400 # lpf 8000
-  # room 0.5 # size 0.65 # amp 0.3
+once $ s "hit" # n 1 # hpf 400 # lpf 8000 # room 0.5 # size 0.65 # amp 0.3
 
 -- let the ceremony ring, then take the room down
 fadeSilence 16 [1,2,4,5,6,7,8,9]

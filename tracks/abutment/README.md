@@ -43,9 +43,11 @@ can carry it:
 The reassurance is that the conflict is already over. The last thing we hear is
 the support, not the span.
 
-## Orbit map
+## Stream map
 
-| Orbit | Role | Main pattern |
+`dN` is a stream slot; Tidal sends it to SuperDirt orbit `N-1`.
+
+| Stream | Role | Main pattern |
 |---|---|---|
 | d1 | soft kick / foot | `kickSoft` / `kickSparse` |
 | d2 | brushes | `brushSoft` / `brush` / `brushWork` |

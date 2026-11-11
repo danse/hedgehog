@@ -13,9 +13,11 @@ No sustained pad beds or drones in this track — harmony/texture use fragmented
 rhythmic, or staccato samples (`arpy`, `moog`, `stab`, `glitch`, `space`,
 `industrial`, `pluck`).
 
-## Orbit map
+## Stream map
 
-| Orbit | Role | Main pattern |
+`dN` is a stream slot; Tidal sends it to SuperDirt orbit `N-1`.
+
+| Stream | Role | Main pattern |
 |---|---|---|
 | d1 | kick | `kick` |
 | d2 | hats/click | `hats` / `click` |
@@ -42,7 +44,7 @@ rhythmic, or staccato samples (`arpy`, `moog`, `stab`, `glitch`, `space`,
 
 1. Start SuperDirt/audio as usual (`scripts/up.sh` from repo root) and open Tidal in Emacs.
 2. Eval `tracks/substructure/00-setup.tidal`.
-3. Work through `01`→`06` in order, or improvise using the orbit map.
+3. Work through `01`→`06` in order, or improvise using the stream map.
 
 ## Notes
 

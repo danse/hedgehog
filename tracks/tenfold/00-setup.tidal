@@ -11,8 +11,9 @@ setbpm 125
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Progression: i–VI–III–VII in B♭ minor (bfm – gf – df – af).
 -- Harmonic rhythm: one chord every 4 cycles; the full form is 16 cycles.
--- Orbits: d1 sub, d2 low pad, d3 high pad, d4 arp, d5 lead,
---         d6 bell, d7 noise, d8 bass, d9 shimmer.
+-- Stream map: d1 sub, d2 low pad, d3 high pad, d4 arp, d5 lead,
+--             d6 bell, d7 noise, d8 bass, d9 shimmer.
+-- dN is a stream slot; Tidal sends it to SuperDirt orbit N-1.
 -- ---------------------------------------------------------------------------
 let
   -- d1 sub drone (one root per chord)
@@ -86,6 +87,6 @@ let
   shimmer = degradeBy 0.5 $ slow 4 $ s "space:2*8?" # speed (range 0.8 2 $ rand)
     # gain 0.66 # hpf 1200 # lpf 7000 # room 0.7 # size 0.75
   --
-  -- convenience: fade several orbits to silence at once (helpers live in
+  -- convenience: fade several streams to silence at once (helpers live in
   -- boot/BootTidal.hs), e.g. fadeSilence 8 [4,5,6,9]
   allOrbits = [1..9]

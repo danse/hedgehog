@@ -13,9 +13,11 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 `01-emergence` → `02-ascent` → `03-expansion` → `04-suspension` →
 `05-drift` → `06-dissolve`
 
-## Orbit map
+## Stream map
 
-| Orbit | Role | Main pattern |
+`dN` is a stream slot; Tidal sends it to SuperDirt orbit `N-1`.
+
+| Stream | Role | Main pattern |
 |---|---|---|
 | d1 | sub drone | `subDrone` |
 | d2 | low pad | `lowPad` |
@@ -41,7 +43,7 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 
 1. Start SuperDirt/audio (`scripts/up.sh`) and open Tidal in Emacs.
 2. Eval `tracks/tenfold/00-setup.tidal` (one `let` block, all at once).
-3. Work through `01`→`06`, using `fadeSilence n [orbits]` for group fades.
+3. Work through `01`→`06`, using `fadeSilence n [streams]` for group fades.
 
 ## Notes
 

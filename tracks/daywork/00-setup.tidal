@@ -10,12 +10,13 @@
 -- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
 -- and glideBpm live in boot/BootTidal.hs; only track voices belong here.
 --
--- Orbit map:
+-- Stream map:
 --   d1 feet / brushes         d6 double bass
 --   d2 gate / small objects   d7 sax
 --   d3 glass / switches       d8 ceremony (toys / pling / trumpet)
 --   d4 piano low              d9 debris / outside
 --   d5 piano high             d10 air / room
+-- dN is a stream slot; Tidal sends it to SuperDirt orbit N-1.
 --
 -- The work song is four notes, A-C-E-G (2-4-6-1), a rising mixolydian call.
 -- It moves from the piano to the gate hits, the bass, the sax, the glass and
@@ -212,8 +213,8 @@ let
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
     # hpf 400 # lpf 1500 # room 0.7 # size 0.85 # amp 0.2
   gravel = degradeBy 0.6 $ slow 8 $ s "pebbles"
-    # speed (range 0.6 1.1 $ slow 8 rand) # hpf 500 # lpf 3000
-    # room 0.7 # size 0.85 # amp 0.1
+    # speed (range 0.6 1.1 $ slow 8 rand)
+    # room 0.7 # size 0.85
   yardAir = degradeBy 0.4 $ slow 4 $ s "outdoor" # n (irand 6)
     # sustain 6 # hpf 200 # lpf 2400 # room 0.7 # size 0.85 # amp 0.14
   --

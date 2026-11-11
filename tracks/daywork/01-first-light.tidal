@@ -11,7 +11,7 @@ fadeSilence 8 [1,2,3,7,8,9]
 -- the first switches
 d3 switchOn
 -- a boot on concrete
-d1 bootDawn
+d1 $ bootDawn # amp 0.2
 -- the bass finds the floor
 d6 bassLight
 
@@ -26,4 +26,4 @@ fadeMulti 8 [
   (1, stack [bootDawn, brushSoft]),
   -- the yard breathes
   (10, stack [air, windBed]),
-  (9, degradeBy 0.6 gravel)]
+  (9, gravel # amp 0.3)]

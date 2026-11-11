@@ -19,6 +19,4 @@ xfadeIn 9 16 $ stack [tray, cutlery, pour]
 xfadeIn 10 24 $ stack [air, yardAir]
 
 -- the reed gets the tune
-d7 reedCant
-
-d7 silence
+once reedCant

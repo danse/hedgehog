@@ -7,9 +7,11 @@ Eval `00-setup.tidal` first, then play the section files in order:
 
 `01-intro` → `02-verse` → `03-chorus` → `04-break` → `05-final`
 
-## Orbit map
+## Stream map
 
-| Orbit | Role | Main pattern |
+`dN` is a stream slot; Tidal sends it to SuperDirt orbit `N-1`.
+
+| Stream | Role | Main pattern |
 |---|---|---|
 | d1 | kick | `kick` / `kickDrive` |
 | d2 | snare/clap | `snare` / `clap` |

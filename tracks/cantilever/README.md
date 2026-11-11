@@ -15,9 +15,11 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 `01-footing` → `02-span` → `03-load` → `04-overhang` → `05-creak` →
 `06-snap` → `07-settle` → `08-afterimage`
 
-## Orbit map
+## Stream map
 
-| Orbit | Role | Main pattern |
+`dN` is a stream slot; Tidal sends it to SuperDirt orbit `N-1`.
+
+| Stream | Role | Main pattern |
 |---|---|---|
 | d1 | soft kick / foot | `kickSoft` / `kickSparse` |
 | d2 | brushes | `brush` / `brushFoot` / `brushSnap` |

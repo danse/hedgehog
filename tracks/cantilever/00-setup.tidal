@@ -10,8 +10,9 @@ setbpm 92
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
--- Orbit map: d1 kick, d2 brushes, d3 ride, d4 piano low, d5 piano high,
---            d6 double bass, d7 sax, d8 trumpet, d9 percussion, d10 air.
+-- Stream map: d1 kick, d2 brushes, d3 ride, d4 piano low, d5 piano high,
+--             d6 double bass, d7 sax, d8 trumpet, d9 percussion, d10 air.
+-- dN is a stream slot; Tidal sends it to SuperDirt orbit N-1.
 -- Harmony: D dorian, voiced with Sound.Tidal.Chords.
 -- ---------------------------------------------------------------------------
 let

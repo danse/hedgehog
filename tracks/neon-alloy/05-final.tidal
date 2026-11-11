@@ -23,6 +23,6 @@ fadeSilence 8 [2, 3]
 xfadeIn 8 16 $ stack [bassMain # gain 0.94, bassOct # gain 0.6] # lpf 400
 xfadeIn 1 16 silence
 
-fadeSilence 16 [1, 4, 8] -- some orbits still missing here
+fadeSilence 16 [1, 4, 8] -- some streams still missing here
 
 hush
