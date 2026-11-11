@@ -10,7 +10,7 @@ d2 brushSnap
 d3 ride
 d6 bassSnap
 xfadeIn 4 8 compSnap
-xfadeIn 9 8 (stack [metalSpark, wood])
+xfadeIn 9 8 $ stack [metalSpark, wood]
 
 -- breathe
 

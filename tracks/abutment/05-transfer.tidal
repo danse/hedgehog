@@ -5,7 +5,7 @@ glideBpm 92 16
 d1 kickSparse
 d2 brush
 d3 ride
-d6 bassTrans
+d6 $ bassTrans # amp 0.5
 xfadeIn 4 16 compTrans
 xfadeIn 5 24 colourTrans
 
@@ -13,7 +13,7 @@ xfadeIn 5 24 colourTrans
 d7 reedTrans
 
 -- tools withdraw
-fadeSilence 12 [9]
+fadeSilence 8 [9]
 
 -- air returns
-xfadeIn 10 24 (stack [air, windBed])
+xfadeIn 10 24 $ stack [air, windBed]

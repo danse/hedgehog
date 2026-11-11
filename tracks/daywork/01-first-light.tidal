@@ -22,7 +22,8 @@ d5 $ motifPiano # amp 0.2
 d4 $ slow 2 $ pianoPedal (slow 4 hLight) # amp 0.3
 
 -- a brush, half-awake
-xfadeIn 1 24 $ stack [bootDawn, brushSoft]
--- the yard breathes
-xfadeIn 10 32 $ stack [air, windBed]
-xfadeIn 9 32 $ degradeBy 0.6 gravel
+fadeMulti 8 [
+  (1, stack [bootDawn, brushSoft]),
+  -- the yard breathes
+  (10, stack [air, windBed]),
+  (9, degradeBy 0.6 gravel)]

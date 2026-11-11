@@ -14,7 +14,6 @@ xfadeIn 5 16 pianoCoda
 -- the last low chord, very sparse
 xfadeIn 4 24 $ slow 8 $ pianoPedal (slow 8 hStand)
 d3 switchOff
-xfadeIn 10 16 $ stack [air, windBed]
 
 -- the mains hum dies
 xfadeIn 3 32 mainsDown

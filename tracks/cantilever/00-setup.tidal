@@ -28,20 +28,20 @@ let
   hAfter = chordAt "<d4 e4 f4 g4 d4>" "<min9 min7 maj9 7sus4 min9>"
   -- --- piano: pluck samples tuned to their natural pitches -----------------
   -- pluck:5 is C3, pluck:8 is D4 (scientific pitch; Tidal c4/d5).
-  -- One-shot samples: loop 0 keeps long sustains from retriggering the file.
-  pianoLo p = s "pluck" # n 5 # speedAt "c4" p # loop 0
+  -- One-shot samples: loop 1 keeps long sustains from retriggering the file.
+  pianoLo p = s "pluck" # n 5 # speedAt "c4" p # loop 1
     # gain 0.68 # sustain 1.2 # release 0.3 # lpf 3000 # lpq 0.3
     # room 0.52 # size 0.68
-  pianoHi p = s "pluck" # n 8 # speedAt "d5" p # loop 0
+  pianoHi p = s "pluck" # n 8 # speedAt "d5" p # loop 1
     # gain 0.6 # sustain 1 # release 0.25 # lpf 4200
     # room 0.58 # size 0.75
-  pianoComp p = s "pluck" # n 5 # speedAt "c4" p # loop 0
+  pianoComp p = s "pluck" # n 5 # speedAt "c4" p # loop 1
     # gain 0.72 # sustain 0.5 # release 0.18 # lpf 3400 # lpq 0.3
     # room 0.32 # size 0.45
-  pianoCompHi p = s "pluck" # n 8 # speedAt "d5" p # loop 0
+  pianoCompHi p = s "pluck" # n 8 # speedAt "d5" p # loop 1
     # gain 0.56 # sustain 0.4 # release 0.15 # lpf 4800
     # room 0.4 # size 0.55
-  pianoPedal = s "pluck" # n 5 # speedAt "c4" (chordAt "d4" "5") # loop 0
+  pianoPedal = s "pluck" # n 5 # speedAt "c4" (chordAt "d4" "5") # loop 1
     # gain 0.58 # sustain 1.4 # release 0.7 # lpf 1700 # lpq 0.25
     # room 0.62 # size 0.78
   pianoCreak = pianoLo (slow 4 hCreak)
@@ -60,87 +60,87 @@ let
   colourLoad = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoCompHi ((slow 3 hLoad) |+ 12))) # gain 0.48
   colourOver = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoCompHi ((slow 3 hOver) |+ 12))) # gain 0.46
   -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
-  bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~" # loop 0
+  bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~" # loop 1
     # sustain 1.6 # release 0.55 # gain 0.9 # lpf 620 # lpq 0.2
     # room 0.3 # size 0.48
-  bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 ~ a2" # loop 0
+  bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 ~ a2" # loop 1
     # sustain 0.62 # release 0.22 # gain 0.9 # lpf 820 # lpq 0.25
     # room 0.24 # size 0.42
-  bassWalk4 = slow 4 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~" # loop 0
+  bassWalk4 = slow 4 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~" # loop 1
     # sustain 0.9 # release 0.3 # gain 0.9 # lpf 760 # lpq 0.22
     # room 0.26 # size 0.44
-  bassLoad = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 d4 ~" # loop 0
+  bassLoad = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 d4 ~" # loop 1
     # sustain 0.5 # release 0.2 # gain 0.9 # lpf 900 # lpq 0.26
     # room 0.22 # size 0.4
-  bassCreak = slow 2 $ s "bass1" # n 14 # speedAt "c3" "d3 ~ ~ ~ ~ ~ ~ ~" # loop 0
+  bassCreak = slow 2 $ s "bass1" # n 14 # speedAt "c3" "d3 ~ ~ ~ ~ ~ ~ ~" # loop 1
     # sustain 2.6 # release 1.1 # gain 0.84 # lpf 420 # lpq 0.16
     # room 0.55 # size 0.7
-  bassSnap = swing16 $ s "bass1" # n 10 # speedAt "c3" "d3 d3 ~ f3 ~ a2 ~ c3" # loop 0
+  bassSnap = swing16 $ s "bass1" # n 10 # speedAt "c3" "d3 d3 ~ f3 ~ a2 ~ c3" # loop 1
     # sustain 0.24 # release 0.1 # gain 0.92 # lpf 1100 # lpq 0.3
     # room 0.18 # size 0.32
-  bassSettle = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~" # loop 0
+  bassSettle = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~" # loop 1
     # sustain 0.8 # release 0.3 # gain 0.9 # lpf 720 # lpq 0.2
     # room 0.3 # size 0.46
-  bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~" # loop 0
+  bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~" # loop 1
     # sustain 1.8 # release 0.9 # lpf 540
     # room 0.52 # size 0.7
   -- --- brushes / ride: gretsch acoustic kit -------------------------------
-  kickSoft = s "~ gretsch ~ gretsch" # n 13 # gain 0.8 # sustain 0.5 # release 0.15 # loop 0
+  kickSoft = s "~ gretsch ~ gretsch" # n 13 # gain 0.8 # sustain 0.5 # release 0.15 # loop 1
     # lpf 360 # room 0.16 # size 0.28
-  kickSparse = slow 2 $ s "gretsch" # n 13 # gain 0.82 # sustain 0.5 # release 0.18 # loop 0
+  kickSparse = slow 2 $ s "gretsch" # n 13 # gain 0.82 # sustain 0.5 # release 0.18 # loop 1
     # lpf 320 # room 0.18 # size 0.3
-  brushFoot = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15 # loop 0
+  brushFoot = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15 # loop 1
     # lpf 2600 # room 0.35 # size 0.5
-  brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # gain 0.68 # sustain 0.3 # release 0.16 # loop 0
+  brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # gain 0.68 # sustain 0.3 # release 0.16 # loop 1
     # lpf 3000 # room 0.28 # size 0.42
-  brushGhost = s "~ ~ gretsch ~" # n 3 # gain 0.5 # sustain 0.25 # release 0.12 # loop 0
+  brushGhost = s "~ ~ gretsch ~" # n 3 # gain 0.5 # sustain 0.25 # release 0.12 # loop 1
     # lpf 2800 # room 0.3 # size 0.45
-  brushSnap = s "gretsch ~ gretsch ~" # n 23 # gain 0.8 # sustain 0.28 # release 0.12 # loop 0
+  brushSnap = s "gretsch ~ gretsch ~" # n 23 # gain 0.8 # sustain 0.28 # release 0.12 # loop 1
     # lpf 4200 # room 0.2 # size 0.34
-  snareSnap = s "~ gretsch ~ gretsch" # n 22 # gain 0.86 # sustain 0.3 # release 0.14 # loop 0
+  snareSnap = s "~ gretsch ~ gretsch" # n 22 # gain 0.86 # sustain 0.3 # release 0.14 # loop 1
     # lpf 4800 # room 0.22 # size 0.35
   ride = swing8 $ s "gretsch:19 ~ gretsch:19 gretsch:19 ~ gretsch:19 ~ gretsch:19"
-    # gain 0.62 # sustain 0.35 # release 0.15 # loop 0 # lpf 5600 # room 0.24 # size 0.38
-  rideBell = swing8 $ s "~ ~ ~ gretsch:18 ~ ~ ~ ~" # gain 0.5 # sustain 0.3 # release 0.2 # loop 0
+    # gain 0.62 # sustain 0.35 # release 0.15 # loop 1 # lpf 5600 # room 0.24 # size 0.38
+  rideBell = swing8 $ s "~ ~ ~ gretsch:18 ~ ~ ~ ~" # gain 0.5 # sustain 0.3 # release 0.2 # loop 1
     # lpf 6400 # room 0.3 # size 0.48
-  hat = swing8 $ s "gretsch:4*2" # gain 0.5 # sustain 0.15 # release 0.05 # loop 0
+  hat = swing8 $ s "gretsch:4*2" # gain 0.5 # sustain 0.15 # release 0.05 # loop 1
     # lpf 7000 # room 0.1 # size 0.2
   -- --- hand percussion / creaks / air -------------------------------------
-  wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0 # gain 0.5 # loop 0 # room 0.3 # size 0.38
-  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # loop 0 # room 0.35 # size 0.42)
-  shime = degradeBy 0.4 $ fast 5 (s "east" # n 5 # gain 0.34 # loop 0 # room 0.4 # size 0.48)
-  rub = slow 2 $ s "gretsch" # n 8 # gain 0.42 # sustain 2.4 # release 1.1 # loop 0
+  wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0 # gain 0.5 # loop 1 # room 0.3 # size 0.38
+  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # loop 1 # room 0.35 # size 0.42)
+  shime = degradeBy 0.4 $ fast 5 (s "east" # n 5 # gain 0.34 # loop 1 # room 0.4 # size 0.48)
+  rub = slow 2 $ s "gretsch" # n 8 # gain 0.42 # sustain 2.4 # release 1.1 # loop 1
     # hpf 220 # lpf 2200 # room 0.62 # size 0.78
-  creak = degradeBy 0.45 $ slow 2 $ s "metal" # n (irand 10) # loop 0 # sustain 0.5
+  creak = degradeBy 0.45 $ slow 2 $ s "metal" # n (irand 10) # loop 1 # sustain 0.5
     # speed (range 0.35 0.85 $ slow 4 rand) # gain 0.38 # pan rand
     # hpf 240 # lpf 1900 # room 0.6 # size 0.8
-  metalSpark = degradeBy 0.55 $ slow 4 $ s "metal" # n (irand 10) # loop 0 # sustain 1
+  metalSpark = degradeBy 0.55 $ slow 4 $ s "metal" # n (irand 10) # loop 1 # sustain 1
     # speed (range 0.6 1.2 $ slow 8 rand) # gain 0.34 # pan rand
     # hpf 300 # lpf 3600 # room 0.55 # size 0.72
-  air = s "breath" # n 0 # loop 0 # sustain 0.5 # hpf 500 # lpf 2400
+  air = s "breath" # n 0 # loop 1 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8 # loop 1
     # gain 0.12 # hpf 400 # lpf 1500 # room 0.7 # size 0.85
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedCall = s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~" # loop 0
+  reedCall = s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~" # loop 1
     # release 0.7 # gain 0.42 # hpf 150 # lpf 1500 # lpq 0.25
     # room 0.62 # size 0.8
-  reedLong = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~" # loop 0
+  reedLong = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~" # loop 1
     # sustain 2.4 # release 1.1 # gain 0.4 # hpf 140 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82
-  reedCreak = slow 8 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~" # loop 0
+  reedCreak = slow 8 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~" # loop 1
     # sustain 4 # release 2 # gain 0.36 # hpf 120 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85
   -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7).
-  trumpetOver = slow 16 $ s "trump" # n 5 # speedAt "b6" "d6 ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ~ ~ ~" # loop 0 # sustain 0.5
+  trumpetOver = slow 16 $ s "trump" # n 5 # speedAt "b6" "d6 ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ~ ~ ~" # loop 1 # sustain 0.5
     # gain 0.34 # release 0.3 # lpf 2200 # lpq 0.2 # room 0.72 # size 0.82
-  trumpetSnap = slow 16 $ s "trump" # n 7 # speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 0 # sustain 0.5
+  trumpetSnap = slow 16 $ s "trump" # n 7 # speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 1 # sustain 0.5
     # gain 0.36 # release 0.3 # lpf 3000 # room 0.6 # size 0.75
-  trumpetAfter = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 0 # sustain 0.5
+  trumpetAfter = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 1 # sustain 0.5
     # gain 0.24 # release 0.4 # hpf 300 # lpf 1200 # lpq 0.25 # room 0.8 # size 0.85
   -- --- a small melodic answer for Settle --------------------------------
-  pianoMotif = slow 2 $ s "pluck" # n 8 # speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~" # loop 0
+  pianoMotif = slow 2 $ s "pluck" # n 8 # speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~" # loop 1
     # gain 0.52 # sustain 0.5 # release 0.25 # lpf 3600
     # room 0.45 # size 0.6
   motifSettle = swing16 (degradeBy 0.15 pianoMotif)

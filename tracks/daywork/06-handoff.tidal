@@ -21,10 +21,8 @@ xfadeIn 7 24 reedHand
 
 -- the handover itself. Evaluate these two one-shots on their own, wait for
 -- the toy, then hush each orbit.
-d8 $ slow 4 $ s "toys" # n 12 # loop 0 # hpf 250 # lpf 7000
-  # room 0.55 # size 0.7 # amp 0.4
-d2 $ slow 4 $ s "hit" # n 1 # loop 0 # hpf 400 # lpf 8000
-  # room 0.5 # size 0.65 # amp 0.3
+d2 $ slow 4 $ s "hit" # n 1 # sustain 1 # hpf 400 # lpf 8000
+  # room 0.5 # size 0.65 # amp 0.3 # loop 1
 
 -- let the ceremony ring, then take the room down
 fadeSilence 16 [1,2,4,5,6,7,8,9]

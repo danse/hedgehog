@@ -5,16 +5,18 @@ glideBpm 86 16
 -- strip the rhythm and the high projection
 fadeSilence 16 [1,2,3,7,8,9]
 
--- sharp slowdown. The abutment remains: low piano, bass and air
+-- the abutment remains: low piano, bass and air
+
+d6 $ bassSteady # amp 0.4 -- slowing down
+
 d4 pianoSteady
-d6 bassSteady
 xfadeIn 10 24 $ stack [air, windBed, gravel]
 
 -- a last high shadow
-xfadeIn 5 24 pianoAfter
--- one distant trumpet
-xfadeIn 8 32 trumpetSteady
-
+fadeMulti 24 [
+  (5, pianoAfter # amp 0.3),
+  (8, trumpetSteady)]
+                 
 -- leave this ringing, then evaluate the two steps below separately:
 -- first fade everything still sounding (24 cycles), and only after the room
 -- has decayed, evaluate `hush` on its own.

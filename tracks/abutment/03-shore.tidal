@@ -3,14 +3,14 @@
 
 glideBpm 90 16
 -- the load returns to the abutment
-d6 bassShore
+d6 $ bassShore # amp 0.3
 xfadeIn 4 16 compShore
 
 -- work rhythm
-xfadeIn 1 24 kickSoft
-xfadeIn 2 16 brushWork
-xfadeIn 3 16 ride
-xfadeIn 9 16 (stack [woodTick, knock])
-
+fadeMulti 16 [
+  (1, kickSoft),
+  (2, brushWork),
+  (3, ride),
+  (9, stack [woodTick, knock])]
 -- a distant reed hears the work
 xfadeIn 7 32 reedShore

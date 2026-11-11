@@ -6,11 +6,14 @@ d2 brush
 d3 $ stack [ride, rideBell]
 xfadeIn 5 24 colourAbut
 -- light swing
-d6 bassAbut
+d6 $ bassAbut # amp 0.5
 xfadeIn 4 16 compAbut
 
 -- the reed enters properly
 xfadeIn 7 24 reedAbut
+
+-- the reed has loop 1 already but doesn't seem to stop
+xfadeIn 7 24 silence
 
 -- the new mass: wood, metal and site air
 xfadeIn 9 16 $ degradeBy 0.4 (stack [woodTick, metalTool])

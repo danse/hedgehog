@@ -10,8 +10,5 @@ xfadeIn 5 24 colourLoad
 -- the reed joins from the back of the room
 d7 $ reedCall # gain 0.7
 
--- keep the 3-against-4 shadow
-d9 $ wood3 # gain 1
-
 -- add a little ride bell for lift
 d3 $ stack [ride, rideBell]

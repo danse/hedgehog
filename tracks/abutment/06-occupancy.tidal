@@ -11,8 +11,8 @@ xfadeIn 5 24 colourOcc
 
 -- the warm melody
 d7 reedOcc
-xfadeIn 8 32 trumpetOcc
-
--- a little hand-work and room
-xfadeIn 9 24 $ degradeBy 0.5 wood
-xfadeIn 10 32 $ stack [air, gravel]
+fadeMulti 24 [
+  (8, trumpetOcc),
+  (9, degradeBy 0.5 wood),
+  (10, stack [air, gravel]),
+  (7, silence)]

@@ -8,7 +8,7 @@ xfadeIn 4 24 compSpan
 xfadeIn 5 32 colourSpan
 
 -- implied polymeter: three woodblock hits per cycle against the 4/4 pulse
-d9 wood3
+d9 $ wood3 # amp 4
 
 -- the bass phrase stretches over four cycles
 d6 bassWalk4

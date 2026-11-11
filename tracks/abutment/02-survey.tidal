@@ -3,13 +3,13 @@
 
 glideBpm 90 16
 -- the datum holds: bass and low piano
-d6 bassSurvey
+d6 $ bassSurvey # amp 0.3
 xfadeIn 4 16 compSurvey
 
 -- plumb-line ticks and a cautious swing
-xfadeIn 9 12 $ stack [plumb, woodTick]
-xfadeIn 2 24 brushSoft
-xfadeIn 3 24 rideSoft
-
--- first colour above
-xfadeIn 5 24 $ pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200
+fadeMulti 12 [
+  (9, stack [plumb, woodTick]),
+  (2, brushSoft),
+  (3, rideSoft),
+  -- first colour above
+  (5, pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200)]
