@@ -3,12 +3,13 @@
 -- fade the remaining moving layers together (keep d1/d2/d3 for the tail)
 fadeSilence 24 [4,5,6,7,8,9]
 -- leave the low pad and sub
-xfadeIn 2 24 $ lowPad # gain 0.68 # lpf 500
-xfadeIn 1 24 $ subDrone # gain 0.76 # lpf 140
+xfadeIn 2 24 $ lowPad # lpf 500
+xfadeIn 1 24 $ subDrone # lpf 140
 
 -- let the last chord ring, then hush
-xfadeIn 3 24 $ highPad # gain 0.6 # lpf 900
+xfadeIn 3 24 $ highPad # lpf 900
 
--- final silence (uncomment when the tail has decayed)
--- fadeSilence 16 [1,2,3]
--- hush
+-- final silence
+fadeSilence 16 [1,2,3]
+
+hush

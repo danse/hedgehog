@@ -2,16 +2,16 @@
 
 -- remove layers gradually (d1 in case the optional Rebuild kick was used)
 xfadeIn 4 16 silence
-xfadeIn 7 8 silence
-xfadeIn 9 8 silence
+fadeSilence 8 [7, 9]
 
 fadeSilence 1 [1, 2, 3, 6, 10]
 
 -- bass fragments over sparse texture
-d8 $ degradeBy 0.45 $ bassMain # lpf 240 # gain 0.84
-d5 $ degradeBy 0.3 $ spaceTex # gain 0.58
+d8 $ degradeBy 0.45 $ bassMain # lpf 240
+d5 $ degradeBy 0.3 spaceTex
 
--- final: bass only, then hush
--- d5 silence
--- xfadeIn 8 16 silence
--- hush
+-- final: bass only
+d5 silence
+xfadeIn 8 16 silence
+
+hush

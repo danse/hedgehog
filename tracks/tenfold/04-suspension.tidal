@@ -3,9 +3,9 @@
 d1 subDrone
 
 fadeMulti 16 [
-  (2, lowPad # gain 0.82 # lpf 900),
-  (3, highPad # gain 0.78 # lpf 2000),
-  (4, arp # gain 0.7 # lpf 2400)]
+  (2, lowPad # lpf 900),
+  (3, highPad # lpf 2000),
+  (4, arp # lpf 2400)]
 
 -- the bass pulse gives way to long roots
 xfadeIn 8 16 $ bassLong # gain 0.8
@@ -14,9 +14,9 @@ xfadeIn 8 16 $ bassLong # gain 0.8
 xfadeIn 5 16 $ melody # gain 0.74
 
 fadeMulti 16 [
-  (6, bell # gain 0.68),
-  (7, noiseBed # gain 0.6),
-  (9, shimmer # gain 0.58)]
+  (6, bell),
+  (7, noiseBed),
+  (9, shimmer)]
 
 -- optional: let the arp drift further back
--- xfadeIn 4 24 $ arp # gain 0.6 # lpf 1800
+xfadeIn 4 24 $ arp # lpf 1800

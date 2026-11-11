@@ -9,13 +9,12 @@ fadeMulti 8 [
 
 fadeMulti 16 [
   (5, lead),
-  (6, bell # gain 0.7),
+  (6, bell),
   (7, noiseBed),
-  (9, shimmer # gain 0.6)]
+  (9, shimmer)]
 
 -- longer melody option instead of the lead
--- xfadeIn 5 16 melody
+xfadeIn 5 16 melody
 
 -- open the arp filter on the next pass
--- xfadeIn 4 16 $ arp # lpf (range 1800 4200 $ slow 8 sine)
-
+xfadeIn 4 16 $ arp # lpf (range 1800 4200 $ slow 8 sine)

@@ -3,18 +3,18 @@
 
 setbpm 118
 
-d1 $ kick
+d1 kick
 
-d3 $ hats # gain 0.7
+d3 hats
 
 d8 $ bassMain # lpf 320
 
-xfadeIn 4 8 $ chords # lpf 700 # gain 0.88
+xfadeIn 4 8 $ chords # lpf 700
 
 -- bring in snare/clap
--- d2 $ snare # gain 0.78
+d2 $ snare # gain 0.78
 
 -- open filter
--- xfadeIn 4 8 $ chords # lpf (range 700 1600 $ slow 8 sine)
+xfadeIn 4 8 $ chords # lpf (range 700 1600 $ slow 8 sine)
 --
 d8 $ stack [bassMain, bassOct]

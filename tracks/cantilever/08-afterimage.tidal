@@ -2,7 +2,6 @@
 -- ~40+ cycles at 92 BPM; open-ended.
 
 glideBpm 92 16
-
 -- strip the rhythm and most of the harmony
 fadeSilence 16 [1,2,3,4,5,6,7,8,9]
 -- leave a high piano shadow, filtered trumpet, metal and air
@@ -17,7 +16,7 @@ xfadeIn 6 24 $ bassAfter # gain 0.82
 -- breathe
 
 -- the last chord: let it ring
-xfadeIn 4 32 (pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85)
+xfadeIn 4 32 $ pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85
 
 -- final fade: everything still sounding (piano, bass, trumpet, metal, air)
 fadeSilence 24 [4,5,6,8,9,10]

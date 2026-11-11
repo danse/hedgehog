@@ -9,7 +9,7 @@ d5 hook
 d6 stab
 
 -- supporting (drop arp if still prominent)
-xfadeIn 4 8 $ stack [chords # gain 0.66, arp # gain 0.68]
+xfadeIn 4 8 $ stack [chords, arp]
 
 -- outro: fade elements
 xfadeIn 5 8 silence
@@ -20,7 +20,6 @@ xfadeIn 3 8 silence
 xfadeIn 2 8 silence
 
 xfadeIn 8 16 $ stack [bassMain # gain 0.94, bassOct # gain 0.6] # lpf 400
-
 xfadeIn 1 16 silence
 
 -- a couple of main orbits can still be listened here

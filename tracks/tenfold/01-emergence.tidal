@@ -1,9 +1,9 @@
 -- 1. Emergence — sub drone and low pad only
 -- Eval 00-setup.tidal first.
 
-d1 $ subDrone # gain 0.82
+d1 subDrone
 -- the low pad appears under the drone
 xfadeIn 2 16 $ lowPad # lpf 520
 
 -- let the room breathe before adding anything else
--- xfadeIn 7 24 $ noiseBed # gain 0.45
+xfadeIn 7 24 noiseBed

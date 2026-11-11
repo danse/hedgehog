@@ -3,10 +3,10 @@
 d1 subDrone
 xfadeIn 2 8 lowPad
 fadeMulti 16 [
-  (3, highPad # gain 0.76 # lpf 1500),
-  (8, bassPulse # gain 0.74)]
+  (3, highPad # lpf 1500),
+  (8, bassPulse)]
 
--- tease the arp before the expansion
--- xfadeIn 4 24 $ arp # gain 0.68 # lpf 1800
+xfadeIn 7 16 $ noiseBed
 
--- xfadeIn 7 16 $ noiseBed # gain 0.52
+-- enter the arp before the expansion
+xfadeIn 4 24 $ arp # lpf 1800

@@ -7,9 +7,9 @@ d5 $ spaceTex # gain 0.66
 d8 $ bassMain # lpf 260 # gain 0.86
 
 -- after a few cycles, add sparse glitch detail and a hint of harmony
--- d5 $ stack [spaceTex # gain 0.62, glitchTex # gain 0.68]
--- d4 $ chordFlow # gain 0.68 # lpf 1100
+d5 $ stack [spaceTex, glitchTex]
+d4 $ chordFlow # lpf 1100
 -- let the 8-cycle bass phrase complete at least once before building
 
--- optional: reveal anchor quietly
--- d9 $ bassAnchor # gain 0.8 # lpf 220
+-- optional: reveal anchor
+d9 $ bassAnchor # lpf 220

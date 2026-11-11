@@ -8,12 +8,12 @@ d10 silence
 
 -- simplified, dark bass
 d8 bassBreak
-d9 $ bassAnchor # gain 0.82 # lpf 240
+d9 $ bassAnchor # lpf 240
 
 -- switch harmony continuity, thinner (no pads/drones)
-d4 $ chordFlow # lpf 1300 # gain 0.76
-d5 $ spaceTex # gain 0.62
-d7 $ burst # gain 0.7
+d4 $ chordFlow # lpf 1300
+d5 spaceTex
+d7 burst
 
 -- rebuild cue
 -- d7 riser

@@ -2,7 +2,6 @@
 -- ~36 cycles (~96 s at 90 BPM).
 
 glideBpm 90 16
-
 -- the datum holds: bass and low piano
 d6 bassSurvey
 xfadeIn 4 16 compSurvey

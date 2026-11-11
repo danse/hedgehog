@@ -9,7 +9,7 @@ d6 $ degradeBy 0.2 $ shimmer
 xfadeIn 4 8 chordsStab -- noticeable
 
 -- tease the hook
--- d5 $ hook # lpf 2800
+d5 $ hook # lpf 2800
 
 -- add accents
--- d6 $ stack [shimmer, stab # gain 0.7]
+d6 $ stack [shimmer, stab]

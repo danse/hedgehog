@@ -3,7 +3,6 @@
 -- ~28 cycles (~75 s at 90 BPM).
 
 glideBpm 90 16
-
 -- clear the previous piece's working orbits
 fadeSilence 8 [1,2,3,7,8,9]
 
