@@ -1,0 +1,20 @@
+-- 2. Gate — The barrier, the turnstile, the dropped ticket, a pigeon.
+-- The first shift arrives; four gate hits carry the work song's rhythm.
+-- ~40 cycles (~100 s at 96 BPM).
+
+glideBpm 96 16
+-- the gate takes over the pulse
+d2 $ stack [gateTick, degradeBy 0.25 gateClang]
+xfadeIn 1 16 bootWork
+xfadeIn 4 16 compGate
+d6 bassGate
+
+-- the pigeon and the dropped ticket, off to one side
+xfadeIn 9 32 $ stack [pigeon, ticket]
+
+-- the high colour of the fence
+xfadeIn 5 24 colourGate
+
+-- brushes and ride arrive with the first shift
+xfadeIn 3 24 rideSoft
+xfadeIn 1 24 $ stack [bootWork, brushSoft]

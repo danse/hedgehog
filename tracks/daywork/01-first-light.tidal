@@ -1,0 +1,28 @@
+-- 1. First Light — Dawn. The yard switches on; nobody is in a hurry.
+-- Eval 00-setup.tidal first.
+-- ~40 cycles (~100 s at 96 BPM).
+-- The first switch, a boot on concrete, a low G add9, then the work song on the
+-- piano. Sparse by design: let the room and the objects arrive one at a time.
+
+glideBpm 96 16
+-- clear anything left from the previous piece
+fadeSilence 8 [1,2,3,7,8,9]
+
+-- the first switches: one at a time
+d3 switchOn
+-- a boot on concrete
+d1 bootDawn
+-- low G add9, still dark
+d4 $ slow 2 $ pianoPedal (slow 4 hLight)
+-- the bass finds the floor
+d6 bassLight
+
+-- the work song, first time: piano high, unaccompanied
+d5 motifPiano
+
+-- the yard breathes
+xfadeIn 10 32 $ stack [air, windBed]
+xfadeIn 9 32 $ degradeBy 0.6 gravel
+
+-- a brush, half-awake
+xfadeIn 1 24 $ stack [bootDawn, brushSoft]

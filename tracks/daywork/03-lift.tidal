@@ -1,0 +1,25 @@
+-- 3. Lift — The hoist tries to lift the crate and stalls. Chain, motor, a
+-- bounce. The bass takes the work song low and slow.
+-- ~40 cycles (~109 s at 88 BPM).
+
+glideBpm 88 16
+-- the gate falls away; the hoist is the new pulse
+fadeSilence 12 [2,3]
+d1 $ stack [bootWork, liftStall]
+xfadeIn 4 16 compLift
+xfadeIn 6 16 bassLift
+
+-- chain and crate
+xfadeIn 9 16 $ stack [liftChain, crateScrape]
+-- the motor surges
+xfadeIn 3 16 motor
+-- the high shadow of the hook
+xfadeIn 5 24 colourLift
+-- the reed hears the strain
+xfadeIn 7 24 reedLift
+
+-- one high spark from the top of the lift
+xfadeIn 8 32 trumpetSpark
+
+-- the hoist gives up; the bass states the work song
+xfadeIn 6 16 motifBass
