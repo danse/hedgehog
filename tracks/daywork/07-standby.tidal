@@ -4,6 +4,8 @@
 -- Leave the last chord and air ringing; `fadeSilence` and `hush` are separate
 -- steps, evaluated in that order after the room has decayed.
 
+-- sharp drop
+
 glideBpm 84 16
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [1,2,4,7,8,9]
