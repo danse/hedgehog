@@ -15,25 +15,8 @@ setbpm 92
 -- Harmony: D dorian, voiced with Sound.Tidal.Chords.
 -- ---------------------------------------------------------------------------
 let
-  -- --- sample calibration --------------------------------------------------
-  -- `speedAt` maps a written Tidal note to the playback rate of a sample whose
-  -- natural pitch is `base`. This keeps letter note names honest for samples.
-  speedAt :: Pattern Note -> Pattern Note -> ControlPattern
-  speedAt base p = speed $ 2 ** (unNote <$> (p |- base) / 12)
-  --
-  -- lazy swing: delay the second half of each 4th/8th-note slice
-  swing8 :: Pattern a -> Pattern a
-  swing8 = swingBy (1/5) 4
-  swing16 :: Pattern a -> Pattern a
-  swing16 = swingBy (1/5) 8
-  --
-  -- Tidal Chords convenience
-  chordAt :: Pattern Note -> Pattern String -> Pattern Note
-  chordAt r q = chord r q []
-  --
-  -- convenience / fades
-  fadeSilence n = mapM (\d -> xfadeIn d n silence)
-  fadeMulti t = mapM (\(d, p) -> xfadeIn d t p)
+  -- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
+  -- live in boot/BootTidal.hs. Only track-specific voices belong here.
   -- --- harmony: D dorian, through-composed --------------------------------
   -- Roots are in the low piano register; the high voice adds an octave.
   hSpan = chordAt "<d4 g4 d4 a4>" "<min9 7sus4 min9 min7>"

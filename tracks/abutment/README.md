@@ -91,6 +91,9 @@ the support, not the span.
 - **Four acts** — the seven sections group as Assess (1–2), Repair (3–4),
   Return (5–6) and Rest (7). *Abutment* is the turn; *Transfer* is the
   resolution; *Occupancy* is the return to normal; *Steady* is the open coda.
+- **Shared helpers** — `speedAt`, `swing8`, `swing16`, `chordAt` and
+  `fadeSilence` are defined in `boot/BootTidal.hs`; the setup only defines this
+  track's voices.
 - **Swing** — `swing8 = swingBy (1/5) 4` (8th-note lilt) and
   `swing16 = swingBy (1/5) 8` (16th-note lilt). The offbeats lean back.
 - **Tuning** — pitched samples are calibrated with `speedAt base p`:

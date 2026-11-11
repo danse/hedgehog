@@ -75,6 +75,5 @@ let
   riser = s "hedge_noise" # sustain 4 # gain (range 0.45 0.84 $ slow 4 saw) # lpf (range 300 5200 $ slow 4 saw) # room 0.8 # size 0.75
   burst = degradeBy 0.2 $ s "glitch(5,16)" # n (irand 16) # gain 0.78 # speed (range 0.8 1.6 $ rand) # room 0.25 # size 0.3
 
--- convenience
-fadeSilence n = mapM (\d -> xfadeIn d n $ silence)
+-- convenience (fadeSilence lives in boot/BootTidal.hs)
 allOrbits = [1..10]

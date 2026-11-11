@@ -59,7 +59,10 @@ Each area documents itself:
 - `samples/` — see `samples/README.md`
 
 `boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config,
-and `recordings/` the gitignored takes.
+and `recordings/` the gitignored takes. `boot/BootTidal.hs` also defines the
+shared track helpers (`speedAt`, `swing8`, `swing16`, `chordAt`, `fadeSilence`,
+`fadeMulti`, `glideBpm`), so `00-setup.tidal` files only define their own voices
+and arrangements.
 
 ## Sound check
 

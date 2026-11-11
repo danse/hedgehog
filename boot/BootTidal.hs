@@ -9,6 +9,9 @@ import Sound.Tidal.Boot
 -- Tidal Chords (e.g. chord "d4" "min7" []).
 import Sound.Tidal.Chords
 
+-- Orbit IDs, for the shared fade helpers.
+import Sound.Tidal.ID (ID)
+
 -- Concurrency, for gentle tempo changes (glideBpm).
 import Control.Concurrent (forkIO, threadDelay)
 
@@ -47,6 +50,33 @@ let glideBpm :: Double -> Double -> IO ()
             threadDelay pause)
           [1 .. n]
       pure ()
+:}
+
+-- --- shared track helpers ---------------------------------------------------
+-- These are identical across tracks, so they live here instead of in every
+-- `00-setup.tidal`. Track setups should only define their own voices, mixes
+-- and arrangements (plus any genuinely local `allOrbits`).
+:{
+let -- Sample calibration: map a written Tidal note to the playback rate of a
+    -- sample whose natural pitch is `base`.
+    speedAt :: Pattern Note -> Pattern Note -> ControlPattern
+    speedAt base p = speed $ 2 ** (unNote <$> (p |- base) / 12)
+    --
+    -- Lazy swing: delay the second half of each 4th/8th-note slice.
+    swing8 :: Pattern a -> Pattern a
+    swing8 = swingBy (1/5) 4
+    swing16 :: Pattern a -> Pattern a
+    swing16 = swingBy (1/5) 8
+    --
+    -- Tidal Chords convenience.
+    chordAt :: Pattern Note -> Pattern String -> Pattern Note
+    chordAt r q = chord r q []
+    --
+    -- Convenience fades: crossfade one or more orbits to silence.
+    fadeSilence :: Time -> [ID] -> IO [()]
+    fadeSilence n = mapM (\d -> xfadeIn d n silence)
+    fadeMulti :: Time -> [(ID, ControlPattern)] -> IO [()]
+    fadeMulti t = mapM (\(d, p) -> xfadeIn d t p)
 :}
 
 -- You can also add your own aliases in this file. For example:

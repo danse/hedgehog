@@ -57,6 +57,9 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
 
 ## Notes
 
+- **Shared helpers** — `speedAt`, `swing8`, `swing16`, `chordAt`, `fadeSilence`
+  and `fadeMulti` are defined in `boot/BootTidal.hs`; the setup only defines
+  this track's voices.
 - **Swing** — `swing8 = swingBy (1/5) 4` (8th-note lilt) and
   `swing16 = swingBy (1/5) 8` (16th-note lilt). The delay is in the second
   half of each slice, so the offbeats lean back.

@@ -86,8 +86,6 @@ let
   shimmer = degradeBy 0.5 $ slow 4 $ s "space:2*8?" # speed (range 0.8 2 $ rand)
     # gain 0.66 # hpf 1200 # lpf 7000 # room 0.7 # size 0.75
   --
-  -- convenience: fade several orbits to silence at once, e.g.
-  -- fadeSilence 8 [4,5,6,9]
-  fadeSilence n = mapM (\d -> xfadeIn d n silence)
+  -- convenience: fade several orbits to silence at once (helpers live in
+  -- boot/BootTidal.hs), e.g. fadeSilence 8 [4,5,6,9]
   allOrbits = [1..9]
-  fadeMulti t = mapM (\(d, p) -> xfadeIn d t p)

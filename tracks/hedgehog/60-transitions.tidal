@@ -6,7 +6,8 @@
 -- Fade orbit 6 out by crossfading to silence.
 -- xfadeIn 6 8 $ silence
 
-fadeSilence = mapM (\d -> xfadeIn d 8 silence)
+-- Fade several orbits out over 8 cycles (shared helper).
+-- fadeSilence 8 [4,6]
 
 -- Noise riser: hold for ~4 cycles, then silence it.
 -- d9 $ riser

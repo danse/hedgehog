@@ -59,6 +59,3 @@ let
   -- d7 fx
   riser = s "hedge_noise" # sustain 4 # gain (range 0.42 0.8 $ slow 4 saw) # lpf (range 400 6000 $ slow 4 saw) # room 0.75 # size 0.7
   impact = s "industrial:1" # gain 0.82 # speed 0.7 # lpf 1800 # room 0.3 # size 0.4
-
--- convenience
-fadeSilence ds n = mapM (\d -> xfadeIn d n $ silence) ds
