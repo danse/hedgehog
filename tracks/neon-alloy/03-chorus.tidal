@@ -7,7 +7,9 @@ d8 $ stack [bassMain, bassOct]
 d5 hook -- very subtle i think it might be enjoyable even with more prominence
 d6 $ stack [stab, shimmer # gain 0.64]
 
-xfadeIn 4 8 $ stack [chords, arp] -- juggler melody
+xfadeIn 4 8 silence
+
+xfadeIn 4 16 $ stack [chords, arp] -- juggler melody
 
 -- drive variation
 d1 kickDrive

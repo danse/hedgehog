@@ -73,10 +73,10 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     chordAt r q = chord r q []
     --
     -- Convenience fades: crossfade one or more orbits to silence.
-    fadeSilence :: Time -> [ID] -> IO [()]
-    fadeSilence n = mapM (\d -> xfadeIn d n silence)
-    fadeMulti :: Time -> [(ID, ControlPattern)] -> IO [()]
-    fadeMulti t = mapM (\(d, p) -> xfadeIn d t p)
+    fadeSilence :: Time -> [ID] -> IO ()
+    fadeSilence n = mapM_ (\d -> xfadeIn d n silence)
+    fadeMulti :: Time -> [(ID, ControlPattern)] -> IO ()
+    fadeMulti t = mapM_ (\(d, p) -> xfadeIn d t p)
 :}
 
 -- You can also add your own aliases in this file. For example:

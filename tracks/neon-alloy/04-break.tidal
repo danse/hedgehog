@@ -10,7 +10,7 @@ xfadeIn 1 4 silence
 d2 silence
 
 -- the hook carries over from the chorus; fade it if the break should be bare
--- xfadeIn 5 8 silence
+xfadeIn 5 8 silence
 
 xfadeIn 3 8 hats
 
