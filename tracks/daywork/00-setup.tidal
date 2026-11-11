@@ -17,8 +17,9 @@
 --   d4 piano low              d9 debris / outside
 --   d5 piano high             d10 air / room
 --
--- The work song is four notes, G-B-A-G (1-3-2-1). It moves from the piano to
--- the gate hits, the bass, the sax, the glass and finally the toy.
+-- The work song is four notes, B-G-F-D (3-1-b7-5), a descending mixolydian
+-- call. It moves from the piano to the gate hits, the bass, the sax, the glass
+-- and finally the toy.
 -- Pitched samples use speedAt: bass1:0=C2 (c3), pluck:5=C3 (c4),
 -- pluck:8=D4 (d5), sax:5=C3 (c4), trump:5=B5 (b6). The glass and bottle voices
 -- use tink:0=F#8 (fs9) and bottle:0=D#8 (ds9) as nominal bases.
@@ -40,12 +41,12 @@ let
   -- live in boot/BootTidal.hs. Only track-specific voices belong here.
   --
   -- --- the work song --------------------------------------------------------
-  -- Four notes: 1-3-2-1. It is passed from the piano to the gate, the hoist,
-  -- the sweeper, the canteen glasses and, finally, the toy.
-  motifP = "g5 b5 a5 g5 ~ ~ ~ ~"
-  motifG = "g8 b8 a8 g8 ~ ~ ~ ~"
-  motifB = "g7 b7 a7 g7 ~ ~ ~ ~"
-  motifS = "g4 b4 a4 g4 ~ ~ ~ ~"  -- the sax states the same four notes
+  -- Four notes: 3-1-b7-5. A descending mixolydian call, passed from the piano
+  -- to the gate, the hoist, the sweeper, the canteen glasses and the toy.
+  motifP = "b5 ~ g5 f5 ~ d5 ~ ~"
+  motifG = "b8 ~ g8 f8 ~ d8 ~ ~"
+  motifB = "b7 ~ g7 f7 ~ d7 ~ ~"
+  motifS = "b4 ~ g4 f4 ~ d4 ~ ~"  -- the sax states the same four notes
   --
   -- --- harmony: G mixolydian, through-composed -----------------------------
   hLight = chordAt "<g4 c4 g4 d4>" "<add9 maj9 sus2 sus4>"
@@ -68,7 +69,7 @@ let
   pianoHi p = s "pluck" # n 8 # speedAt "d5" p # loop 0
     # sustain 0.8 # release 0.35 # lpf 4200
     # room 0.5 # size 0.65 # amp 0.55
-  pianoCoda = slow 2 $ s "pluck" # n 8 # speedAt "d5" "g5 ~ a5 ~ g5 ~ ~ ~" # loop 0
+  pianoCoda = slow 2 $ s "pluck" # n 8 # speedAt "d5" "g5 ~ f5 d5 ~ ~ ~ ~" # loop 0
     # sustain 1.5 # release 0.8 # lpf 2800
     # room 0.68 # size 0.82 # amp 0.46
   --
@@ -94,13 +95,13 @@ let
   bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~" # loop 0
     # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
     # room 0.45 # size 0.64 # amp 0.82
-  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ f2 g2 a2 ~ b2 ~" # loop 0
+  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ d3 ~ f2 ~ b2 ~" # loop 0
     # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "g2 ~ f2 ~ d3 ~ f2 ~" # loop 0
+  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "g2 ~ b2 ~ d3 ~ f3 ~" # loop 0
     # sustain 1.3 # release 0.5 # lpf 680 # lpq 0.2
     # room 0.32 # size 0.5 # amp 0.86
-  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 a2 b2 c3 b2 a2 g2 f2" # loop 0
+  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 d3 f2 d3 g2 f2 d3 f2" # loop 0
     # sustain 0.48 # release 0.2 # lpf 850 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
   bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "c3 ~ e3 g3 ~ e3 c3 ~" # loop 0
@@ -112,7 +113,7 @@ let
   bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~" # loop 0
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
-  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "g2 b2 a2 g2 ~ ~ ~ ~" # loop 0
+  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "b2 ~ g2 f2 ~ d3 ~ ~" # loop 0
     # sustain 1.8 # release 0.8 # lpf 560 # lpq 0.18
     # room 0.4 # size 0.58 # amp 0.8
   --
@@ -217,7 +218,7 @@ let
     # sustain 6 # hpf 200 # lpf 2400 # room 0.7 # size 0.85 # amp 0.14
   --
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "g4 ~ ~ ~ f4 ~ ~ ~" # loop 0
+  reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "b4 ~ ~ ~ g4 ~ ~ ~" # loop 0
     # sustain 2.4 # release 1 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82 # amp 0.3
   reedRound = slow 4 $ s "sax" # n 5 # speedAt "c4" motifS # loop 0
@@ -226,15 +227,15 @@ let
   reedCant = slow 2 $ s "sax" # n 5 # speedAt "c4" motifS # loop 0
     # sustain 1.2 # release 0.55 # hpf 170 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.4
-  reedHand = slow 8 $ s "sax" # n 5 # speedAt "c4" "g4 ~ ~ ~ ~ ~ ~ ~" # loop 0
+  reedHand = slow 8 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~" # loop 0
     # sustain 4 # release 1.8 # hpf 140 # lpf 1100 # lpq 0.2
     # room 0.72 # size 0.85 # amp 0.3
-  reedStand = slow 8 $ s "sax" # n 5 # speedAt "c4" "b4 ~ ~ ~ a4 ~ ~ ~" # loop 0
+  reedStand = slow 8 $ s "sax" # n 5 # speedAt "c4" "f4 ~ ~ ~ d4 ~ ~ ~" # loop 0
     # sustain 2.8 # release 1.2 # hpf 130 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85 # amp 0.26
   --
   -- --- trumpet: high, distant, never featured -----------------------------
-  -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7).
-  trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 0
+  -- trump:5 is B5 (Tidal b6); the spark sits on the natural pitch.
+  trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ b6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 0
     # sustain 0.5 # release 0.35 # lpf 2800 # lpq 0.2
     # room 0.72 # size 0.82 # amp 0.2
