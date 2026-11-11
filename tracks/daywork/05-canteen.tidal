@@ -4,14 +4,15 @@
 
 glideBpm 100 16
 -- the sweeper parks; the room fills with small objects
-fadeSilence 12 [1,2,8,9]
+fadeSilence 12 [1,4,7,8,9]
 d1 brush
 fadeMulti 16 [
   (2, stack [cupTick, canteenBell]),
   (3, stack [cupClink, bottleHoot]),
-  (4, compCant),
   (6, bassCant)]
 xfadeIn 5 24 colourCant
+
+xfadeIn 4 16 compCant
 
 -- trays, cutlery and a drink being poured
 xfadeIn 9 16 $ stack [tray, cutlery, pour]

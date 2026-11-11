@@ -4,16 +4,16 @@
 
 glideBpm 92 16
 -- the hoist gives way to the little machine
-fadeSilence 12 [2,3,7,8]
+fadeSilence 12 [2,3,4,7,8]
 d1 $ stack [bootWork, brushWork]
 d2 $ stack [sweeperMiss, sweepBrush]
-xfadeIn 4 16 compSweep
 xfadeIn 6 16 bassSweep
+
+xfadeIn 4 16 compSweep
 
 -- grit and a pigeon following the broom
 xfadeIn 9 16 $ stack [sweepGrit, pigeon]
 xfadeIn 5 24 colourSweep
-
 -- the reed starts to hum the round
 xfadeIn 7 24 reedRound
 -- one high spark over the fence

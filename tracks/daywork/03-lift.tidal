@@ -4,9 +4,8 @@
 
 glideBpm 88 16
 -- the gate falls away; the hoist is the new pulse
-fadeSilence 12 [2,3]
+fadeSilence 12 [2,3,4]
 d1 $ stack [bootWork, liftStall]
-xfadeIn 4 16 compLift
 xfadeIn 6 16 bassLift
 
 -- chain and crate
@@ -18,6 +17,7 @@ xfadeIn 5 24 colourLift
 -- the reed hears the strain
 xfadeIn 7 24 reedLift
 
+xfadeIn 4 16 compLift
 -- one high spark from the top of the lift
 xfadeIn 8 32 trumpetSpark
 

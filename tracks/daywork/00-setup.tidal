@@ -62,7 +62,7 @@ let
   -- One-shot samples: loop 0 keeps long sustains from retriggering the file.
   pianoPedal p = s "pluck" # n 5 # speedAt "c4" p # loop 0
     # sustain 2.4 # release 1.1 # lpf 1500 # lpq 0.25
-    # room 0.62 # size 0.78 # amp 0.56
+    # room 0.62 # size 0.78
   pianoComp p = s "pluck" # n 5 # speedAt "c4" p # loop 0
     # sustain 0.55 # release 0.22 # lpf 3000 # lpq 0.28
     # room 0.35 # size 0.5 # amp 0.7
@@ -92,9 +92,9 @@ let
     # room 0.5 # size 0.62 # amp 0.48
   --
   -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
-  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~" # loop 0
+  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "~ g2 ~ ~ ~ d3 ~ ~" # loop 0
     # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
-    # room 0.45 # size 0.64 # amp 0.82
+    # room 0.45 # size 0.64
   bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ a2 ~ c3 ~ d3 ~" # loop 0
     # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88

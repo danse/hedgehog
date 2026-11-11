@@ -7,13 +7,13 @@ glideBpm 96 16
 d2 $ stack [gateTick, degradeBy 0.25 gateClang]
 xfadeIn 1 16 bootWork
 xfadeIn 4 16 compGate
-d6 bassGate
 
--- the pigeon and the dropped ticket, off to one side
-xfadeIn 9 32 $ stack [pigeon, ticket]
+d6 $ bassGate # amp 0.4
 
 -- the high colour of the fence
 xfadeIn 5 24 colourGate
+-- the pigeon and the dropped ticket, off to one side
+xfadeIn 9 32 $ stack [pigeon, ticket]
 
 -- brushes and ride arrive with the first shift
 xfadeIn 3 24 rideSoft

@@ -9,7 +9,7 @@
 glideBpm 84 16
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [1,2,4,7,8,9]
-d6 bassStand
+d6 $ bassStand # amp 0.4
 xfadeIn 5 16 pianoCoda
 -- the last low chord, very sparse
 xfadeIn 4 24 $ slow 8 $ pianoPedal (slow 8 hStand)
@@ -26,7 +26,7 @@ xfadeIn 8 24 $ stack [motifGlass, bottleHoot]
 xfadeIn 7 32 reedStand
 
 -- the work song one more time, very low
-xfadeIn 6 24 motifBass
+xfadeIn 6 8 motifBass
 
 -- leave the room ringing, then fade
 fadeSilence 24 [3,4,5,6,7,8,10]

@@ -8,21 +8,21 @@ glideBpm 96 16
 -- clear anything left from the previous piece
 fadeSilence 8 [1,2,3,7,8,9]
 
--- the first switches: one at a time
+-- the first switches
 d3 switchOn
 -- a boot on concrete
 d1 bootDawn
--- low G add9, still dark
-d4 $ slow 2 $ pianoPedal (slow 4 hLight)
 -- the bass finds the floor
 d6 bassLight
 
 -- the work song, first time: piano high, unaccompanied
-d5 motifPiano
+d5 $ motifPiano # amp 0.2
 
--- the yard breathes
-xfadeIn 10 32 $ stack [air, windBed]
-xfadeIn 9 32 $ degradeBy 0.6 gravel
+-- low G add9, still dark
+d4 $ slow 2 $ pianoPedal (slow 4 hLight) # amp 0.3
 
 -- a brush, half-awake
 xfadeIn 1 24 $ stack [bootDawn, brushSoft]
+-- the yard breathes
+xfadeIn 10 32 $ stack [air, windBed]
+xfadeIn 9 32 $ degradeBy 0.6 gravel
