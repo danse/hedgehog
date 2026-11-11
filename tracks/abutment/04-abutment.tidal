@@ -12,7 +12,7 @@ xfadeIn 4 16 compAbut
 -- the reed enters properly
 xfadeIn 7 24 reedAbut
 
--- the reed has loop 1 already but doesn't seem to stop
+-- the reed doesn't seem to stop
 xfadeIn 7 24 silence
 
 -- the new mass: wood, metal and site air

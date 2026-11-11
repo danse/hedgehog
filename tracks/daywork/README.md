@@ -12,5 +12,5 @@ Eval `00-setup.tidal` once, then play in order:
 
 Global notes (orbit map, tuning, palette, levels) are at the top of
 `00-setup.tidal`; story beats and performance instructions are at the top of
-each section file. Handoff's toy/pling lines are live one-shots; Standby's fade
-and `hush` are separate steps.
+each section file. Handoff's pling is a live one-shot; Standby's fade and
+`hush` are separate steps.

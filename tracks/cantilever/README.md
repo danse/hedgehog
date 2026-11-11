@@ -70,9 +70,8 @@ Eval `00-setup.tidal` once (one `let` block), then play the sections in order:
   `bass1:0 = C2` (`c3`), `pluck:5 = C3` (`c4`), `pluck:8 = D4` (`d5`),
   `sax:5 = C3` (`c4`), `trump:5 = B5` (`b6`), `trump:7 = E6` (`e7`).
   Written pitches are Tidal letter names, one octave above scientific pitch.
-- **One-shots** — the setup sets `loop 0` on plucked, reed, trumpet and
-  percussion voices so long `sustain` values do not retrigger short samples.
-  `windBed` keeps `loop 1` for the coda bed.
+- **One-shots** — each voice triggers its sample once; `sustain` and `release`
+  shape the tail.
 - **Chords** — harmony is built with `Sound.Tidal.Chords` (`chordAt`), not
   hand-written voicings. The boot file exposes `tidal-core` so the chord
   module is importable.

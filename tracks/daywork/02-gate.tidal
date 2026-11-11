@@ -5,7 +5,7 @@
 glideBpm 96 16
 -- the gate takes over the pulse
 d2 $ stack [gateTick, degradeBy 0.25 gateClang]
-fadeMulti 16 [(1, bootWork, 4, compGate)]
+fadeMulti 16 [(1, bootWork), (4, compGate)]
 
 d6 $ bassGate # amp 0.4
 

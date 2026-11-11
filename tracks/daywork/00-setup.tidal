@@ -59,19 +59,17 @@ let
   --
   -- --- piano: pluck samples tuned to their natural pitches -----------------
   -- pluck:5 is C3 and pluck:8 is D4 (scientific pitch; Tidal c4/d5).
-  -- `loop` scales a sample's own length: 1 plays it once, N repeats it N
-  -- times, 0 gives a zero-length (silent) event. When `sustain` is set,
-  -- `loop` is ignored and the sample never outlasts its own length.
-  pianoPedal p = s "pluck" # n 5 # speedAt "c4" p # loop 1
+  -- Each voice plays its sample once; `sustain` decides how long it rings.
+  pianoPedal p = s "pluck" # n 5 # speedAt "c4" p
     # sustain 2.4 # release 1.1 # lpf 1500 # lpq 0.25
     # room 0.62 # size 0.78
-  pianoComp p = s "pluck" # n 5 # speedAt "c4" p # loop 1
+  pianoComp p = s "pluck" # n 5 # speedAt "c4" p
     # sustain 0.55 # release 0.22 # lpf 3000 # lpq 0.28
     # room 0.35 # size 0.5 # amp 0.7
-  pianoHi p = s "pluck" # n 8 # speedAt "d5" p # loop 1
+  pianoHi p = s "pluck" # n 8 # speedAt "d5" p
     # sustain 0.8 # release 0.35 # lpf 4200
     # room 0.5 # size 0.65 # amp 0.55
-  pianoCoda = slow 2 $ s "pluck" # n 8 # speedAt "d5" "g5 ~ a5 c6 ~ ~ ~ ~" # loop 1
+  pianoCoda = slow 2 $ s "pluck" # n 8 # speedAt "d5" "g5 ~ a5 c6 ~ ~ ~ ~"
     # sustain 1.5 # release 0.8 # lpf 2800
     # room 0.68 # size 0.82 # amp 0.46
   --
@@ -89,155 +87,155 @@ let
   colourHand  = swing16 (struct "~ t ~ ~ t ~ ~ ~" (pianoHi ((slow 3 hHand) |+ 12)))
   --
   -- --- the work song on the piano high voice --------------------------------
-  motifPiano = slow 2 $ s "pluck" # n 8 # speedAt "d5" motifP # loop 1
+  motifPiano = slow 2 $ s "pluck" # n 8 # speedAt "d5" motifP
     # sustain 1.1 # release 0.45 # lpf 3600
     # room 0.5 # size 0.62 # amp 0.48
   --
   -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
-  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "~ g2 ~ ~ ~ d3 ~ ~" # loop 1
+  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "~ g2 ~ ~ ~ d3 ~ ~"
     # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
     # room 0.45 # size 0.64
-  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ a2 ~ c3 ~ d3 ~" # loop 1
+  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ a2 ~ c3 ~ d3 ~"
     # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "c3 ~ e3 ~ a2 ~ g2 ~" # loop 1
+  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "c3 ~ e3 ~ a2 ~ g2 ~"
     # sustain 1.3 # release 0.5 # lpf 680 # lpq 0.2
     # room 0.32 # size 0.5 # amp 0.86
-  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 a2 c3 a2 g2 c3 a2 c3" # loop 1
+  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 a2 c3 a2 g2 c3 a2 c3"
     # sustain 0.48 # release 0.2 # lpf 850 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
-  bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "c3 ~ e3 g3 ~ e3 c3 ~" # loop 1
+  bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "c3 ~ e3 g3 ~ e3 c3 ~"
     # sustain 0.7 # release 0.28 # lpf 820 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassHand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ c3 ~" # loop 1
+  bassHand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ c3 ~"
     # sustain 1.5 # release 0.6 # lpf 620 # lpq 0.2
     # room 0.38 # size 0.56 # amp 0.84
-  bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~" # loop 1
+  bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~"
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
-  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "a2 c3 ~ e3 ~ g3 ~ ~" # loop 1
+  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "a2 c3 ~ e3 ~ g3 ~ ~"
     # sustain 1.8 # release 0.8 # lpf 560 # lpq 0.18
     # room 0.4 # size 0.58 # amp 0.8
   --
   -- --- brushes / ride: gretsch acoustic kit -------------------------------
-  bootDawn = slow 4 $ s "stomp" # n 7 # loop 1
+  bootDawn = slow 4 $ s "stomp" # n 7
     # lpf 700 # hpf 40 # room 0.4 # size 0.55
-  bootWork = swing8 $ s "~ stomp ~ stomp ~ ~ stomp ~" # n "<7 5 3>" # loop 1
+  bootWork = swing8 $ s "~ stomp ~ stomp ~ ~ stomp ~" # n "<7 5 3>"
     # lpf 800 # hpf 40 # room 0.3 # size 0.45
-  handStep = slow 4 $ s "stomp" # n 5 # loop 1
+  handStep = slow 4 $ s "stomp" # n 5
     # lpf 600 # hpf 40 # room 0.35 # size 0.5
-  brushSoft = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15 # loop 1
+  brushSoft = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15
     # lpf 2600 # room 0.35 # size 0.5
-  brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # sustain 0.3 # release 0.16 # loop 1
+  brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # sustain 0.3 # release 0.16
     # lpf 3000 # room 0.28 # size 0.42
-  brushWork = swing8 $ s "gretsch ~ gretsch ~" # n 3 # sustain 0.28 # release 0.14 # loop 1
+  brushWork = swing8 $ s "gretsch ~ gretsch ~" # n 3 # sustain 0.28 # release 0.14
     # lpf 3200 # room 0.3 # size 0.44
   rideSoft = swing8 $ s "gretsch:19 ~ gretsch:19 ~ gretsch:19 ~ gretsch:19 ~"
-    # sustain 0.3 # release 0.15 # loop 1 # lpf 5000 # room 0.26 # size 0.4
+    # sustain 0.3 # release 0.15 # lpf 5000 # room 0.26 # size 0.4
   --
   -- --- gate: turnstile, barrier, ticket, pigeon ----------------------------
-  gateTick = swing8 $ s "tok tok ~ tok ~ tok ~ ~" # n "<0 1 2 3>" # loop 1
+  gateTick = swing8 $ s "tok tok ~ tok ~ tok ~ ~" # n "<0 1 2 3>"
     # hpf 120 # lpf 6000 # room 0.3 # size 0.42 # amp 0.44
-  gateClang = slow 4 $ s "bin" # n 0 # loop 1 # speed 0.72
+  gateClang = slow 4 $ s "bin" # n 0 # speed 0.72
     # hpf 60 # lpf 2400 # room 0.55 # size 0.68 # amp 0.5
-  ticket = degradeBy 0.55 $ slow 4 $ s "coins" # n 0 # loop 1
+  ticket = degradeBy 0.55 $ slow 4 $ s "coins" # n 0
     # speed (range 1 1.4 $ slow 8 rand) # hpf 500 # lpf 6500
     # room 0.4 # size 0.55 # amp 0.32
-  pigeon = degradeBy 0.72 $ slow 2 $ s "crow" # n (irand 4) # loop 1
+  pigeon = degradeBy 0.72 $ slow 2 $ s "crow" # n (irand 4)
     # speed (range 0.9 1.2 $ slow 8 rand) # hpf 300 # lpf 5000
     # room 0.55 # size 0.72 # amp 0.22
   --
   -- --- hoist: stall, chain, motor -----------------------------------------
-  liftStall = slow 8 $ s "circus" # n 0 # loop 1 # speed 0.95
+  liftStall = slow 8 $ s "circus" # n 0 # speed 0.95
     # hpf 80 # lpf 6000 # room 0.5 # size 0.65 # amp 0.5
   liftChain = degradeBy 0.2 $ swing8 $ s "metal ~ metal metal ~ metal ~ metal"
-    # n (irand 10) # loop 1 # speed (range 0.45 0.85 $ slow 8 rand)
+    # n (irand 10) # speed (range 0.45 0.85 $ slow 8 rand)
     # hpf 250 # lpf 4200 # pan rand # room 0.5 # size 0.68 # amp 0.26
-  motor = slow 4 $ s "simplesine" # n 2 # loop 1
+  motor = slow 4 $ s "simplesine" # n 2
     # sustain 3.6 # release 0.4 # lpf 220 # hpf 20
     # room 0.5 # size 0.6 # amp 0.16
   --
   -- --- sweeper: the little machine and its broom ---------------------------
-  sweeperMiss = slow 8 $ s "circus" # n 1 # loop 1 # speed 1
+  sweeperMiss = slow 8 $ s "circus" # n 1 # speed 1
     # hpf 80 # lpf 5000 # room 0.45 # size 0.62 # amp 0.46
   sweepBrush = swing8 $ s "perc ~ perc perc ~ perc ~ perc" # n "<0 2 4>"
-    # loop 1 # speed 0.9 # hpf 200 # lpf 3800
+    # speed 0.9 # hpf 200 # lpf 3800
     # room 0.3 # size 0.45 # amp 0.32
-  sweepGrit = degradeBy 0.5 $ slow 2 $ s "pebbles" # loop 1
+  sweepGrit = degradeBy 0.5 $ slow 2 $ s "pebbles"
     # speed (range 0.7 1.1 $ slow 8 rand) # hpf 500 # lpf 3200
     # room 0.6 # size 0.78 # amp 0.1
   --
   -- --- canteen: cups, trays, cutlery, a bell ------------------------------
-  cupTick = swing8 $ s "tok ~ tok ~ tok tok ~ tok" # n "<1 2 3 0>" # loop 1
+  cupTick = swing8 $ s "tok ~ tok ~ tok tok ~ tok" # n "<1 2 3 0>"
     # speed 1.35 # hpf 400 # lpf 7000 # room 0.35 # size 0.48 # amp 0.36
   cupClink = degradeBy 0.3 $ swing16 $ s "tink ~ tink ~ ~ tink ~ tink"
-    # n "<0 1 2 3 4>" # loop 1 # hpf 800 # lpf 9000
+    # n "<0 1 2 3 4>" # hpf 800 # lpf 9000
     # room 0.35 # size 0.5 # amp 0.24
-  tray = swing8 $ s "~ tabla ~ ~ tabla ~ ~ ~" # n "<0 2 4 6>" # loop 1
+  tray = swing8 $ s "~ tabla ~ ~ tabla ~ ~ ~" # n "<0 2 4 6>"
     # hpf 100 # lpf 2400 # room 0.25 # size 0.4 # amp 0.28
-  cutlery = degradeBy 0.45 $ s "coins" # n 0 # loop 1
+  cutlery = degradeBy 0.45 $ s "coins" # n 0
     # speed (range 1 1.5 $ slow 4 rand) # hpf 600 # lpf 8000
     # room 0.35 # size 0.5 # amp 0.3
-  pour = degradeBy 0.5 $ slow 2 $ s "bubble" # n (irand 8) # loop 1
+  pour = degradeBy 0.5 $ slow 2 $ s "bubble" # n (irand 8)
     # hpf 400 # lpf 6000 # room 0.4 # size 0.55 # amp 0.2
-  canteenBell = slow 8 $ s "tink" # n 0 # loop 1 # speed 0.75
+  canteenBell = slow 8 $ s "tink" # n 0 # speed 0.75
     # hpf 400 # lpf 7000 # room 0.55 # size 0.7 # amp 0.3
-  motifGlass = slow 2 $ s "tink" # n 0 # speedAt "fs9" motifG # loop 1
+  motifGlass = slow 2 $ s "tink" # n 0 # speedAt "fs9" motifG
     # hpf 500 # lpf 9000 # room 0.55 # size 0.7 # amp 0.22
-  bottleHoot = slow 4 $ s "bottle" # n 0 # speedAt "ds9" motifB # loop 1
+  bottleHoot = slow 4 $ s "bottle" # n 0 # speedAt "ds9" motifB
     # hpf 500 # lpf 9000 # room 0.6 # size 0.75 # amp 0.2
   --
   -- --- handoff: crate, toy, one pling -------------------------------------
   crateScrape = degradeBy 0.35 $ swing8 $ s "perc ~ perc perc ~ perc ~ perc"
-    # n "<1 3 5>" # loop 1 # speed (range 0.7 1.1 $ slow 4 rand)
+    # n "<1 3 5>" # speed (range 0.7 1.1 $ slow 4 rand)
     # hpf 150 # lpf 3000 # room 0.4 # size 0.55 # amp 0.36
-  crateThud = slow 4 $ s "stomp" # n 5 # loop 1
+  crateThud = slow 4 $ s "stomp" # n 5
     # lpf 500 # hpf 30 # room 0.4 # size 0.55 # amp 0.5
-  handoffPop = slow 16 $ s "circus" # n 2 # loop 1
+  handoffPop = slow 16 $ s "circus" # n 2
     # hpf 100 # lpf 7000 # room 0.5 # size 0.65 # amp 0.46
   --
   -- --- standby: switches, mains, night ------------------------------------
-  switchOn = slow 8 $ s "flick" # n "<15 12 14 13>" # loop 1
+  switchOn = slow 8 $ s "flick" # n "<15 12 14 13>"
     # hpf 500 # lpf 9000 # room 0.4 # size 0.55
-  switchOff = slow 8 $ s "flick" # n "<13 14 12 15>" # loop 1
+  switchOff = slow 8 $ s "flick" # n "<13 14 12 15>"
     # hpf 500 # lpf 9000 # room 0.4 # size 0.55
-  mainsDown = slow 4 $ s "simplesine" # n 2 # loop 1
+  mainsDown = slow 4 $ s "simplesine" # n 2
     # sustain 8 # release 1 # lpf 180 # hpf 20
     # room 0.55 # size 0.7 # amp 0.14
-  insectChat = degradeBy 0.65 $ slow 4 $ s "insect" # n (irand 3) # loop 1
+  insectChat = degradeBy 0.65 $ slow 4 $ s "insect" # n (irand 3)
     # speed (range 0.8 1.1 $ slow 8 rand) # hpf 900 # lpf 6000
     # room 0.55 # size 0.72 # amp 0.12
   --
   -- --- air / room ---------------------------------------------------------
-  air = slow 8 $ s "breath" # n 0 # loop 1 # sustain 0.5 # hpf 500 # lpf 2400
+  air = slow 8 $ s "breath" # n 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82 # amp 0.3
-  windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8 # loop 1
+  windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
     # hpf 400 # lpf 1500 # room 0.7 # size 0.85 # amp 0.2
-  gravel = degradeBy 0.6 $ slow 8 $ s "pebbles" # loop 1
+  gravel = degradeBy 0.6 $ slow 8 $ s "pebbles"
     # speed (range 0.6 1.1 $ slow 8 rand) # hpf 500 # lpf 3000
     # room 0.7 # size 0.85 # amp 0.1
-  yardAir = degradeBy 0.4 $ slow 4 $ s "outdoor" # n (irand 6) # loop 1
+  yardAir = degradeBy 0.4 $ slow 4 $ s "outdoor" # n (irand 6)
     # sustain 6 # hpf 200 # lpf 2400 # room 0.7 # size 0.85 # amp 0.14
   --
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ c4 ~ ~ ~" # loop 1
+  reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ c4 ~ ~ ~"
     # sustain 2.4 # release 1 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82 # amp 0.3
-  reedRound = slow 4 $ s "sax" # n 5 # speedAt "c4" motifS # loop 1
+  reedRound = slow 4 $ s "sax" # n 5 # speedAt "c4" motifS
     # sustain 1.8 # release 0.8 # hpf 160 # lpf 1500 # lpq 0.24
     # room 0.62 # size 0.8 # amp 0.36
-  reedCant = slow 2 $ s "sax" # n 5 # speedAt "c4" motifS # loop 1
+  reedCant = slow 2 $ s "sax" # n 5 # speedAt "c4" motifS
     # sustain 1.2 # release 0.55 # hpf 170 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.4
-  reedHand = slow 8 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ ~ ~ ~ ~" # loop 1
+  reedHand = slow 8 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ ~ ~ ~ ~"
     # sustain 4 # release 1.8 # hpf 140 # lpf 1100 # lpq 0.2
     # room 0.72 # size 0.85 # amp 0.3
-  reedStand = slow 8 $ s "sax" # n 5 # speedAt "c4" "g4 ~ ~ ~ e4 ~ ~ ~" # loop 1
+  reedStand = slow 8 $ s "sax" # n 5 # speedAt "c4" "g4 ~ ~ ~ e4 ~ ~ ~"
     # sustain 2.8 # release 1.2 # hpf 130 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85 # amp 0.26
   --
   -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); the spark drops to a high E.
-  trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # loop 1
+  trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
     # sustain 0.5 # release 0.35 # lpf 2800 # lpq 0.2
     # room 0.72 # size 0.82 # amp 0.2

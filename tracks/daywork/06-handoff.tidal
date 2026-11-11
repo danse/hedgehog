@@ -1,8 +1,8 @@
 -- 6. Handoff — The crate changes hands. A scrape, a latch, one toy tune and
 -- one pling. A small ceremony; nobody opens it.
 -- ~36 cycles (~94 s at 92 BPM).
--- The `toys:12` and `hit:1` lines are live one-shots: evaluate each on its own,
--- let it ring, then hush d8/d2. Do not let them retrigger for long.
+-- The `hit:1` line is a true one-shot (`once`): evaluate it when the crate
+-- changes hands. `handoffPop` and the room keep running until the fade.
 
 glideBpm 92 16
 -- the canteen clears; only the crate and two sets of hands
@@ -19,10 +19,9 @@ d2 handoffPop
 -- the high reed holds one note
 xfadeIn 7 24 reedHand
 
--- the handover itself. Evaluate these two one-shots on their own, wait for
--- the toy, then hush each orbit.
-d2 $ slow 4 $ s "hit" # n 1 # sustain 1 # hpf 400 # lpf 8000
-  # room 0.5 # size 0.65 # amp 0.3 # loop 1
+-- the handover itself: one pling
+once $ orbit 1 # s "hit" # n 1 # hpf 400 # lpf 8000
+  # room 0.5 # size 0.65 # amp 0.3
 
 -- let the ceremony ring, then take the room down
 fadeSilence 16 [1,2,4,5,6,7,8,9]
