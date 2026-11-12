@@ -1,13 +1,7 @@
 -- d3 / d4 — field recordings and air.
 
--- d3: birds, slowed and scattered left/right.
-d3 $ birds
-
 -- d4: wind bed.
-d4 $ air
+d4 air
 
--- Variation: only occasional bird calls.
+-- occasional bird calls
 -- d3 $ sometimesBy 0.5 (fast 2) birds
-
--- Variation: open the wind up.
--- d4 $ air # lpf 2200 # gain 0.45

@@ -19,27 +19,20 @@ setbpm 72
 
 -- 1
 let
-  bed = slow 8 $ bedStudy # gain 0.88 # room 0.95 # size 0.9 # lpf 1400
+  bed = slow 8 $ bedStudy # room 0.95 # size 0.9 # lpf 1400
   bedStudy = s "padlong"
-
--- 2
-let
+  -- 2
   droneStudy n = s "hedge_sine" # note n # gain 0.88 # room 0.8
   droneS n s = slow 8 $ droneStudy n # sustain s
   drone n = droneS n 28 # lpf 240
   d n = d2 $ droneS n 28
-
--- 3
-let air = slow 4 $ s "wind:4" # speed 0.65 # pan rand # gain 0.8 # room 0.95 # size 0.9 # lpf 900
-
--- 4
-let birds = slow 4 $ s "birds:2" # speed (range 0.7 1.05 rand) # pan rand # gain 0.85 # room 0.9 # size 0.85 # lpf 3400
-
--- 5
-let tick = slow 2 $ s "click:2(3,16,2)" # gain 0.76 # pan 0.3 # room 0.6 # size 0.7 # lpf 2400
-
--- 6
-let
+  -- 3
+  air = slow 4 $ s "wind:4" # speed 0.65 # pan rand # room 0.95 # size 0.9 # lpf 900
+  -- 4
+  birds = slow 4 $ s "birds:2" # speed (range 0.7 1.05 rand) # pan rand # gain 0.85 # room 0.9 # size 0.85 # lpf 3400
+  -- 5
+  tick = slow 2 $ s "click:2(3,16,2)" # pan 0.3 # room 0.6 # size 0.7 # lpf 2400
+  -- 6
   harmony :: Pattern Note
   harmony = fromString $ unlines [
     "[d4,f4,a4,c5,e5] ~ ~ [c4,e4,g4,b4] [bb3,d4,f4,a4] [a3,c4,e4,g4] ~ ~",
@@ -61,27 +54,8 @@ let
   padS n s' = slow 16 $ note harmony # s "hedge_pad" # sustain s' # gain 0.85
     # room 0.95 # size 0.85
   padDeg = degradeBy 0.5 $ padS harmony 4
+  -- 7
+  pluck = slow 4 $ note "d5 ~ ~ f5 ~ a5 ~ ~" # s "pluck" # gain 0.85 # delay 0.7 # delaytime 0.375 # room 0.9 # size 0.8 # lpf 2600
+  -- 9
+  riser = s "hedge_noise" # sustain 4 # gain (range 0.5 0.88 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9
 
--- 7
-let pluck = slow 4 $ note "d5 ~ ~ f5 ~ a5 ~ ~" # s "pluck" # gain 0.85 # delay 0.7 # delaytime 0.375 # room 0.9 # size 0.8 # lpf 2600
-
--- 9
-let riser = s "hedge_noise" # sustain 4 # gain (range 0.5 0.88 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9
-
-a=
-  [
-    -- bed
-    1, -- bed
-    2, -- drone
-    -- texture
-    3, -- birds
-    4, -- air
-    -- pulse
-    5, -- tick
-    -- harmony
-    6, -- pad
-    -- melody
-    7, -- pluck
-    -- transitions
-    9 -- riser
-  ]
