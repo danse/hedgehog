@@ -1,80 +1,16 @@
--- Cantilever — acoustic illusion / jazz-adjacent (separate track)
--- A playful, jazz-adjacent acoustic illusion: a small imaginary ensemble
--- anchored at one end, extending under load. 92 BPM base · D dorian.
--- Lazy swing, implied polymeter and through-composition, with slight tempo
--- shifts at the structural joints.
+-- Cantilever — acoustic illusion / jazz-adjacent
+-- A small imaginary ensemble anchored at one end, extending under load.
+-- 92 BPM base · D dorian. Lazy swing, implied polymeter and through-composition,
+-- with slight tempo shifts at the structural joints.
 --
--- Only Dirt-Samples acoustic banks are used — double bass, brushed kit, ride,
--- plucked piano, sax, trumpet sparkles, woodblock, metal, breath and wind.
--- No custom samples, no pads/arps/casio-style timbres, no obvious electronic
--- processing.
+-- Only Dirt-Samples acoustic banks: double bass, brushed kit, ride, plucked
+-- piano, sax, trumpet sparkles, woodblock, metal, breath and wind. No custom
+-- samples, no pads/arps/casio timbres, no obvious electronic processing.
 --
--- Eval the setup block below once (one `let` block), then play the sections in
--- order: Footing → Span → Load → Overhang → Creak → Snap → Settle → Afterimage.
+-- Eval the setup block below, then play the sections in order:
+-- Footing → Span → Load → Overhang → Creak → Snap → Settle → Afterimage.
 --
 -- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4 (trim with gain).
---
--- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
---   d1  soft kick / foot      kickSoft / kickSparse
---   d2  brushes               brush / brushFoot / brushSnap
---   d3  ride                  ride / rideBell / rub
---   d4  piano low / comping   compSpan … compSettle / pianoPedal / pianoCreak
---   d5  piano high / colour   colourSpan … colourOver / motifSettle / pianoAfter
---   d6  double bass           bassFoot / bassWalk / bassWalk4 / bassLoad /
---                             bassCreak / bassSnap / bassSettle
---   d7  sax                   reedCall / reedLong / reedCreak
---   d8  trumpet sparkle       trumpetOver / trumpetSnap / trumpetAfter
---   d9  hand percussion       wood / wood3 / shime / metalSpark / creak
---   d10 air                   air / windBed
---
--- Structure (~12½ min, open coda):
---   1. Footing — the anchor is set; solo bass, room, a foot tap (92 BPM, 32 cycles).
---   2. Span — the beam extends; ride, comping, 3-against-4 woodblock (92 BPM, 40 cycles).
---   3. Load — the full ensemble takes weight, still lazy (92 BPM, 40 cycles).
---   4. Overhang — the far end hangs; tempo nudges up, trumpet appears (98 BPM, 40 cycles).
---   5. Creak — tempo drops; kit falls away, room and low clusters take over (86 BPM, 32 cycles).
---   6. Snap — a short hard release, then the hole (96 BPM, 24 cycles).
---   7. Settle — the structure comes to rest; bluesy piano answer (92 BPM, 40 cycles).
---   8. Afterimage — open coda; the room keeps the shape (92 BPM, 40+ cycles).
---
--- How to run:
---   1. Start SuperDirt/audio with scripts/up.sh and open Tidal in Emacs.
---   2. Eval the setup block below as one block.
---   3. Work through sections 1→8. Each section glides to its tempo over 16 s
---      (glideBpm in boot/BootTidal.hs), rather than jumping.
---   4. Section 6 (Snap) is performed in three gestures: the break, then the
---      commented "hole" (everything drops except a trumpet stab), then bass
---      alone into section 7 (Settle).
---   5. Section 8 (Afterimage) is open-ended. Leave the last chord ringing; a
---      24-cycle fadeSilence fades everything still sounding before hush.
---
--- Notes:
---   - Shared helpers — speedAt, swing8, swing16, chordAt, fadeSilence and
---     fadeMulti live in boot/BootTidal.hs; this setup only defines track voices.
---   - Swing — swing8 = swingBy (1/5) 4 (8th-note lilt) and swing16 = swingBy
---     (1/5) 8 (16th-note lilt). The delay is in the second half of each slice,
---     so the offbeats lean back.
---   - Implied polymeter — wood3 is a fast-3 woodblock against the 4/4 pulse,
---     shime is fast-5, and several harmonic phrases use slow 3 or slow 4
---     against the bass, so the layers drift in and out of phase.
---   - Tuning — pitched samples are calibrated with speedAt base p, e.g.
---     bass1:0 = C2 (c3), pluck:5 = C3 (c4), pluck:8 = D4 (d5), sax:5 = C3
---     (c4), trump:5 = B5 (b6), trump:7 = E6 (e7). Written pitches are Tidal
---     letter names, one octave above scientific pitch.
---   - One-shots — each voice triggers its sample once; sustain and release
---     shape the tail.
---   - Chords — harmony is built with Sound.Tidal.Chords (chordAt), not
---     hand-written voicings. The boot file exposes tidal-core so the chord
---     module is importable.
---   - Levels — gain is non-linear (amp * gain^4); reverb size <= 0.9. The
---     trumpet is deliberately quiet and distant — a sparkle, never a feature.
---   - Tempo glides — setbpm jumps the clock, so section boundaries use
---     glideBpm target 16 (boot/BootTidal.hs). It forks and steps the tempo
---     10×/s, so the sender is not blocked; each glide starts from the tempo
---     current at call time. Overlapping glides are not cancelled, so leave a
---     section playing long enough for its 16 s glide to finish.
---   - Trumpet — trumpetOver and trumpetAfter use slow 16, so each written note
---     lands once every 16 cycles. Expect long silences between stabs.
 
 setbpm 92
 
@@ -85,8 +21,11 @@ setbpm 92
 let
   -- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
   -- live in boot/BootTidal.hs. Only track-specific voices belong here.
-  -- --- harmony: D dorian, through-composed --------------------------------
-  -- Roots are in the low piano register; the high voice adds an octave.
+  -- Levels: gain is non-linear (amp * gain^4); reverb size <= 0.9. The trumpet
+  -- is deliberately quiet and distant — a sparkle, never a feature.
+  -- --- d4/d5 harmony: D dorian, through-composed --------------------------
+  -- Harmony is built with Sound.Tidal.Chords (chordAt), not hand-written
+  -- voicings. Roots are in the low piano register; the high voice adds an octave.
   hSpan = chordAt "<d4 g4 d4 a4>" "<min9 7sus4 min9 min7>"
   hLoad = chordAt "<d4 f4 g4 a4 d4 b3 c4 d4>" "<min9 maj9 7sus4 min9 min11 maj9 maj9 min9>"
   hOver = chordAt "<d4 f4 g4 a4 b3 c4 d4 g4>" "<min9 maj9 dom7 min9 maj9 maj9 min11 7sus4>"
@@ -94,9 +33,10 @@ let
   hSnap = chordAt "<d4 g4 d4>" "<min7 dom7 min7>"
   hSettle = chordAt "<d4 g4 c4 f4 d4>" "<min9 dom7 maj9 maj9 min9>"
   hAfter = chordAt "<d4 e4 f4 g4 d4>" "<min9 min7 maj9 7sus4 min9>"
-  -- --- piano: pluck samples tuned to their natural pitches -----------------
-  -- pluck:5 is C3, pluck:8 is D4 (scientific pitch; Tidal c4/d5).
-  -- Each voice plays its sample once; `sustain` decides how long it rings.
+  -- --- d4/d5 piano: pluck samples tuned to their natural pitches ----------
+  -- pluck:5 is C3, pluck:8 is D4 (scientific pitch; Tidal c4/d5). Written
+  -- pitches are Tidal letter names, one octave above scientific pitch. Each
+  -- voice plays its sample once; `sustain` decides how long it rings.
   pianoLo p = s "pluck" # n 5 # speedAt "c4" p
     # gain 0.68 # sustain 1.2 # release 0.3 # lpf 3000 # lpq 0.3
     # room 0.52 # size 0.68
@@ -119,6 +59,8 @@ let
     # gain 0.52 # sustain 1.8 # release 1 # lpf 1900
     # room 0.72 # size 0.82
   -- --- comping: chords on a rhythm, then swung -----------------------------
+  -- swing8 = swingBy (1/5) 4, swing16 = swingBy (1/5) 8. The delay is in the
+  -- second half of each slice, so the offbeats lean back.
   compSpan = swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hSpan)))
   compLoad = swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hLoad)))
   compOver = swing8 (struct "t t ~ ~ t ~ ~ t" (pianoComp (slow 3 hOver)))
@@ -127,7 +69,7 @@ let
   colourSpan = swing16 (struct "~ ~ t ~ ~ ~ ~ t" (pianoCompHi ((slow 3 hSpan) |+ 12))) # gain 0.5
   colourLoad = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoCompHi ((slow 3 hLoad) |+ 12))) # gain 0.48
   colourOver = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoCompHi ((slow 3 hOver) |+ 12))) # gain 0.46
-  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
+  -- --- d6 double bass: bass1:0 is C2 (Tidal c3) ---------------------------
   bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.6 # release 0.55 # gain 0.9 # lpf 620 # lpq 0.2
     # room 0.3 # size 0.48
@@ -152,7 +94,7 @@ let
   bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.8 # release 0.9 # lpf 540
     # room 0.52 # size 0.7
-  -- --- brushes / ride: gretsch acoustic kit -------------------------------
+  -- --- d1/d2/d3 kick, brushes, ride: gretsch acoustic kit ----------------
   kickSoft = s "~ gretsch ~ gretsch" # n 13 # gain 0.8 # sustain 0.5 # release 0.15
     # lpf 360 # room 0.16 # size 0.28
   kickSparse = slow 2 $ s "gretsch" # n 13 # gain 0.82 # sustain 0.5 # release 0.18
@@ -173,8 +115,10 @@ let
     # lpf 6400 # room 0.3 # size 0.48
   hat = swing8 $ s "gretsch:4*2" # gain 0.5 # sustain 0.15 # release 0.05
     # lpf 7000 # room 0.1 # size 0.2
-  -- --- hand percussion / creaks / air -------------------------------------
+  -- --- d9/d10 hand percussion, creaks, air -------------------------------
   wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0 # gain 0.5 # room 0.3 # size 0.38
+  -- wood3 is fast-3 against the 4/4 pulse and shime is fast-5; several harmonic
+  -- phrases use slow 3/4 against the bass, so the layers drift in and out.
   wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # room 0.35 # size 0.42)
   shime = degradeBy 0.4 $ fast 5 (s "east" # n 5 # gain 0.34 # room 0.4 # size 0.48)
   rub = slow 2 $ s "gretsch" # n 8 # gain 0.42 # sustain 2.4 # release 1.1
@@ -189,7 +133,7 @@ let
     # room 0.65 # size 0.82
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
     # gain 0.12 # hpf 400 # lpf 1500 # room 0.7 # size 0.85
-  -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
+  -- --- d7 sax: sax:5 is C3 (Tidal c4) -------------------------------------
   reedCall = s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~"
     # release 0.7 # gain 0.42 # hpf 150 # lpf 1500 # lpq 0.25
     # room 0.62 # size 0.8
@@ -199,8 +143,9 @@ let
   reedCreak = slow 8 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~"
     # sustain 4 # release 2 # gain 0.36 # hpf 120 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85
-  -- --- trumpet: high, distant, never featured -----------------------------
-  -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7).
+  -- --- d8 trumpet: high, distant, never featured -------------------------
+  -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7). slow 16 means each
+  -- written note lands once every 16 cycles; expect long silences between stabs.
   trumpetOver = slow 16 $ s "trump" # n 5 # speedAt "b6" "d6 ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ~ ~ ~" # sustain 0.5
     # gain 0.34 # release 0.3 # lpf 2200 # lpq 0.2 # room 0.72 # size 0.82
   trumpetSnap = slow 16 $ s "trump" # n 7 # speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # sustain 0.5
@@ -216,6 +161,8 @@ let
 -- 1. Footing — the anchor is set. Solo double bass, room, a foot tap.
 -- ~32 cycles (~84 s at 92 BPM).
 
+-- setbpm jumps the clock; glideBpm steps the tempo 10x/s over 16 s, starting
+-- from the tempo current at call time. Leave each section long enough to finish.
 glideBpm 92 16
 
 d6 bassFoot
@@ -375,6 +322,8 @@ xfadeIn 6 24 $ bassAfter # gain 0.82
 -- the last chord: let it ring
 xfadeIn 4 32 $ pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85
 
+-- Open coda: the last chord rings, then fadeSilence and hush are separate
+-- steps — evaluate them in order, with a pause between.
 -- final fade: everything still sounding (piano, bass, trumpet, metal, air)
 fadeSilence 24 [4,5,6,8,9,10]
 

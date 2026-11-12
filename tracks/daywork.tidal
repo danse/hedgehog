@@ -1,49 +1,26 @@
 -- Daywork — the yard keeps moving (The Works, track 3)
 -- A day in the district around the Cantilever/Abutment failure: physical,
--- funny, mostly below the level of the argument. The crate is never opened.
--- 96 BPM home, G mixolydian. Acoustic ensemble plus physical object Foley.
--- Seven sections in four acts: Dawn (1-2), The Round (3-4), Delivery (5-6),
--- Standby (7). Through-composed, open coda.
+-- funny, mostly below the level of the argument. 96 BPM home, G mixolydian.
+-- Acoustic ensemble plus physical object Foley. Seven sections in four acts:
+-- Dawn (1-2), The Round (3-4), Delivery (5-6), Standby (7). Open coda.
 --
--- Eval the setup block below once (one `let` block), then play the sections in
--- order: First Light → Gate → Lift → Sweeper → Canteen → Handoff → Standby.
+-- Eval the setup block below, then play the sections in order:
+-- First Light → Gate → Lift → Sweeper → Canteen → Handoff → Standby.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
--- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
--- and glideBpm live in boot/BootTidal.hs; only track voices belong here.
---
--- Stream map:
---   d1 feet / brushes         d6 double bass
---   d2 gate / small objects   d7 sax
---   d3 glass / switches       d8 ceremony (toys / pling / trumpet)
---   d4 piano low              d9 debris / outside
---   d5 piano high             d10 air / room
--- dN is a stream slot; Tidal sends it to SuperDirt orbit N-1.
---
--- The work song is four notes, A-C-E-G (2-4-6-1), a rising mixolydian call.
--- It moves from the piano to the gate hits, the bass, the sax, the glass and
--- finally the toy.
--- Pitched samples use speedAt: bass1:0=C2 (c3), pluck:5=C3 (c4),
--- pluck:8=D4 (d5), sax:5=C3 (c4), trump:5=B5 (b6). The glass and bottle voices
--- use tink:0=F#8 (fs9) and bottle:0=D#8 (ds9) as nominal bases.
--- Palette: acoustic ensemble plus circus, tink, bottle, stomp, tok, bin, coins,
--- crow, flick, bubble and simplesine; perc, tabla, outdoor, insect, toys:12 and
--- hit:1 sparingly. No PA, printers, spoken numbers or control-room palette.
---
--- Structure: First Light → Gate → Lift → Sweeper → Canteen → Handoff → Standby.
--- Section story beats and performance cues live at the top of each section.
--- Handoff's pling is a live one-shot; Standby's fade and hush are separate steps.
--- Global notes (stream map, tuning, palette, levels) are above, in this header.
 
 setbpm 96
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Harmony: G mixolydian, voiced with Sound.Tidal.Chords.
+-- Palette: acoustic ensemble plus circus, tink, bottle, stomp, tok, bin, coins,
+-- crow, flick, bubble and simplesine; perc, tabla, outdoor, insect, toys:12 and
+-- hit:1 sparingly. No PA, printers, spoken numbers or control-room palette.
 -- ---------------------------------------------------------------------------
 let
   -- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
-  -- live in boot/BootTidal.hs. Only track-specific voices belong here.
+  -- and glideBpm live in boot/BootTidal.hs. Only track-specific voices here.
   --
   -- --- the work song --------------------------------------------------------
   -- Four notes: 2-4-6-1. A rising mixolydian call, passed from the piano to
@@ -53,7 +30,7 @@ let
   motifB = "a7 c8 ~ e8 ~ g8 ~ ~"
   motifS = "a3 c4 ~ e4 ~ g4 ~ ~"  -- the sax states the same four notes
   --
-  -- --- harmony: G mixolydian, through-composed -----------------------------
+  -- --- d4/d5 harmony: G mixolydian, through-composed ----------------------
   hLight = chordAt "<g4 c4 g4 d4>" "<add9 maj9 sus2 sus4>"
   hGate  = chordAt "<a4 c4 g4 d4>" "<min7 maj9 add9 sus4>"
   hLift  = chordAt "<c4 e4 a4 g4>" "<maj9 min7 min7 sus4>"
@@ -62,7 +39,7 @@ let
   hHand  = chordAt "<g4 c4 d4 g4>" "<maj9 sixNine sus4 major>"
   hStand = chordAt "<c4 g4 f4 g4>" "<maj9 sus2 maj9 add9>"
   --
-  -- --- piano: pluck samples tuned to their natural pitches -----------------
+  -- --- d4/d5 piano: pluck samples tuned to their natural pitches ----------
   -- pluck:5 is C3 and pluck:8 is D4 (scientific pitch; Tidal c4/d5).
   -- Each voice plays its sample once; `sustain` decides how long it rings.
   pianoPedal p = s "pluck" # n 5 # speedAt "c4" p
@@ -78,7 +55,7 @@ let
     # sustain 1.5 # release 0.8 # lpf 2800
     # room 0.68 # size 0.82 # amp 0.46
   --
-  -- --- comping: chords on a rhythm, then swung -----------------------------
+  -- --- d4/d5 comping: chords on a rhythm, then swung ----------------------
   compLight = swing8 (struct "t ~ ~ ~ t ~ ~ ~" (pianoComp (slow 3 hLight)))
   compGate  = swing8 (struct "t ~ t t ~ ~ t ~" (pianoComp (slow 3 hGate)))
   compLift  = swing8 (struct "t ~ ~ t ~ t ~ t" (pianoComp (slow 3 hLift)))
@@ -96,7 +73,7 @@ let
     # sustain 1.1 # release 0.45 # lpf 3600
     # room 0.5 # size 0.62 # amp 0.48
   --
-  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
+  -- --- d6 double bass: bass1:0 is C2 (Tidal c3) ---------------------------
   bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "~ g2 ~ ~ ~ d3 ~ ~"
     # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
     # room 0.45 # size 0.64
@@ -122,7 +99,7 @@ let
     # sustain 1.8 # release 0.8 # lpf 560 # lpq 0.18
     # room 0.4 # size 0.58 # amp 0.8
   --
-  -- --- brushes / ride: gretsch acoustic kit -------------------------------
+  -- --- d1/d2/d3 boots, brushes, ride: gretsch acoustic kit ---------------
   bootDawn = slow 4 $ s "stomp" # n 7
     # lpf 700 # hpf 40 # room 0.4 # size 0.55
   bootWork = swing8 $ s "~ stomp ~ stomp ~ ~ stomp ~" # n "<7 5 3>"
@@ -138,7 +115,7 @@ let
   rideSoft = swing8 $ s "gretsch:19 ~ gretsch:19 ~ gretsch:19 ~ gretsch:19 ~"
     # sustain 0.3 # release 0.15 # lpf 5000 # room 0.26 # size 0.4
   --
-  -- --- gate: turnstile, barrier, ticket, pigeon ----------------------------
+  -- --- d2/d9 gate: turnstile, barrier, ticket, pigeon ----------------------
   gateTick = swing8 $ s "tok tok ~ tok ~ tok ~ ~" # n "<0 1 2 3>"
     # hpf 120 # lpf 6000 # room 0.3 # size 0.42 # amp 0.44
   gateClang = slow 4 $ s "bin" # n 0 # speed 0.72
@@ -150,7 +127,7 @@ let
     # speed (range 0.9 1.2 $ slow 8 rand) # hpf 300 # lpf 5000
     # room 0.55 # size 0.72 # amp 0.22
   --
-  -- --- hoist: stall, chain, motor -----------------------------------------
+  -- --- d1/d3/d9 hoist: stall, chain, motor --------------------------------
   liftStall = slow 8 $ s "circus" # n 0 # speed 0.95
     # hpf 80 # lpf 6000 # room 0.5 # size 0.65 # amp 0.5
   liftChain = degradeBy 0.2 $ swing8 $ s "metal ~ metal metal ~ metal ~ metal"
@@ -160,7 +137,7 @@ let
     # sustain 3.6 # release 0.4 # lpf 220 # hpf 20
     # room 0.5 # size 0.6 # amp 0.16
   --
-  -- --- sweeper: the little machine and its broom ---------------------------
+  -- --- d2/d9 sweeper: the little machine and its broom ---------------------
   sweeperMiss = slow 8 $ s "circus" # n 1 # speed 1
     # hpf 80 # lpf 5000 # room 0.45 # size 0.62 # amp 0.46
   sweepBrush = swing8 $ s "perc ~ perc perc ~ perc ~ perc" # n "<0 2 4>"
@@ -170,7 +147,7 @@ let
     # speed (range 0.7 1.1 $ slow 8 rand) # hpf 500 # lpf 3200
     # room 0.6 # size 0.78 # amp 0.1
   --
-  -- --- canteen: cups, trays, cutlery, a bell ------------------------------
+  -- --- d3/d9 canteen: cups, trays, cutlery, a bell -------------------------
   cupTick = swing8 $ s "tok ~ tok ~ tok tok ~ tok" # n "<1 2 3 0>"
     # speed 1.35 # hpf 400 # lpf 7000 # room 0.35 # size 0.48 # amp 0.36
   cupClink = degradeBy 0.3 $ swing16 $ s "tink ~ tink ~ ~ tink ~ tink"
@@ -185,12 +162,14 @@ let
     # hpf 400 # lpf 6000 # room 0.4 # size 0.55 # amp 0.2
   canteenBell = slow 8 $ s "tink" # n 0 # speed 0.75
     # hpf 400 # lpf 7000 # room 0.55 # size 0.7 # amp 0.3
+  -- The glass and bottle are tuned from nominal bases: tink:0 = F#8 (fs9),
+  -- bottle:0 = D#8 (ds9).
   motifGlass = slow 2 $ s "tink" # n 0 # speedAt "fs9" motifG
     # hpf 500 # lpf 9000 # room 0.55 # size 0.7 # amp 0.22
   bottleHoot = slow 4 $ s "bottle" # n 0 # speedAt "ds9" motifB
     # hpf 500 # lpf 9000 # room 0.6 # size 0.75 # amp 0.2
   --
-  -- --- handoff: crate, toy, one pling -------------------------------------
+  -- --- d8/d9 handoff: crate, toy, one pling -------------------------------
   crateScrape = degradeBy 0.35 $ swing8 $ s "perc ~ perc perc ~ perc ~ perc"
     # n "<1 3 5>" # speed (range 0.7 1.1 $ slow 4 rand)
     # hpf 150 # lpf 3000 # room 0.4 # size 0.55 # amp 0.36
@@ -199,7 +178,7 @@ let
   handoffPop = slow 16 $ s "circus" # n 2
     # hpf 100 # lpf 7000 # room 0.5 # size 0.65 # amp 0.46
   --
-  -- --- standby: switches, mains, night ------------------------------------
+  -- --- d3/d9 standby: switches, mains, night ------------------------------
   switchOn = slow 8 $ s "flick" # n "<15 12 14 13>"
     # hpf 500 # lpf 9000 # room 0.4 # size 0.55
   switchOff = slow 8 $ s "flick" # n "<13 14 12 15>"
@@ -211,7 +190,7 @@ let
     # speed (range 0.8 1.1 $ slow 8 rand) # hpf 900 # lpf 6000
     # room 0.55 # size 0.72 # amp 0.12
   --
-  -- --- air / room ---------------------------------------------------------
+  -- --- d10 air / room -----------------------------------------------------
   air = slow 8 $ s "breath" # n 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82 # amp 0.3
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
@@ -222,7 +201,7 @@ let
   yardAir = degradeBy 0.4 $ slow 4 $ s "outdoor" # n (irand 6)
     # sustain 6 # hpf 200 # lpf 2400 # room 0.7 # size 0.85 # amp 0.14
   --
-  -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
+  -- --- d7 sax: sax:5 is C3 (Tidal c4) -------------------------------------
   reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ c4 ~ ~ ~"
     # sustain 2.4 # release 1 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82 # amp 0.3
@@ -239,7 +218,7 @@ let
     # sustain 2.8 # release 1.2 # hpf 130 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85 # amp 0.26
   --
-  -- --- trumpet: high, distant, never featured -----------------------------
+  -- --- d8 trumpet: high, distant, never featured --------------------------
   -- trump:5 is B5 (Tidal b6); the spark drops to a high E.
   trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
     # sustain 0.5 # release 0.35 # lpf 2800 # lpq 0.2

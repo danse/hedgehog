@@ -3,29 +3,24 @@ import Data.String (fromString)
 -- Hedgehog — ambient live set
 -- 72 BPM · D minor · ~16 min · five movements.
 --
--- Eval the setup block below first (C-RET), then work through the layer blocks
--- in order: bed → texture → pulse → harmony → melody → transitions.
---
--- See notes/set-plan.md for the movement plan and cue notes. The root README has
--- the general start/run instructions.
+-- Eval the setup block below, then work through the layer blocks in order:
+-- bed → texture → pulse → harmony → melody → transitions.
+-- See notes/set-plan.md for the movement plan and cue notes.
 
 setbpm 72
 
 -- Layers. Each definition is one paragraph: eval once after boot.
 -- Re-eval a definition only when you want to change that instrument.
 
--- Two SuperDirt gotchas, both silent-show-stoppers:
---  1. `size` is valid 0..1 only. Above ~0.9 the feedback gain in
---     `dirt_reverb` exceeds unity and the orbit self-oscillates at full
---     scale — and keeps ringing after hush. Never write size > 0.9.
---  2. `gain` is not linear: amp = amp * gain^4. gain 0.5 is -24 dB, not
---     "half". Keep layers in 0.75..1.0 and trim with `amp` (linear) instead.
--- Baseline is gain 1.0, so these numbers are the whole mix balance.
-
 -- 1
 let
+  -- `size` must stay <= 0.9: above that the dirt_reverb feedback gain exceeds
+  -- unity, the orbit self-oscillates and keeps ringing after hush.
   bed = slow 8 $ bedStudy # room 0.95 # size 0.9 # lpf 1400
   bedStudy = s "padlong"
+  -- `gain` is not linear (amp = amp * gain^4); gain 0.5 is -24 dB, not "half".
+  -- Keep layers in 0.75..1.0 and trim with `amp` (linear) instead. Baseline is
+  -- gain 1.0, so these numbers are the whole mix balance.
   -- 2
   droneStudy n = s "hedge_sine" # note n # gain 0.88 # room 0.8
   droneS n s = slow 8 $ droneStudy n # sustain s

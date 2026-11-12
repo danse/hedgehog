@@ -69,6 +69,19 @@ else
   ok "ghci can load Sound.Tidal.Context"
 fi
 
+echo "[tracks]"
+if command -v ghci >/dev/null 2>&1; then
+  if track_out=$(scripts/check-tidal.sh 2>&1); then
+    n=$(find "$root/tracks" -name '*.tidal' | wc -l)
+    ok "all $n track files typecheck (silent boot)"
+  else
+    bad "track typecheck"
+    printf '%s\n' "$track_out" | sed 's/^/        /'
+  fi
+else
+  warn "ghci missing — track typecheck skipped"
+fi
+
 echo "[disk]"
 avail=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
 if [ "${avail:-0}" -ge 10 ]; then

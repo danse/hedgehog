@@ -21,7 +21,7 @@ setup block and sections. Evaluate the setup block at the top first. See
 ## Start
 
 ```sh
-scripts/check.sh        # verify binaries, audio, Tidal, samples, disk
+scripts/check.sh        # verify binaries, audio, Tidal, samples, disk, tracks
 scripts/up.sh           # start SuperDirt
 scripts/edit.sh         # open Emacs on tracks/
 ```

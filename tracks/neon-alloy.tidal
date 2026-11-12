@@ -2,30 +2,10 @@
 -- 118 BPM · A minor. Driving bass, crisp electro drums, shimmering synths and
 -- hooks. Uses hedge_sine/hedge_pad/hedge_noise.
 --
--- Gotchas: reverb size <= 0.9
+-- Eval the setup block below, then play the sections in order:
+-- Intro → Verse → Chorus → Break → Final.
 --
--- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
---   d1  kick                 kick / kickDrive
---   d2  snare / clap         snare / clap
---   d3  hats / percussion    hats / hatsOpen / perc
---   d4  chords / synth / arp chords / chordsStab / arp
---   d5  lead / hook          hook / lead
---   d6  texture / accents    stab / hoover / shimmer
---   d7  fx                   riser / impact
---   d8  bass                 bassMain + bassOct / bassDrive
---
--- Structure (~4–6 min):
---   1. Intro — beat + bass + filtered chords.
---   2. Verse — groove settles, hook teases in.
---   3. Chorus — full lift: hook, arp/stabs, open hats, bass drive option.
---   4. Break — strip to chords/bass fragments + tension.
---   5. Final — last chorus energy and outro.
---
--- Notes:
---   - `hoover`/sample names depend on your Dirt-Samples; swap if missing
---     (`moog`, `stab`, `arpy` are safe fallbacks).
---   - Start SuperDirt/audio with scripts/up.sh, open Tidal in Emacs, eval the
---     setup block, then work through sections 1→5 in this file.
+-- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4.
 
 setbpm 118
 
@@ -77,6 +57,8 @@ let
   --
   -- d6 texture / accents
   stab = s "stab(3,8)" # n (irand 8) # gain 0.78 # lpf 3000 # room 0.2 # size 0.3
+  -- `hoover` depends on your Dirt-Samples; swap if missing (`moog`, `stab`,
+  -- `arpy` are safe fallbacks).
   hoover = slow 4 $ n "<a3 f3 g3 e3>" # s "hoover" # gain 0.76 # legato 0.8 # lpf 2000 # room 0.4 # size 0.5
   shimmer = degradeBy 0.3 $ fast 2 $ s "space:2*4?" # speed (range 1 2.5 $ rand) # gain 0.68 # hpf 1200 # lpf 7000 # room 0.35 # size 0.45
   --

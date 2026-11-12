@@ -1,41 +1,13 @@
 -- Substructure — complex-bass ambient
---
 -- 72 BPM · D minor · focus: complex bass structure (8-cycle evolving form).
 -- No pads or drones: harmony/texture use fragmented, rhythmic or staccato
 -- samples (arpy, moog, stab, glitch, space, industrial, pluck).
 -- Uses hedge_sine/hedge_pad/hedge_noise.
 --
--- Gotchas: reverb size <= 0.9
+-- Eval the setup block below, then play the sections in order:
+-- Intro → Build → Main → Breakdown → Rebuild → Outro.
 --
--- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
---   d1  kick                 kick
---   d2  hats / click         hats / click
---   d3  percussion           perc
---   d4  harmony (continuous) chordFlow / chordStab / chordStabAlt / chordPulse / stabHit
---   d5  texture fragments    glitchTex / spaceTex / metalTex
---   d6  motif                motif / motifArp
---   d7  fx                   riser / burst
---   d8  bass (main)          bassMain / bassDrive / bassBreak
---   d9  bass (anchor)        bassAnchor
---   d10 bass (ghost/detail)  bassGhost
---
--- Structure (~6–8 min sketch, extend by repeating sections):
---   1. Intro — sparse texture + bass enters (main, dark filter), establish the 8-cycle form.
---   2. Build — add anchor/ghost bass layers, harmony stabs, light pulse/texture.
---   3. Main — full groove: kick/hats, stabs/texture, motif answers bass; optional drive.
---   4. Breakdown — remove drums/detail, bassBreak/dark bass + sparse stabs/texture.
---   5. Rebuild — pulse and detail return: bassDrive/anchor/ghost, pulsing harmony,
---      metal/space texture and motifArp; optional kick for the last wave.
---   6. Outro — dissolve to bass fragments and sparse texture, then silence.
---
--- Notes:
---   - Bass is intentionally complex: two 4-cycle phrases (bassA/B) concatenated
---     into an 8-cycle form, patterned sustain, and moving filter. Anchor/ghost
---     layers add rhythmic structure without cluttering the low root.
---   - Keep headroom: bass + kick + stabs can build up. If muddy, lower d4/d8
---     gain slightly or cut d8 lpf.
---   - Start SuperDirt/audio with scripts/up.sh, open Tidal in Emacs, eval the
---     setup block, then work through sections 1→6 or improvise with the stream map.
+-- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4.
 
 setbpm 72
 
@@ -44,6 +16,8 @@ setbpm 72
 -- ---------------------------------------------------------------------------
 -- d8 main/variants, d9 anchor, d10 ghost
 let
+  -- bassA and bassB are 4 cycles each; cat makes the 8-cycle form. Anchor and
+  -- ghost layers add rhythmic structure without cluttering the low root.
   bassA = "<[d2 ~ a2 d3 ~ ~ f2 ~] [d2 ~ ~ a2 ~ c3 ~ bb1] [d2 f2 ~ a2 ~ d3 c3 ~] [bb1 ~ d2 ~ a2 ~ f2 ~]>"
   bassB = "<[d2 ~ a2 ~ f2 d3 ~ c3] [a1 ~ d2 ~ c3 ~ bb1 a1] [d2 a2 ~ f2 ~ d3 ~ c3] [bb1 d2 ~ a2 ~ f2 ~ d2]>"
   bassPhrase = cat [bassA, bassB]  -- 8 cycles
@@ -109,6 +83,8 @@ let
   burst = degradeBy 0.2 $ s "glitch(5,16)" # n (irand 16) # gain 0.78 # speed (range 0.8 1.6 $ rand) # room 0.25 # size 0.3
 
 -- convenience (fadeSilence lives in boot/BootTidal.hs)
+-- Keep headroom: bass + kick + stabs can build up. If muddy, lower d4/d8 gain
+-- slightly or cut d8 lpf.
 allOrbits = [1..10]
 
 -- 1. Intro — establish texture fragments and complex bass form
