@@ -143,23 +143,23 @@ d10 burst
 
 -- rebuild cue
 once riser
--- clear the breakdown burst smoothly
-xfadeIn 10 8 silence
--- pulse returns, lighter than Main
-xfadeIn 6 8 click
-xfadeIn 8 8 $ degradeBy 0.45 perc
--- driven bass + anchor, ghost answering above
-xfadeIn 2 8 bassDrive
-xfadeIn 4 8 $ bassAnchor # lpf 280
-xfadeIn 5 8 bassGhost
+-- clear the breakdown burst smoothly. Pulse returns, lighter than
+-- Main. driven bass + anchor, ghost answering above
+fadeMulti 16 [
+  (2, bassDrive),
+  (4, bassAnchor # lpf 280),
+  (5, bassGhost),
+  (6, click),
+  (8, degrade perc),
+  (10, silence)]
 
 -- alternate harmony colour: pulsing casio + arpy stabs
-xfadeIn 3 8 $ stack [chordPulse, chordStab]
 xfadeIn 1 8 $ stack [metalTex, degradeBy 0.25 spaceTex]
+xfadeIn 3 8 $ stack [chordPulse, chordStab]
 
 -- the pulsing casio is worth listening for a while
 
-fadeMulti 8 [
+fadeMulti 16 [
   -- optional: add the kick for the last wave
   (7, kick),
   -- higher, more active motif
@@ -170,8 +170,8 @@ fadeMulti 8 [
 -- transition into the outro
 once riser
 -- remove layers gradually
-xfadeIn 3 16 silence
 fadeSilence 8 [4,10]
+xfadeIn 3 16 silence
 
 fadeSilence 8 [5,6,7,8,9]
 -- bass fragments over sparse texture

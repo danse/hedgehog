@@ -107,8 +107,7 @@ xfadeIn 3 24 noiseBed
 -- 2. Ascent — high pad, soft bass, first arp hint
 
 -- texture
-d1 subDrone
-xfadeIn 2 8 lowPad
+xfadeIn 2 8 lowPad -- -lpf
 fadeMulti 16 [
   (4, highPad # lpf 1500),
   (5, bassPulse),
@@ -120,8 +119,8 @@ xfadeIn 6 24 $ arp # lpf 1800
 -- 3. Expansion — full synth palette (still no drums)
 
 fadeMulti 8 [
-  (4, highPad), -- without the lpf
-  (6, arp)] -- without the lpf
+  (4, highPad), -- -lpf
+  (6, arp)] -- -lpf
 
 -- punctuation
 fadeMulti 16 [
@@ -147,11 +146,6 @@ fadeMulti 16 [
   (7, melody),
   -- optional: let the arp drift further back
   (6, arp # lpf 1800)]
-
-fadeMulti 16 [
-  (8, bell),
-  (3, noiseBed),
-  (9, shimmer)]
 
 -- 5. Drift — strip lead/bell/arp, keep pads, texture and long bass
 

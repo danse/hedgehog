@@ -70,17 +70,7 @@ d4 tick
 
 d2 $ drone "d3" # amp 0.25 -- slightly lower the drone
 
--- Lift it gently.
--- d4 $ tick # gain 0.38 # lpf 3200
-
--- Half-time feel.
--- d4 $ slow 4 $ tick
-
--- Drop it out again.
--- d4 silence
-
--- Pad harmony: Dm9 → Cmaj7 → Bbmaj7 → Am7, one chord every 4 cycles.
-
+-- Dm9 → Cmaj7 → Bbmaj7 → Am7, one chord every 4 cycles.
 d5 $ pad harmony
 
 -- Open the filter slowly across the progression.
@@ -90,7 +80,6 @@ d5 $ pad harmony
 -- d5 $ pad harmony # lpf 700 # gain 0.35
 
 -- Sparse plucked melody. Space is the instrument.
-
 d6 $ degradeBy 0.3 pluck
 
 -- Denser, for the bloom.
@@ -110,6 +99,4 @@ d6 $ degradeBy 0.3 pluck
 
 once $ slow 8 riser
 
-a = [1,2,3,4,5,6]
-
-fadeSilence 16 a
+fadeSilence 24 [1,2,3,4,5,6]
