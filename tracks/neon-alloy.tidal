@@ -1,0 +1,199 @@
+-- Neon Alloy — glam electro-pop / synth noir (separate track)
+-- 118 BPM · A minor. Driving bass, crisp electro drums, shimmering synths and
+-- hooks. Uses hedge_sine/hedge_pad/hedge_noise.
+--
+-- Eval the setup block below (C-RET), then play the sections in order:
+-- Intro → Verse → Chorus → Break → Final.
+--
+-- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4.
+--
+-- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
+--   d1  kick                 kick / kickDrive
+--   d2  snare / clap         snare / clap
+--   d3  hats / percussion    hats / hatsOpen / perc
+--   d4  chords / synth / arp chords / chordsStab / arp
+--   d5  lead / hook          hook / lead
+--   d6  texture / accents    stab / hoover / shimmer
+--   d7  fx                   riser / impact
+--   d8  bass                 bassMain + bassOct / bassDrive
+--
+-- Structure (~4–6 min):
+--   1. Intro — beat + bass + filtered chords.
+--   2. Verse — groove settles, hook teases in.
+--   3. Chorus — full lift: hook, arp/stabs, open hats, bass drive option.
+--   4. Break — strip to chords/bass fragments + tension.
+--   5. Final — last chorus energy and outro.
+--
+-- Notes:
+--   - `hoover`/sample names depend on your Dirt-Samples; swap if missing
+--     (`moog`, `stab`, `arpy` are safe fallbacks).
+--   - Start SuperDirt/audio with scripts/up.sh, open Tidal in Emacs, eval the
+--     setup block, then work through sections 1→5 in this file.
+
+setbpm 118
+
+-- ---------------------------------------------------------------------------
+-- Voices / patterns (eval this whole block together)
+-- ---------------------------------------------------------------------------
+let
+  -- d1 kick
+  kick = s "808bd(<3 4>,8)" # n 0 # gain 0.9 # lpf 220 # room 0.04 # size 0.12
+  kickDrive = s "808bd*4" # n "<0 0 1 0>" # gain 0.88 # lpf 240 # room 0.03 # size 0.1
+  --
+  -- d2 snare / clap
+  snare = s "~ 808sd ~ 808sd" # n 1 # gain 0.84 # lpf 4200 # room 0.12 # size 0.2
+  clap = s "~ cp ~ [~ cp?]" # gain 0.8 # room 0.18 # size 0.3 # lpf 5000
+  --
+  -- d3 hats / percussion
+  hats = s "[808hc*2 808oh] 808hc*2 [808hc 808oh?] 808hc*2" # gain (range 0.68 0.8 $ slow 4 rand)
+    # pan (range 0.4 0.6 $ fast 2 rand) # lpf 9000 # room 0.06 # size 0.1
+  hatsOpen = s "~ ~ 808oh ~" # gain 0.76 # release 0.12 # room 0.08 # size 0.12
+  perc = degradeBy 0.25 $ s "glitch(3,8,<0 5>)" # n (irand 8) # gain 0.72 # speed (choose [1,1.5,2]) # lpf 5000 # room 0.1 # size 0.15
+  --
+  -- d8 bass (driving, glam-electro; complex enough to move, not sparse)
+  bassGain = gain 1
+  bassRiff = "<[a1 a1 ~ a2 ~ g2 ~ e2] [f1 ~ f1 a1 ~ c2 ~ a1] [g1 g1 ~ g2 ~ e2 ~ d2] [e1 ~ e1 g1 ~ b1 ~ gs1]>"
+  bassMain = note bassRiff # s "hedge_sine"
+    # sustain "0.22 0.18 0.12 0.28 0.1 0.2 0.12 0.24"
+    # lpf (range 220 900 $ slow 8 sine) # lpq 0.18 # shape 0.15
+    # room 0.06 # size 0.12
+  bassOct = note (bassRiff |- 12) # s "hedge_sine"
+    # sustain 0.16 # lpf 1400 # lpq 0.12 # shape 0.2
+  bassDrive = fast 2 $ note "<a1 f1 g1 e1>" # s "hedge_sine"
+    # sustain 0.14 # lpf (range 300 1200 $ fast 2 saw) # lpq 0.22 # shape 0.25
+  chordsGain = gain 1 # amp 4
+  --
+  -- d4 chords / synth bed (supporting, kept under bass/drums/hook)
+  chords = slow 2 $ n "<[a3,c4,e4] [f3,a3,c4] [g3,b3,d4] [e3,gs3,b3]>" # s "hedge_pad"
+    # sustain 1.3 # chordsGain # lpf (range 700 1800 $ slow 8 sine) # room 0.32 # size 0.5
+  chordsStab = degradeBy 0.15 $ n "<[a4,c5,e5] ~ [f4,a4,c5] ~ [g4,b4,d5] ~ [e4,gs4,b4] ~>" # s "moog"
+    # legato 0.3 # lpf 1700 # room 0.22 # size 0.3 # amp 0.3
+  arp = fast 2 $ n "a4 c5 e5 a5 e5 c5" # s "arpy"
+    # chordsGain # legato 0.45 # speed (choose [1,1,1,2]) # lpf (range 1400 3200 $ slow 4 sine) # room 0.25 # size 0.35 # amp 0.5
+  --
+  -- d5 lead / hook
+  hook = slow 2 $ n "<a5 ~ c6 b5 ~ a5 g5 ~ e5 ~ g5 a5 ~ ~ ~ ~>" # s "arpy"
+    # gain 0.84 # legato 0.55 # delay 0.4 # delaytime (3/16) # delayfb 0.3
+    # lpf 4200 # room 0.45 # size 0.55
+  lead = n "<~ a4 ~ c5 ~ e5 ~ [d5 c5]>" # s "casio"
+    # gain 0.8 # legato 0.4 # speed 1 # lpf 3500 # room 0.35 # size 0.45
+  --
+  -- d6 texture / accents
+  stab = s "stab(3,8)" # n (irand 8) # gain 0.78 # lpf 3000 # room 0.2 # size 0.3
+  hoover = slow 4 $ n "<a3 f3 g3 e3>" # s "hoover" # gain 0.76 # legato 0.8 # lpf 2000 # room 0.4 # size 0.5
+  shimmer = degradeBy 0.3 $ fast 2 $ s "space:2*4?" # speed (range 1 2.5 $ rand) # gain 0.68 # hpf 1200 # lpf 7000 # room 0.35 # size 0.45
+  --
+  -- d7 fx
+  riser = s "hedge_noise" # sustain 4 # gain (range 0.42 0.8 $ slow 4 saw) # lpf (range 400 6000 $ slow 4 saw) # room 0.75 # size 0.7
+  impact = s "industrial:1" # gain 0.82 # speed 0.7 # lpf 1800 # room 0.3 # size 0.4
+
+-- 1. Intro — beat + bass + filtered synths
+
+
+d1 kick
+
+d3 hats
+
+d8 $ bassMain # lpf 320
+
+d2 snare
+d8 $ stack [bassMain, bassOct]
+
+xfadeIn 4 8 $ chords # lpf 700
+
+-- 2. Verse — groove settles, hook teases
+
+d1 kick
+d2 snare
+d3 $ stack [hats, hatsOpen]
+d8 $ stack [bassMain, bassOct]
+d6 $ degradeBy 0.2 $ shimmer
+
+-- tease the hook
+d5 $ hook # lpf 2800
+-- add accents
+d6 $ stack [shimmer, stab]
+
+xfadeIn 4 8 chordsStab -- noticeable
+
+-- 3. Chorus — full lift
+
+d1 kick
+d2 $ stack [snare, clap]
+d3 $ stack [hats, hatsOpen, perc # gain 0.66]
+d8 $ stack [bassMain, bassOct]
+d5 hook -- very subtle i think it might be enjoyable even with more prominence
+d6 $ stack [stab, shimmer # gain 0.64]
+
+xfadeIn 4 8 silence
+
+xfadeIn 4 16 $ stack [chords, arp] -- juggler melody
+
+-- drive variation
+d1 kickDrive
+d8 bassDrive
+xfadeIn 4 8 $ stack [chords, arp, chordsStab] -- future melody
+
+-- pull back
+d5 lead
+d1 kick
+d8 $ stack [bassMain, bassOct]
+
+-- 4. Break — tension, strip back
+
+-- keep the harmony present, just darker; mute instead if it feels too lush
+-- xfadeIn 4 8 $ silence
+xfadeIn 4 8 $ chords # lpf (range 850 1400 $ slow 8 sine)
+
+-- thin the drums
+xfadeIn 1 4 silence
+
+d2 silence
+
+-- the hook carries over from the chorus; fade it if the break should be bare
+xfadeIn 5 8 silence
+
+xfadeIn 3 8 hats
+
+d6 $ hoover # lpf 2400
+
+d8 $ stack [bassMain, bassOct] # lpf (range 350 520 $ slow 8 sine)
+
+-- meditative at this point, and complex enough
+
+-- fx / build
+d7 riser
+d3 $ stack [hats, s "~ ~ 808oh ~" # gain 0.78]
+
+-- drop riser before chorus
+d7 silence
+d7 impact
+
+-- 5. Final — last chorus and outro
+
+-- wake up again
+d1 kick
+d2 $ stack [snare, clap # gain 0.74]
+d3 $ stack [hats, hatsOpen]
+d5 hook
+d6 stab
+d8 $ stack [bassMain, bassOct]
+
+-- outro: fade elements
+
+-- supporting (drop arp if still prominent)
+fadeMulti 8 [
+  (4, stack [chords, arp]),
+  (5, silence),
+  (6, silence)]
+
+xfadeIn 4 16 $ chords # lpf (range 900 1400 $ slow 8 sine) # gain 0.78
+
+fadeSilence 8 [2, 3]
+
+xfadeIn 8 16 $ stack [bassMain # gain 0.94, bassOct # gain 0.6] # lpf 400
+xfadeIn 1 16 silence
+
+fadeSilence 16 [1, 4, 8] -- some streams still missing here
+
+hush

@@ -5,7 +5,9 @@
 -- Seven sections in four acts: Dawn (1-2), The Round (3-4), Delivery (5-6),
 -- Standby (7). Through-composed, open coda.
 --
--- Eval this whole file at once (the `let` below is one block).
+-- Eval the setup block below once (one `let` block), then play the sections in
+-- order: First Light → Gate → Lift → Sweeper → Canteen → Handoff → Standby.
+--
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- Shared helpers (speedAt, swing8, swing16, chordAt, fadeSilence, fadeMulti)
 -- and glideBpm live in boot/BootTidal.hs; only track voices belong here.
@@ -30,6 +32,8 @@
 --
 -- Structure: First Light → Gate → Lift → Sweeper → Canteen → Handoff → Standby.
 -- Section story beats and performance cues live at the top of each section.
+-- Handoff's pling is a live one-shot; Standby's fade and hush are separate steps.
+-- Global notes (stream map, tuning, palette, levels) are above, in this header.
 
 setbpm 96
 
@@ -240,3 +244,186 @@ let
   trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
     # sustain 0.5 # release 0.35 # lpf 2800 # lpq 0.2
     # room 0.72 # size 0.82 # amp 0.2
+
+-- 1. First Light — Dawn. The yard switches on; nobody is in a hurry.
+-- ~40 cycles (~100 s at 96 BPM).
+-- The first switch, a boot on concrete, a low G add9, then the work song on the
+-- piano. Sparse by design: let the room and the objects arrive one at a time.
+
+glideBpm 96 16
+-- clear anything left from the previous piece
+fadeSilence 8 [1,2,3,7,8,9]
+
+-- the first switches
+d3 switchOn
+-- a boot on concrete
+d1 $ bootDawn # amp 0.2
+-- the bass finds the floor
+d6 bassLight
+
+-- the work song, first time: piano high, unaccompanied
+d5 $ motifPiano # amp 0.2
+
+-- low G add9, still dark
+d4 $ slow 2 $ pianoPedal (slow 4 hLight) # amp 0.3
+
+-- a brush, half-awake
+fadeMulti 8 [
+  (1, stack [bootDawn, brushSoft]),
+  -- the yard breathes
+  (10, stack [air, windBed]),
+  (9, gravel # amp 0.3)]
+
+-- 2. Gate — The barrier, the turnstile, the dropped ticket, a pigeon.
+-- The first shift arrives; four gate hits carry the work song's rhythm.
+-- ~40 cycles (~100 s at 96 BPM).
+
+glideBpm 96 16
+-- the gate takes over the pulse
+d2 $ stack [gateTick, degradeBy 0.25 gateClang]
+fadeMulti 16 [(1, bootWork), (4, compGate)]
+
+d6 $ bassGate # amp 0.4
+
+fadeMulti 24 [
+  -- the high colour of the fence
+  (5, colourGate),
+  -- the pigeon and the dropped ticket, off to one side
+  (9, stack [pigeon, ticket])]
+
+-- brushes and ride arrive with the first shift
+fadeMulti 24 [(1, stack [bootWork, brushSoft]), (3, rideSoft)]
+
+-- 3. Lift — The hoist tries to lift the crate and stalls. Chain, motor, a
+-- bounce. The bass takes the work song low and slow.
+-- ~40 cycles (~109 s at 88 BPM).
+
+glideBpm 88 16
+-- the gate falls away; the hoist is the new pulse
+fadeSilence 12 [2,3,4]
+d1 $ stack [bootWork, liftStall]
+xfadeIn 6 16 bassLift
+
+p9 = stack [liftChain, crateScrape]
+-- chain and crate
+xfadeIn 9 16 $ p9 # amp 0.5
+-- the motor surges
+xfadeIn 3 16 motor
+-- the high shadow of the hook
+xfadeIn 5 24 colourLift
+-- the reed hears the strain
+xfadeIn 7 24 reedLift
+
+xfadeIn 4 16 compLift
+-- one high spark from the top of the lift
+xfadeIn 8 32 trumpetSpark
+
+-- the hoist gives up; the bass states the work song
+xfadeIn 6 16 motifBass
+
+-- 4. Sweeper — The little machine goes round and round, missing the same
+-- corner. Brushes, grit, a pigeon following the broom; the sax hums the round.
+-- ~40 cycles (~104 s at 92 BPM).
+
+glideBpm 92 16
+-- the hoist gives way to the little machine
+fadeSilence 12 [2,3,4,7,8]
+d1 $ stack [bootWork, brushWork]
+d2 $ stack [sweeperMiss, sweepBrush]
+xfadeIn 6 16 bassSweep
+
+xfadeIn 4 16 compSweep
+
+-- grit and a pigeon following the broom
+xfadeIn 9 16 $ stack [sweepGrit, pigeon]
+xfadeIn 5 24 colourSweep
+-- the reed starts to hum the round
+xfadeIn 7 24 reedRound
+-- one high spark over the fence
+xfadeIn 8 32 trumpetSpark
+
+-- 5. Canteen — Break. Cups, trays, cutlery, a bottle hoot; the crate stays
+-- under the table. The sax gets the tune.
+-- ~36 cycles (~86 s at 100 BPM).
+
+glideBpm 100 16
+-- the sweeper parks; the room fills with small objects
+fadeSilence 12 [1,4,7,8,9]
+d1 brush
+fadeMulti 16 [
+  (2, stack [cupTick, canteenBell]),
+  (3, stack [cupClink, bottleHoot]),
+  (6, bassCant)]
+xfadeIn 5 24 colourCant
+
+xfadeIn 4 16 compCant
+
+-- trays, cutlery and a drink being poured
+xfadeIn 9 16 $ stack [tray, cutlery, pour]
+xfadeIn 10 24 $ stack [air, yardAir]
+
+-- the reed gets the tune
+once reedCant
+
+-- 6. Handoff — The crate changes hands. A scrape, a latch, one toy tune and
+-- one pling. A small ceremony; nobody opens it.
+-- ~36 cycles (~94 s at 92 BPM).
+-- The `hit:1` line is a true one-shot (`once`): evaluate it when the crate
+-- changes hands. `handoffPop` and the room keep running until the fade.
+
+glideBpm 92 16
+-- the canteen clears; only the crate and two sets of hands
+fadeSilence 12 [1,2,3,7,9]
+d6 bassHand
+xfadeIn 4 16 compHand
+xfadeIn 5 24 colourHand
+d1 handStep
+xfadeIn 9 16 $ stack [crateScrape, crateThud]
+xfadeIn 10 24 air
+
+-- the crate latch
+d2 handoffPop
+-- the high reed holds one note
+xfadeIn 7 24 reedHand
+
+-- the handover itself: one pling
+once $ s "hit" # n 1 # hpf 400 # lpf 8000 # room 0.5 # size 0.65 # amp 0.3
+
+-- let the ceremony ring, then take the room down
+fadeSilence 16 [1,2,4,5,6,7,8,9]
+xfadeIn 10 24 $ stack [air, windBed]
+
+-- 7. Standby — Lights off, one by one. The mains hum dies; insects, air, one
+-- last glass note, the work song very low. The yard holds its breath; open coda.
+-- ~40+ cycles (~114 s+ at 84 BPM; open-ended).
+-- Leave the last chord and air ringing; `fadeSilence` and `hush` are separate
+-- steps, evaluated in that order after the room has decayed.
+
+-- sharp drop, let the fadesilence decay before
+
+glideBpm 84 16
+-- the last machine stops; the room gets bigger
+fadeSilence 16 [1,2,4,7,8,9]
+d6 $ bassStand # amp 0.4
+xfadeIn 5 16 pianoCoda
+-- the last low chord, very sparse
+xfadeIn 4 24 $ slow 8 $ pianoPedal (slow 8 hStand)
+d3 switchOff
+
+-- the mains hum dies
+xfadeIn 3 32 mainsDown
+-- a few insects in the dark
+xfadeIn 9 32 $ degradeBy 0.7 insectChat
+-- one last glass note from the canteen
+xfadeIn 8 24 $ stack [motifGlass, bottleHoot]
+-- a last, distant reed
+xfadeIn 7 32 reedStand
+
+-- the work song one more time, very low
+xfadeIn 6 8 motifBass
+
+-- leave the room ringing, then fade
+fadeSilence 24 [3,4,5,6,7,8,10]
+
+-- hush when the room has decayed
+hush

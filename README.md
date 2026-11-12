@@ -3,8 +3,9 @@
 Live-coded tracks. TidalCycles → SuperDirt → PipeWire JACK, edited in a
 project-contained Emacs.
 
-Tracks live in `tracks/`; each folder has its own tiny README and a `00-setup.tidal`
-to evaluate first. See `tracks/hedgehog/README.md` for the main ambient set.
+Tracks live in `tracks/`; each track is a single `<track>.tidal` file with its
+setup block and sections. Evaluate the setup block at the top first. See
+`tracks/hedgehog.tidal` for the main ambient set.
 
 ## Status
 
@@ -30,8 +31,9 @@ Logs go to `logs/superdirt.log`.
 
 ## Playing
 
-Open a track under `tracks/` and evaluate its `00-setup.tidal` first, then work
-through the numbered section files (each track README lists the order).
+Open a track under `tracks/` and evaluate the setup block at the top of its
+`.tidal` file first, then work through the sections below (the file header lists
+the order).
 
 | Key | Action |
 |---|---|
@@ -52,7 +54,7 @@ Indented statements and continuation lines are handled.
 
 Each area documents itself:
 
-- `tracks/` — one folder per track, each with its own README
+- `tracks/` — one `.tidal` file per track
 - `scripts/` — see `scripts/README.md`
 - `visuals/` — see `visuals/README.md`
 - `notes/` — see `notes/set-plan.md`
@@ -61,8 +63,8 @@ Each area documents itself:
 `boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config,
 and `recordings/` the gitignored takes. `boot/BootTidal.hs` also defines the
 shared track helpers (`speedAt`, `swing8`, `swing16`, `chordAt`, `fadeSilence`,
-`fadeMulti`, `glideBpm`), so `00-setup.tidal` files only define their own voices
-and arrangements.
+`fadeMulti`, `glideBpm`), so each track's setup block only defines its own
+voices and arrangements.
 
 ## Sound check
 
@@ -96,7 +98,7 @@ through PipeWire. Check `command -v pw-jack`; `scripts/up.sh` launches sclang vi
 audio device busy, `sclang` not on PATH, PipeWire JACK library missing.
 
 **Tidal REPL says a function is not in scope** — `C-c C-s` restarts ghci and
-re-runs `boot/BootTidal.hs`. Definitions in `00-setup` must be re-evaluated
+re-runs `boot/BootTidal.hs`. Setup-block definitions must be re-evaluated
 after a restart.
 
 **Clicking / xruns** — realtime limits are not installed; see Phase 0.4 in the

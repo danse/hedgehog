@@ -1,0 +1,247 @@
+-- Substructure — complex-bass ambient (separate from the Hedgehog live set)
+-- 72 BPM · D minor · focus: complex bass structure (8-cycle evolving form).
+-- No pads or drones: harmony/texture use fragmented, rhythmic or staccato
+-- samples (arpy, moog, stab, glitch, space, industrial, pluck).
+-- Uses hedge_sine/hedge_pad/hedge_noise.
+--
+-- Eval the setup block below (C-RET), then play the sections in order:
+-- Intro → Build → Main → Breakdown → Rebuild → Outro.
+--
+-- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4 (trim with gain 0.75..1.0).
+--
+-- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
+--   d1  kick                 kick
+--   d2  hats / click         hats / click
+--   d3  percussion           perc
+--   d4  harmony (continuous) chordFlow / chordStab / chordStabAlt / chordPulse / stabHit
+--   d5  texture fragments    glitchTex / spaceTex / metalTex
+--   d6  motif                motif / motifArp
+--   d7  fx                   riser / burst
+--   d8  bass (main)          bassMain / bassDrive / bassBreak
+--   d9  bass (anchor)        bassAnchor
+--   d10 bass (ghost/detail)  bassGhost
+--
+-- Structure (~6–8 min sketch, extend by repeating sections):
+--   1. Intro — sparse texture + bass enters (main, dark filter), establish the 8-cycle form.
+--   2. Build — add anchor/ghost bass layers, harmony stabs, light pulse/texture.
+--   3. Main — full groove: kick/hats, stabs/texture, motif answers bass; optional drive.
+--   4. Breakdown — remove drums/detail, bassBreak/dark bass + sparse stabs/texture.
+--   5. Rebuild — pulse and detail return: bassDrive/anchor/ghost, pulsing harmony,
+--      metal/space texture and motifArp; optional kick for the last wave.
+--   6. Outro — dissolve to bass fragments and sparse texture, then silence.
+--
+-- Notes:
+--   - Bass is intentionally complex: two 4-cycle phrases (bassA/B) concatenated
+--     into an 8-cycle form, patterned sustain, and moving filter. Anchor/ghost
+--     layers add rhythmic structure without cluttering the low root.
+--   - Keep headroom: bass + kick + stabs can build up. If muddy, lower d4/d8
+--     gain slightly or cut d8 lpf.
+--   - Start SuperDirt/audio with scripts/up.sh, open Tidal in Emacs, eval the
+--     setup block, then work through sections 1→6 or improvise with the stream map.
+
+setbpm 72
+
+-- ---------------------------------------------------------------------------
+-- Bass (complex structure): 8-cycle evolving form + anchor + ghost + drive
+-- ---------------------------------------------------------------------------
+-- d8 main/variants, d9 anchor, d10 ghost
+let
+  bassA = "<[d2 ~ a2 d3 ~ ~ f2 ~] [d2 ~ ~ a2 ~ c3 ~ bb1] [d2 f2 ~ a2 ~ d3 c3 ~] [bb1 ~ d2 ~ a2 ~ f2 ~]>"
+  bassB = "<[d2 ~ a2 ~ f2 d3 ~ c3] [a1 ~ d2 ~ c3 ~ bb1 a1] [d2 a2 ~ f2 ~ d3 ~ c3] [bb1 d2 ~ a2 ~ f2 ~ d2]>"
+  bassPhrase = cat [bassA, bassB]  -- 8 cycles
+  -- d8
+  bassMain = slow 8 $ note bassPhrase # s "hedge_sine"
+    # sustain "<0.55 0.35 0.8 0.45 0.3 0.75 0.4 0.5 0.6 0.35 0.85 0.4 0.3 0.7 0.45 0.55>"
+    # gain 0.9
+    # lpf (slow 4 $ range 150 620 sine)
+    # lpq 0.12
+    # room 0.18 # size 0.45
+  -- d9
+  bassAnchor = slow 4 $ note "<d2 a1 bb1 [c2 d2]>" # s "hedge_sine"
+    # sustain 0.45 # gain 0.86 # lpf 300 # lpq 0.08 # room 0.12 # size 0.35
+  -- d10
+  bassGhost = degradeBy 0.45 $ slow 2 $ note "d3 ~ f3 ~ a3 ~ c4 ~" # s "hedge_sine"
+    # sustain (range 0.12 0.35 $ slow 3 rand)
+    # gain 0.78 # lpf (range 500 1400 $ slow 5 sine) # hpf 120 # room 0.2 # size 0.4
+  -- d8 (variant)
+  bassDrive = degradeBy 0.1 $ slow 4 $ note bassPhrase # s "hedge_sine"
+    # sustain (range 0.22 0.65 $ slow 3 rand)
+    # gain 0.88 # lpf (range 180 980 $ slow 2 sine) # lpq 0.16 # room 0.15 # size 0.4
+  -- d8 (variant)
+  bassBreak = slow 8 $ note "<d2 ~ ~ ~ bb1 ~ ~ ~ d2 ~ ~ c2 ~ ~ bb1 ~>" # s "hedge_sine"
+    # sustain 0.9 # gain 0.88 # lpf 220 # lpq 0.1 # room 0.22 # size 0.5
+  -- ---------------------------------------------------------------------------
+  -- Rhythm / pulse
+  -- ---------------------------------------------------------------------------
+  -- d1 kick: sparse, low, supports bass (not a 4/4 club kick)
+  kick = slow 2 $ s "808bd(3,8,<0 2 5>)" # gain 0.86 # lpf 180 # room 0.08 # size 0.2
+  -- d2 hats/clicks: texture pulse
+  hats = degradeBy 0.25 $ s "hh*8?" # gain (range 0.62 0.78 $ slow 4 rand) # pan (range 0.3 0.7 rand)
+    # lpf (range 3500 7000 $ slow 8 sine) # room 0.15 # size 0.25
+  click = slow 2 $ s "click:2(3,16,2)" # gain 0.74 # pan 0.35 # room 0.5 # size 0.6 # lpf 2400
+  -- d3 perc: occasional movement
+  perc = degradeBy 0.55 $ slow 2 $ s "~ [clak*2?] ~ [hand? ~]" # gain 0.76 # pan rand # room 0.35 # size 0.45 # lpf 2200
+  -- ---------------------------------------------------------------------------
+  -- Harmony / texture / melody (no pads, no drones)
+  -- ---------------------------------------------------------------------------
+  -- d4 harmony: more continuous pitched motion (arpy/moog/casio), no sustained pad beds
+  chordFlow = slow 2 $ n "<d4 f4 a4 c5 a4 f4 bb3 d4 f4 a4 g4 e4 c4 e4 g4 b4 a4 e4 a3 c4 e4 g4 f4 d4>"
+    # s "arpy" # gain 0.82 # legato 0.85 # lpf (range 1100 2600 $ slow 8 sine) # room 0.32 # size 0.42
+  chordStab = degradeBy 0.08 $ slow 2 $ n "<[d4,f4,a4] [a3,c4,e4] [bb3,d4,f4] [f3,a3,c4] [c4,e4,g4] [g3,b3,d4] [a3,c4,e4] [e3,a3,c4]>" # s "arpy"
+    # legato 0.65 # lpf (range 900 2400 $ slow 8 sine) # room 0.35 # size 0.45
+  chordStabAlt = slow 2 $ n "<[d4,a4,c5] [f4,c5,a4] [bb3,f4,d4] [a3,e4,c4]>" # s "moog"
+    # legato 0.55 # lpf (range 1200 2000 $ slow 6 sine) # room 0.3 # size 0.4
+  chordPulse = s "casio(5,8,<0 1 2>)" # n "<d4 f4 a4 bb3 c4 a3>"
+    # legato 0.5 # speed (choose [1,1,2]) # lpf 2200 # room 0.28 # size 0.38
+  stabHit = sometimes (fast 2) $ s "stab(3,8,<0 3>)" # n (irand 8) # gain 0.76 # lpf 2200 # room 0.25 # size 0.35
+  -- d5 texture: fragmented/granular feel from samples (no continuous drone)
+  glitchTex = degradeBy 0.35 $ slow 2 $ s "glitch*8?" # n (irand 16) # speed (range 0.7 1.3 $ rand)
+    # gain 0.76 # pan rand # lpf (range 1200 5000 $ slow 6 sine) # room 0.3 # size 0.4
+  spaceTex = degradeBy 0.5 $ slow 4 $ s "space" # n (irand 12) # speed (range 0.5 1.1 $ slow 4 rand)
+    # gain 0.74 # pan rand # hpf 300 # lpf 3200 # room 0.45 # size 0.55
+  metalTex = degradeBy 0.6 $ slow 4 $ s "industrial(2,8)" # n (irand 8) # speed 0.9
+    # gain 0.72 # pan rand # lpf 2600 # room 0.35 # size 0.45
+  -- d6 motif: sparse melodic answers
+  motif = degradeBy 0.3 $ slow 4 $ note "<d5 ~ a5 ~ f5 ~ e5 ~ ~ c5 ~ a4 ~ d5 ~ ~>" # s "pluck"
+    # gain 0.82 # delay 0.65 # delaytime 0.375 # delayfb 0.35 # room 0.8 # size 0.7 # lpf 2600
+  motifArp = degradeBy 0.25 $ slow 2 $ n "d5 f5 a5 c6 a5 f5" # s "arpy"
+    # gain 0.8 # legato 0.25 # speed (choose [1,1,1,2]) # room 0.4 # size 0.5 # lpf 3200
+  -- d7 fx
+  riser = s "hedge_noise" # sustain 4 # gain (range 0.45 0.84 $ slow 4 saw) # lpf (range 300 5200 $ slow 4 saw) # room 0.8 # size 0.75
+  burst = degradeBy 0.2 $ s "glitch(5,16)" # n (irand 16) # gain 0.78 # speed (range 0.8 1.6 $ rand) # room 0.25 # size 0.3
+
+-- convenience (fadeSilence lives in boot/BootTidal.hs)
+allOrbits = [1..10]
+
+-- 1. Intro — establish texture fragments and complex bass form
+
+
+d5 $ spaceTex # gain 0.66
+d8 $ bassMain # lpf 260 # gain 0.86
+
+-- after a few cycles, add sparse glitch detail and a hint of harmony
+d5 $ stack [spaceTex, glitchTex]
+d4 $ chordFlow # lpf 1100
+-- let the 8-cycle bass phrase complete at least once before building
+
+-- optional: reveal anchor
+d9 $ bassAnchor # lpf 220
+
+-- 2. Build — layer bass complexity, add harmony stabs and pulse
+
+-- open bass filter slowly
+d8 $ bassMain # lpf (range 180 520 $ slow 16 sine)
+
+-- structural anchor + ghost detail
+d9 bassAnchor
+d10 bassGhost
+
+-- harmony (more continuous) + texture fragments (no sustained beds)
+d4 $ stack [chordFlow, chordStab]
+d5 $ stack [glitchTex, degradeBy 0.2 $ spaceTex]
+
+-- light pulse (no heavy kick yet)
+d2 click
+-- or: d2 hats
+
+-- transition swell into main
+d7 riser
+d7 silence
+
+-- 3. Main — full groove, bass remains the complex center
+
+d1 kick
+d2 hats
+d3 $ degradeBy 0.2 perc
+d4 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
+d5 $ stack [glitchTex, metalTex]
+
+-- bass: main form + anchor
+d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
+d9 $ bassAnchor
+
+-- bring ghost in/out for movement
+-- d10 bassGhost
+d10 silence
+
+-- melodic answer (sparse)
+d6 motif
+
+-- drive variation (swap in for intensity, then return)
+-- d8 bassDrive
+d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
+
+
+d4 stabHit -- alternate melody
+
+d4 $ stack [chordPulse, chordStabAlt] -- swap it back when desired
+
+d6 motifArp
+d3 silence
+
+-- 4. Breakdown — strip rhythm/detail, expose bass structure
+
+-- pull drums and detail
+fadeSilence 8 [1,2,3]
+
+d6 silence
+d10 silence
+
+-- simplified, dark bass
+d8 bassBreak
+d9 $ bassAnchor # lpf 240
+
+-- switch harmony continuity, thinner (no pads/drones)
+d4 $ chordFlow # lpf 1300
+d5 spaceTex
+d7 burst
+
+-- rebuild cue
+-- d7 riser
+-- d7 silence
+
+-- 5. Rebuild — pulse and detail resurface, bass takes the lead
+
+-- clear the breakdown burst smoothly
+xfadeIn 7 8 silence
+
+-- pulse returns, lighter than Main
+xfadeIn 2 8 click
+xfadeIn 3 8 $ degradeBy 0.45 perc
+
+-- driven bass + anchor, ghost answering above
+xfadeIn 8 8 bassDrive
+xfadeIn 9 8 $ bassAnchor # lpf 280
+xfadeIn 10 8 bassGhost
+
+-- alternate harmony colour: pulsing casio + arpy stabs
+xfadeIn 4 8 $ stack [chordPulse, chordStab]
+xfadeIn 5 8 $ stack [metalTex, degradeBy 0.25 spaceTex]
+
+-- higher, more active motif
+xfadeIn 6 8 motifArp
+
+-- optional: add the kick for the last wave
+xfadeIn 1 8 kick
+
+-- transition into the outro: ride the riser, then clear it
+-- d7 riser
+-- d7 silence
+
+-- 6. Outro — dissolve to bass fragments and sparse texture, then silence
+
+-- remove layers gradually (d1 in case the optional Rebuild kick was used)
+xfadeIn 4 16 silence
+fadeSilence 8 [7, 9]
+
+fadeSilence 1 [1, 2, 3, 6, 10]
+
+-- bass fragments over sparse texture
+d8 $ degradeBy 0.45 $ bassMain # lpf 240
+d5 $ degradeBy 0.3 spaceTex
+
+-- final: bass only
+d5 silence
+xfadeIn 8 16 silence
+
+hush

@@ -1,8 +1,13 @@
-
 import Data.String (fromString)
 
 -- Hedgehog — ambient live set
--- 72 BPM, D minor. Eval this block first (C-RET).
+-- 72 BPM · D minor · ~16 min · five movements.
+--
+-- Eval the setup block below first (C-RET), then work through the layer blocks
+-- in order: bed → texture → pulse → harmony → melody → transitions.
+--
+-- See notes/set-plan.md for the movement plan and cue notes. The root README has
+-- the general start/run instructions.
 
 setbpm 72
 
@@ -59,3 +64,87 @@ let
   -- 9
   riser = s "hedge_noise" # sustain 4 # gain (range 0.5 0.88 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9
 
+-- d1 / d2 — the bed and the sub. Open with these two.
+
+-- d1: 26-second atmospheric pad, looped by slow repetition.
+d1 $ bed # gain 0.88
+
+-- d2: sub drone, D2. Long sustain, very little top end.
+d2 $ drone "c3" # amp 0.25
+
+-- Variation: thin the pad out once the set is moving.
+d1 $ bed # lpf 900 # gain 0.4
+
+-- d3 / d4 — field recordings and air.
+
+-- d4: wind bed.
+d4 air
+
+-- occasional bird calls
+-- d3 $ sometimesBy 0.5 (fast 2) birds
+
+-- d5 — soft pulse. Starts the clock without turning it into a beat.
+
+d5 tick
+
+d2 $ drone "d3" # amp 0.25 -- slightly lower the drone
+
+-- Lift it gently.
+-- d5 $ tick # gain 0.38 # lpf 3200
+
+-- Half-time feel.
+-- d5 $ slow 4 $ tick
+
+-- Drop it out again.
+-- d5 silence
+
+-- d6 — pad harmony: Dm9 → Cmaj7 → Bbmaj7 → Am7, one chord every 4 cycles.
+
+d6 $ pad harmony
+
+-- Open the filter slowly across the progression.
+-- d6 $ pad harmony # lpf (range 500 3500 $ slow 16 sine)
+
+-- Narrow it for the drift section.
+-- d6 $ pad harmony # lpf 700 # gain 0.35
+
+-- d7 — sparse plucked melody. Space is the instrument.
+
+d7 $ degradeBy 0.3 pluck
+
+-- Denser, for the bloom.
+-- d7 $ degradeBy 0.15 $ slow 2 pluck
+
+-- Thinner, for the dissolve.
+-- d7 $ degradeBy 0.6 $ slow 8 pluck
+
+-- Off.
+-- d7 $ silence
+
+-- Transitions. Eval one line at a time; the commented ones are cues.
+
+-- xfadeIn 4 8 air
+
+-- xfadeIn 6 8 silence
+
+once $ slow 8 riser
+
+a=
+  [
+    -- bed
+    1, -- bed
+    2, -- drone
+    -- texture
+    3, -- birds
+    4, -- air
+    -- pulse
+    5, -- tick
+    -- harmony
+    6, -- pad
+    -- melody
+    7, -- pluck
+    -- transitions
+    9 -- riser
+  ]
+
+fadeSilence 16 a

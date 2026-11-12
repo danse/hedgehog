@@ -1,9 +1,44 @@
 -- Tenfold — synthapella-inspired ambient (separate track)
--- 125 BPM, B♭ minor. No drums/percussion: drones, pads, arp, lead,
--- bell, filtered noise and shimmer only.
--- Inspired by the synth-only version of Stephan Bodzin's "Powers of Ten".
--- Eval this whole file at once (the `let` below is one block).
+-- 125 BPM · B♭ minor. No drums or percussion — drones, pads, arp, lead, bell,
+-- filtered noise and shimmer only.
+--
+-- Inspired by the synth-only version of Stephan Bodzin's "Powers of Ten": slow
+-- melodic/ambient evolution, no drums. Progression i–VI–III–VII in B♭ minor
+-- (bfm – gf – df – af); one chord every 4 cycles, full form 16 cycles.
+--
+-- Eval the setup block below once (one `let` block), then play the sections in
+-- order: Emergence → Ascent → Expansion → Suspension → Drift → Dissolve.
+--
 -- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4 (trim with amp if needed).
+--
+-- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
+--   d1 sub drone        subDrone
+--   d2 low pad          lowPad
+--   d3 high pad         highPad
+--   d4 arpeggio         arp
+--   d5 lead melody      lead / melody
+--   d6 bell / counter   bell
+--   d7 noise / air      noiseBed
+--   d8 synth bass       bassPulse / bassLong
+--   d9 shimmer          shimmer
+--
+-- Structure (~7–9 min):
+--   1. Emergence — sub drone and low pad only.
+--   2. Ascent — high pad, soft bass, first arp hint.
+--   3. Expansion — full palette: arp, lead, bell, texture.
+--   4. Suspension — pulse loosens to long bass; lead becomes the higher,
+--      sparser melody; pads and bells float.
+--   5. Drift — lead/bell/arp fade out; pads, noise, long bass.
+--   6. Dissolve — pads/drone only, then silence.
+--
+-- How to run:
+--   1. Start SuperDirt/audio with scripts/up.sh and open Tidal in Emacs.
+--   2. Eval the setup block below (one `let` block, all at once).
+--   3. Work through sections 1→6, using fadeSilence n [streams] for group fades.
+--
+-- Notes:
+--   - No percussion: motion comes from the arp, bass pulse and slow filter moves.
+--   - The setup is a single `let` block; keep it free of blank lines if editing.
 
 setbpm 125
 
@@ -11,9 +46,6 @@ setbpm 125
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Progression: i–VI–III–VII in B♭ minor (bfm – gf – df – af).
 -- Harmonic rhythm: one chord every 4 cycles; the full form is 16 cycles.
--- Stream map: d1 sub, d2 low pad, d3 high pad, d4 arp, d5 lead,
---             d6 bell, d7 noise, d8 bass, d9 shimmer.
--- dN is a stream slot; Tidal sends it to SuperDirt orbit N-1.
 -- ---------------------------------------------------------------------------
 let
   -- d1 sub drone (one root per chord)
@@ -92,7 +124,6 @@ let
   allOrbits = [1..9]
 
 -- 1. Emergence — sub drone and low pad only
--- Eval 00-setup.tidal first.
 
 d1 subDrone
 -- the low pad appears under the drone

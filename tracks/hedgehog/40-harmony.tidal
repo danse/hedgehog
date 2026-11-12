@@ -1,9 +1,0 @@
--- d6 — pad harmony: Dm9 → Cmaj7 → Bbmaj7 → Am7, one chord every 4 cycles.
-
-d6 $ pad harmony
-
--- Open the filter slowly across the progression.
--- d6 $ pad harmony # lpf (range 500 3500 $ slow 16 sine)
-
--- Narrow it for the drift section.
--- d6 $ pad harmony # lpf 700 # gain 0.35

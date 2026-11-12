@@ -16,7 +16,8 @@ One cycle = 4 beats ≈ 3.33 s. `slow 4` = a chord every 13 s, `slow 8` ≈ 27 s
 
 ## Cue sheet
 
-Eval `00-setup.tidal` first, then open the movement files. Keys: `C-RET` evals the
+Eval the setup block at the top of `tracks/hedgehog.tidal`, then work
+through the movement blocks below it. Keys: `C-RET` evals the
 block under the cursor, `C-c C-h` hushes, `C-c C-s` starts/stops the Tidal REPL.
 
 ### 1 — Emergence
@@ -70,7 +71,7 @@ Finally `hush` and let the room/hall tail ring.
 
 1. `hush`
 2. `setbpm 72`
-3. Re-eval `00-setup.tidal`, then one movement file.
+3. Re-eval the setup block in `hedgehog.tidal`, then one movement block.
 4. If the REPL is wedged: `C-c C-i` (interrupt), then `C-c C-s` (restart).
 
 ## Recording notes
