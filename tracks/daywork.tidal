@@ -257,7 +257,6 @@ fadeMulti 24 [
 -- The first shift arrives; four gate hits carry the work song's rhythm.
 -- ~40 cycles (~100 s at 96 BPM).
 
-glideBpm 96 16
 -- the gate takes over the pulse
 d8 $ stack [gateTick, degradeBy 0.25 gateClang]
 fadeMulti 16 [(2, bootWork), (5, compGate)]
@@ -326,14 +325,14 @@ xfadeIn 10 32 trumpetSpark
 -- under the table. The sax gets the tune.
 -- ~36 cycles (~86 s at 100 BPM).
 
-d2 brush
 -- the sweeper parks; the room fills with small objects
 fadeSilence 12 [2,5,7,9,10]
 glideBpm 100 16 -- from 92
 fadeMulti 16 [
-  (8, stack [cupTick, canteenBell]),
   (1, stack [cupClink, bottleHoot]),
-  (3, bassCant)]
+  (2, brush),
+  (3, bassCant),
+  (8, stack [cupTick, canteenBell])]
 xfadeIn 4 24 colourCant
 xfadeIn 5 64 compCant
 
@@ -380,9 +379,10 @@ xfadeIn 6 24 $ stack [air, windBed]
 
 -- sharp drop, let the fadesilence decay before
 
-d3 $ bassStand # amp 0.4
-d1 switchOff
-xfadeIn 4 8 pianoCoda
+fadeMulti 8 [
+  (1, switchOff),
+  (3, bassStand # amp 0.4),
+  {4, pianoCoda)]
 glideBpm 84 16 -- from 92
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [2,5,7,8,9,10]
