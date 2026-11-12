@@ -3,7 +3,7 @@
 ;; Launch with:
 ;;   emacs --init-directory /home/marea/hub/hedgehog/emacs
 ;; or simply:
-;;   scripts/edit.sh [file.tidal]
+;;   scripts/edit.sh [file.tidal]   (no argument: dired on tracks/)
 
 ;;; Code:
 

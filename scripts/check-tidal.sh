@@ -7,7 +7,7 @@
 # track.
 #
 # Usage: scripts/check-tidal.sh [track.tidal ...]
-#        scripts/check-tidal.sh            # every */*.tidal track
+#        scripts/check-tidal.sh            # every tracks/*/*.tidal track
 set -u
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 invoke_dir="$PWD"
@@ -23,7 +23,7 @@ if [ "$#" -gt 0 ]; then
   done
 else
   shopt -s nullglob
-  files=(*/*.tidal)
+  files=(tracks/*/*.tidal)
 fi
 if [ "${#files[@]}" -eq 0 ]; then
   echo "check-tidal: no track files" >&2

@@ -72,7 +72,7 @@ fi
 echo "[tracks]"
 if command -v ghci >/dev/null 2>&1; then
   if track_out=$(scripts/check-tidal.sh 2>&1); then
-    n=$(find "$root" -mindepth 2 -maxdepth 2 -name '*.tidal' | wc -l)
+    n=$(find "$root/tracks" -mindepth 2 -maxdepth 2 -name '*.tidal' | wc -l)
     ok "all $n track files typecheck (silent boot)"
   else
     bad "track typecheck"
@@ -114,7 +114,7 @@ while IFS= read -r -d '' f; do
       bad_size="$bad_size ${f#"$root"/}:$n"
     fi
   done
-done < <(find "$root" -mindepth 2 -maxdepth 2 -name '*.tidal' -print0 2>/dev/null)
+done < <(find "$root/tracks" -mindepth 2 -maxdepth 2 -name '*.tidal' -print0 2>/dev/null)
 if [ -n "$bad_size" ]; then
   bad "reverb size > 0.9 self-oscillates:$bad_size"
 else
