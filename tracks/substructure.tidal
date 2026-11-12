@@ -1,13 +1,11 @@
--- Substructure — complex-bass ambient (separate from the Hedgehog live set)
+-- Substructure — complex-bass ambient
+--
 -- 72 BPM · D minor · focus: complex bass structure (8-cycle evolving form).
 -- No pads or drones: harmony/texture use fragmented, rhythmic or staccato
 -- samples (arpy, moog, stab, glitch, space, industrial, pluck).
 -- Uses hedge_sine/hedge_pad/hedge_noise.
 --
--- Eval the setup block below (C-RET), then play the sections in order:
--- Intro → Build → Main → Breakdown → Rebuild → Outro.
---
--- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4 (trim with gain 0.75..1.0).
+-- Gotchas: reverb size <= 0.9
 --
 -- Stream map (dN is a stream slot; Tidal sends it to SuperDirt orbit N-1):
 --   d1  kick                 kick
@@ -115,7 +113,6 @@ allOrbits = [1..10]
 
 -- 1. Intro — establish texture fragments and complex bass form
 
-
 d5 $ spaceTex # gain 0.66
 d8 $ bassMain # lpf 260 # gain 0.86
 
@@ -145,24 +142,24 @@ d2 click
 -- or: d2 hats
 
 -- transition swell into main
-d7 riser
-d7 silence
+once riser
 
 -- 3. Main — full groove, bass remains the complex center
 
 d1 kick
 d2 hats
 d3 $ degradeBy 0.2 perc
-d4 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
+d4 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab # amp 0.2]
 d5 $ stack [glitchTex, metalTex]
+
+xfadeIn 4 16 stabHit -- alternate melody
 
 -- bass: main form + anchor
 d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
 d9 $ bassAnchor
 
 -- bring ghost in/out for movement
--- d10 bassGhost
-d10 silence
+d10 bassGhost
 
 -- melodic answer (sparse)
 d6 motif
@@ -171,21 +168,12 @@ d6 motif
 -- d8 bassDrive
 d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
 
-
-d4 stabHit -- alternate melody
-
-d4 $ stack [chordPulse, chordStabAlt] -- swap it back when desired
-
 d6 motifArp
 d3 silence
 
 -- 4. Breakdown — strip rhythm/detail, expose bass structure
 
--- pull drums and detail
-fadeSilence 8 [1,2,3]
-
-d6 silence
-d10 silence
+fadeSilence 8 [1,2,3,6,10]
 
 -- simplified, dark bass
 d8 bassBreak
@@ -197,14 +185,12 @@ d5 spaceTex
 d7 burst
 
 -- rebuild cue
--- d7 riser
--- d7 silence
+once riser
 
 -- 5. Rebuild — pulse and detail resurface, bass takes the lead
 
 -- clear the breakdown burst smoothly
 xfadeIn 7 8 silence
-
 -- pulse returns, lighter than Main
 xfadeIn 2 8 click
 xfadeIn 3 8 $ degradeBy 0.45 perc
@@ -225,8 +211,7 @@ xfadeIn 6 8 motifArp
 xfadeIn 1 8 kick
 
 -- transition into the outro: ride the riser, then clear it
--- d7 riser
--- d7 silence
+once riser
 
 -- 6. Outro — dissolve to bass fragments and sparse texture, then silence
 
