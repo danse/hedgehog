@@ -95,9 +95,11 @@ let
   bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~"
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
-  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "a2 c3 ~ e3 ~ g3 ~ ~"
-    # sustain 1.8 # release 0.8 # lpf 560 # lpq 0.18
-    # room 0.4 # size 0.58 # amp 0.8
+  -- the work song gets a plain 4/4 tune, one note per beat; in G
+  -- mixolydian the F natural is what makes it grin a little
+  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "g3 g3 a3 b3 g3 e3 d3 f3 g3 g3 a3 b3 c4 b3 a3 g3"
+    # sustain 0.5 # release 0.25 # lpf 800 # lpq 0.16
+    # room 0.45 # size 0.6 # amp 0.8
   --
   -- --- boots, brushes, ride: gretsch acoustic kit -------------------------
   bootDawn = slow 4 $ s "stomp" # n 7
@@ -247,7 +249,7 @@ d4 $ motifPiano # amp 0.2
 d5 $ slow 2 $ pianoPedal (slow 4 hLight) # amp 0.3
 
 -- a brush, half-awake
-fadeMulti 8 [
+fadeMulti 24 [
   (2, stack [bootDawn, brushSoft]),
   -- the yard breathes
   (6, stack [air, windBed]),
@@ -277,12 +279,13 @@ fadeMulti 24 [(2, stack [bootWork, brushSoft]), (1, rideSoft)]
 -- bounce. The bass takes the work song low and slow.
 -- ~40 cycles (~109 s at 88 BPM).
 
-glideBpm 88 16
--- the gate falls away; the hoist is the new pulse
-fadeSilence 12 [1,5,8]
 d2 $ stack [bootWork, liftStall]
-xfadeIn 3 16 bassLift
+-- the gate falls away; the hoist is the new pulse
+glideBpm 88 32 -- from 96
+fadeSilence 32 [1,5,8]
+xfadeIn 3 32 bassLift
 
+-- getting clumsy on the high pings
 p9 = stack [liftChain, crateScrape]
 -- chain and crate
 xfadeIn 7 16 $ p9 # amp 0.5
@@ -304,20 +307,20 @@ xfadeIn 3 16 motifBass
 -- corner. Brushes, grit, a pigeon following the broom; the sax hums the round.
 -- ~40 cycles (~104 s at 92 BPM).
 
-glideBpm 92 16
--- the hoist gives way to the little machine
-fadeSilence 12 [1,5,8,9,10]
 d2 $ stack [bootWork, brushWork]
 d8 $ stack [sweeperMiss, sweepBrush]
+-- the hoist gives way to the little machine
+fadeSilence 12 [1,5,8,9,10]
+glideBpm 92 16 -- from 88
 xfadeIn 3 16 bassSweep
 
 xfadeIn 5 16 compSweep
 
 -- grit and a pigeon following the broom
-xfadeIn 7 16 $ stack [sweepGrit, pigeon]
-xfadeIn 4 24 colourSweep
+xfadeIn  7 16 $ stack [sweepGrit, pigeon]
+xfadeIn  4 24 colourSweep
 -- the reed starts to hum the round
-xfadeIn 9 24 reedRound
+xfadeIn  9 24 reedRound
 -- one high spark over the fence
 xfadeIn 10 32 trumpetSpark
 
@@ -325,23 +328,22 @@ xfadeIn 10 32 trumpetSpark
 -- under the table. The sax gets the tune.
 -- ~36 cycles (~86 s at 100 BPM).
 
-glideBpm 100 16
+d2 brush
 -- the sweeper parks; the room fills with small objects
 fadeSilence 12 [2,5,7,9,10]
-d2 brush
+glideBpm 100 16 -- from 92
 fadeMulti 16 [
   (8, stack [cupTick, canteenBell]),
   (1, stack [cupClink, bottleHoot]),
   (3, bassCant)]
 xfadeIn 4 24 colourCant
-
-xfadeIn 5 16 compCant
+xfadeIn 5 64 compCant
 
 -- trays, cutlery and a drink being poured
 xfadeIn 7 16 $ stack [tray, cutlery, pour]
 xfadeIn 6 24 $ stack [air, yardAir]
 
--- the reed gets the tune
+-- this reed is looking for a seat
 once reedCant
 
 -- 6. Handoff — The crate changes hands. A scrape, a latch, one toy tune and
@@ -350,14 +352,14 @@ once reedCant
 -- The `hit:1` line is a true one-shot (`once`): evaluate it when the crate
 -- changes hands. `handoffPop` and the room keep running until the fade.
 
-glideBpm 92 16
+d2 handStep
+d3 bassHand
 -- the canteen clears; only the crate and two sets of hands
 fadeSilence 12 [1,2,7,8,9]
-d3 bassHand
+glideBpm 92 16 -- from 100
 xfadeIn 5 16 compHand
-xfadeIn 4 24 colourHand
-d2 handStep
 xfadeIn 7 16 $ stack [crateScrape, crateThud]
+xfadeIn 4 24 colourHand
 xfadeIn 6 24 air
 
 -- the crate latch
@@ -380,26 +382,26 @@ xfadeIn 6 24 $ stack [air, windBed]
 
 -- sharp drop, let the fadesilence decay before
 
-glideBpm 84 16
+d3 $ bassStand # amp 0.4
+d1 switchOff
+xfadeIn 4 8 pianoCoda
+glideBpm 84 16 -- from 92
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [2,5,7,8,9,10]
-d3 $ bassStand # amp 0.4
-xfadeIn 4 16 pianoCoda
 -- the last low chord, very sparse
-xfadeIn 5 24 $ slow 8 $ pianoPedal (slow 8 hStand)
-d1 switchOff
+xfadeIn 5 16 $ slow 8 $ pianoPedal (slow 8 hStand)
 
--- the mains hum dies
-xfadeIn 1 32 mainsDown
--- a few insects in the dark
-xfadeIn 7 32 $ degradeBy 0.7 insectChat
 -- one last glass note from the canteen
 xfadeIn 10 24 $ stack [motifGlass, bottleHoot]
+-- the mains hum dies
+xfadeIn  1 32 mainsDown
+-- a few insects in the dark
+xfadeIn  7 32 $ degradeBy 0.7 insectChat
 -- a last, distant reed
-xfadeIn 9 32 reedStand
+xfadeIn  9 32 reedStand
 
--- the work song one more time, very low
-xfadeIn 3 8 motifBass
+-- the work song recalled, half-time and very low
+d3 $ slow 2 $ motifBass # amp 0.7
 
 -- leave the room ringing, then fade
 fadeSilence 24 [1,3,4,5,6,9,10]

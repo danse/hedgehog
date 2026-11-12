@@ -162,24 +162,24 @@ glideBpm 90 16
 -- clear the previous piece's working streams
 fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]
 
--- the surviving mass: a low D pedal and a sus2 piano
-d1 pianoPedal
-d2 $ bassPedal # amp 0.2
--- the room breathes
-d3 air
 -- one high shadow, far away
-xfadeIn 4 24 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
+xfadeIn 4 8 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
+-- the surviving mass: a low D pedal and a sus2 piano
+fadeMulti 32 [
+  (1, pianoPedal),
+  (2, bassPedal # amp 0.2),
+  -- the room breathes
+  (3, air)]
 
 -- 2. Survey — the wreck is measured from the abutment; it becomes the datum.
 -- ~36 cycles (~96 s at 90 BPM).
 
-glideBpm 90 16
 -- the datum holds: bass and low piano
 d2 $ bassSurvey # amp 0.3
 xfadeIn 1 16 compSurvey
 
 -- plumb-line ticks and a cautious swing
-fadeMulti 12 [
+fadeMulti 32 [
   (5, stack [plumb, woodTick]),
   (6, brushSoft),
   (7, rideSoft),
@@ -191,13 +191,12 @@ fadeMulti 12 [
 -- 3. Shore — props take the broken stub; cables run back to the abutment.
 -- ~36 cycles (~96 s at 90 BPM).
 
-glideBpm 90 16
 -- the load returns to the abutment
 d2 $ bassShore # amp 0.3
 xfadeIn 1 16 compShore
 
 -- work rhythm
-fadeMulti 16 [
+fadeMulti 32 [
   (8, kickSoft),
   (6, brushWork),
   (7, ride),
@@ -208,7 +207,7 @@ xfadeIn 9 32 reedShore
 -- 4. Abutment — the old block is underpinned; new mass is keyed in behind it.
 -- ~40 cycles (~102 s at 94 BPM).
 
-glideBpm 94 16
+glideBpm 94 16 -- from 90
 d6 brush
 d7 $ stack [ride, rideBell]
 xfadeIn 4 24 colourAbut
@@ -217,10 +216,7 @@ d2 $ bassAbut # amp 0.5
 xfadeIn 1 16 compAbut
 
 -- the reed enters properly
-xfadeIn 9 24 reedAbut
-
--- the reed doesn't seem to stop
-xfadeIn 9 24 silence
+once reedAbut
 
 -- the new mass: wood, metal and site air
 xfadeIn 5 16 $ degradeBy 0.4 (stack [woodTick, metalTool])
@@ -231,7 +227,7 @@ xfadeIn 3 32 $ stack [air, gravel]
 -- 5. Transfer — props eased out; the load moves into the abutment. It holds.
 -- ~36 cycles (~94 s at 92 BPM).
 
-glideBpm 92 16
+glideBpm 92 16 -- from 94
 d8 kickSparse
 d6 brush
 d7 ride
@@ -251,7 +247,7 @@ xfadeIn 3 24 $ stack [air, windBed]
 -- 6. Occupancy — the span is rebuilt; people return; the abutment disappears
 -- under the approach. ~40 cycles (~107 s at 90 BPM).
 
-glideBpm 90 16
+glideBpm 90 16 -- from 92
 d8 kickSoft
 d6 brush
 d7 (stack [ride, rideBell])
@@ -272,7 +268,7 @@ fadeMulti 24 [
 -- 7. Steady — evening; the structure rests; the load is held. Open coda.
 -- ~40+ cycles (~112 s+ at 86 BPM; open-ended).
 
-glideBpm 86 16
+glideBpm 86 16 -- from 90
 -- strip the rhythm and the high projection
 fadeSilence 16 [5,6,7,8,9,10]
 
@@ -288,9 +284,7 @@ fadeMulti 24 [
   (4, pianoAfter # amp 0.3),
   (10, trumpetSteady)]
                  
--- leave this ringing, then evaluate the two steps below separately:
--- first fade everything still sounding (24 cycles), and only after the room
--- has decayed, evaluate `hush` on its own.
-fadeSilence 24 [1,2,3,4,10]
+-- leave this ringing
+fadeSilence 32 [1,2,3,4,10]
 
 hush

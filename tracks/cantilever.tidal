@@ -186,11 +186,12 @@ xfadeIn 5 24 ride
 xfadeIn 3 24 compSpan
 xfadeIn 6 32 colourSpan
 
--- implied polymeter: three woodblock hits per cycle against the 4/4 pulse
+-- implied polymeter: three woodblock hits per cycle against the 4/4
+-- pulse. Don't get here too late or there will be too little time to
+-- enjoy. Anyway the next block will leave it alive
 d7 wood3
-
 -- the bass phrase stretches over four cycles
-d1 bassWalk4
+xfadeIn 1 32 bassWalk4
 
 -- 3. Load — the span takes weight. The full ensemble, still lazy.
 -- ~40 cycles (~104 s at 92 BPM).
@@ -201,7 +202,6 @@ xfadeIn 6 24 colourLoad
 
 -- the reed joins from the back of the room
 d9 $ degrade $ reedCall # gain 0.7
-
 -- add a little ride bell for lift
 d5 $ stack [ride, rideBell]
 
@@ -213,18 +213,18 @@ d5 $ stack [ride, rideBell]
 -- if it's silenced we can listen to the rest of the texture for a bit
 
 glideBpm 98 16
-d8 kickSoft
-d2 brush
-d5 $ stack [ride, rideBell]
 d1 bassLoad
+d2 brush
 xfadeIn 3 16 compOver
+d5 $ stack [ride, rideBell]
 xfadeIn 6 24 colourOver
+d8 kickSoft
 
 -- two distant trumpet stabs, never a solo
 d10 trumpetOver
 
--- breathe. This rings enough to keep adding phrases over time, but
--- it's a very gentle development
+-- breathe. We are in the middle of overhang. This rings enough to
+-- keep adding phrases over time, but it's a very gentle development
 
 -- tiny 5-against-4 shime shimmer
 d7 shime
@@ -265,21 +265,21 @@ xfadeIn 7 24 $ degradeBy 0.7 metalSpark
 -- this adds rhythm
 glideBpm 96 16
 fadeMulti 16 [
-  (8, kickSoft),
-  (2, brushSnap),
-  (5, ride),
   (1, bassSnap),
+  (2, brushSnap),
   (3, compSnap),
-  (7, stack [metalSpark, wood])]
+  (5, ride),
+  (7, stack [metalSpark, wood]),
+  (8, kickSoft)]
 
--- breathe
+-- breathe until it catches rhythm, then the snap
 
 -- Step 2 (after ~8 cycles): the hole — everything but the trumpet drops out
-fadeSilence 16 [1,2,3,5,6,7,8,9]
-xfadeIn 10 16 trumpetSnap
+fadeSilence 2 [1,2,3,5,6,7,8,9]
+xfadeIn 10 2 trumpetSnap
 -- together it's a sharp transition
 -- Step 3 (after the stab): bass alone, then Settle
-xfadeIn 1 16 bassSettle
+xfadeIn 1 2 bassSettle
 
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
@@ -292,12 +292,10 @@ d5 ride
 d1 bassSettle
 xfadeIn 3 16 compSettle
 
--- a bluesy piano answer, sparse
-d6 motifSettle
--- the reed returns for one phrase
-d9 reedCall
+d6 motifSettle -- a bluesy piano answer, sparse
+d9 reedCall -- the reed returns for one phrase
 
--- no trumpet here; let the room do the sparkle
+-- no trumpet here; let the room do the sparkle until it's too weird
 
 -- 8. Afterimage — open coda. The room keeps the shape after the sound.
 -- ~40+ cycles at 92 BPM; open-ended.
@@ -306,10 +304,10 @@ glideBpm 92 16
 -- strip the rhythm and most of the harmony
 fadeSilence 16 [1,2,3,5,6,7,8,9,10]
 -- leave a high piano shadow, filtered trumpet, metal and air
-xfadeIn 6 24 pianoAfter
+xfadeIn  6 24 pianoAfter
+xfadeIn  7 24 metalSpark
 xfadeIn 10 32 trumpetAfter
-xfadeIn 7 24 metalSpark
-xfadeIn 4 32 (stack [air, windBed])
+xfadeIn  4 32 (stack [air, windBed])
 
 -- the bass returns once, very low
 xfadeIn 1 24 $ bassAfter # gain 0.82
