@@ -95,11 +95,9 @@ let
   bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~"
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
-  -- the work song gets a plain 4/4 tune, one note per beat; in G
+  -- the work song: a plain 4/4 tune, eight notes to the bar; in G
   -- mixolydian the F natural is what makes it grin a little
-  motifBass = slow 4 $ s "bass1" # n 2 # speedAt "c3" "g3 g3 a3 b3 g3 e3 d3 f3 g3 g3 a3 b3 c4 b3 a3 g3"
-    # sustain 0.5 # release 0.25 # lpf 800 # lpq 0.16
-    # room 0.45 # size 0.6 # amp 0.8
+  motifBass = pace 8 $ s "bass1" # note "g4 g4 a4 b4 g4 e4 d4 f4 g4 g4 a4 b4 c5 b4 a4 g4"
   --
   -- --- boots, brushes, ride: gretsch acoustic kit -------------------------
   bootDawn = slow 4 $ s "stomp" # n 7
