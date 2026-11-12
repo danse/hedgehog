@@ -61,8 +61,10 @@ let
     # s "arpy" # gain 0.82 # legato 0.85 # lpf (range 1100 2600 $ slow 8 sine) # room 0.32 # size 0.42
   chordStab = degradeBy 0.08 $ slow 2 $ n "<[d4,f4,a4] [a3,c4,e4] [bb3,d4,f4] [f3,a3,c4] [c4,e4,g4] [g3,b3,d4] [a3,c4,e4] [e3,a3,c4]>" # s "arpy"
     # legato 0.65 # lpf (range 900 2400 $ slow 8 sine) # room 0.35 # size 0.45
+    # amp 0.2
   chordStabAlt = slow 2 $ n "<[d4,a4,c5] [f4,c5,a4] [bb3,f4,d4] [a3,e4,c4]>" # s "moog"
     # legato 0.55 # lpf (range 1200 2000 $ slow 6 sine) # room 0.3 # size 0.4
+    # amp 0.2
   chordPulse = s "casio(5,8,<0 1 2>)" # n "<d4 f4 a4 bb3 c4 a3>"
     # legato 0.5 # speed (choose [1,1,2]) # lpf 2200 # room 0.28 # size 0.38
   stabHit = sometimes (fast 2) $ s "stab(3,8,<0 3>)" # n (irand 8) # gain 0.76 # lpf 2200 # room 0.25 # size 0.35
@@ -77,7 +79,8 @@ let
   motif = degradeBy 0.3 $ slow 4 $ note "<d5 ~ a5 ~ f5 ~ e5 ~ ~ c5 ~ a4 ~ d5 ~ ~>" # s "pluck"
     # gain 0.82 # delay 0.65 # delaytime 0.375 # delayfb 0.35 # room 0.8 # size 0.7 # lpf 2600
   motifArp = degradeBy 0.25 $ slow 2 $ n "d5 f5 a5 c6 a5 f5" # s "arpy"
-    # gain 0.8 # legato 0.25 # speed (choose [1,1,1,2]) # room 0.4 # size 0.5 # lpf 3200
+    # legato 0.25 # speed (choose [1,1,1,2]) # room 0.4 # size 0.5 # lpf 3200
+    # amp 0.4
   -- d7 fx
   riser = s "hedge_noise" # sustain 4 # gain (range 0.45 0.84 $ slow 4 saw) # lpf (range 300 5200 $ slow 4 saw) # room 0.8 # size 0.75
   burst = degradeBy 0.2 $ s "glitch(5,16)" # n (irand 16) # gain 0.78 # speed (range 0.8 1.6 $ rand) # room 0.25 # size 0.3
@@ -104,12 +107,11 @@ d9 $ bassAnchor # lpf 220
 
 -- open bass filter slowly
 d8 $ bassMain # lpf (range 180 520 $ slow 16 sine)
-
 -- structural anchor + ghost detail
 d9 bassAnchor
 d10 bassGhost
 
--- harmony (more continuous) + texture fragments (no sustained beds)
+-- harmony + texture fragments (no sustained beds)
 d4 $ stack [chordFlow, chordStab]
 d5 $ stack [glitchTex, degradeBy 0.2 $ spaceTex]
 
@@ -117,15 +119,14 @@ d5 $ stack [glitchTex, degradeBy 0.2 $ spaceTex]
 d2 click
 -- or: d2 hats
 
--- transition swell into main
-once riser
-
 -- 3. Main — full groove, bass remains the complex center
 
+-- transition swell into main
+once riser
 d1 kick
 d2 hats
 d3 $ degradeBy 0.2 perc
-d4 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab # amp 0.2]
+d4 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
 d5 $ stack [glitchTex, metalTex]
 
 xfadeIn 4 16 stabHit -- alternate melody
@@ -133,7 +134,6 @@ xfadeIn 4 16 stabHit -- alternate melody
 -- bass: main form + anchor
 d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
 d9 $ bassAnchor
-
 -- bring ghost in/out for movement
 d10 bassGhost
 
@@ -145,7 +145,6 @@ d6 motif
 d8 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
 
 d6 motifArp
-d3 silence
 
 -- 4. Breakdown — strip rhythm/detail, expose bass structure
 
@@ -160,11 +159,12 @@ d4 $ chordFlow # lpf 1300
 d5 spaceTex
 d7 burst
 
--- rebuild cue
-once riser
+-- here the rhythmic texture is complex enough to indulge
 
 -- 5. Rebuild — pulse and detail resurface, bass takes the lead
 
+-- rebuild cue
+once riser
 -- clear the breakdown burst smoothly
 xfadeIn 7 8 silence
 -- pulse returns, lighter than Main
@@ -180,28 +180,28 @@ xfadeIn 10 8 bassGhost
 xfadeIn 4 8 $ stack [chordPulse, chordStab]
 xfadeIn 5 8 $ stack [metalTex, degradeBy 0.25 spaceTex]
 
+-- the pulsing casio is worth listening for a while
+
 -- higher, more active motif
 xfadeIn 6 8 motifArp
 
 -- optional: add the kick for the last wave
 xfadeIn 1 8 kick
 
--- transition into the outro: ride the riser, then clear it
-once riser
-
 -- 6. Outro — dissolve to bass fragments and sparse texture, then silence
 
+-- transition into the outro
+once riser
 -- remove layers gradually (d1 in case the optional Rebuild kick was used)
 xfadeIn 4 16 silence
 fadeSilence 8 [7, 9]
 
-fadeSilence 1 [1, 2, 3, 6, 10]
-
+fadeSilence 8 [1, 2, 3, 6, 10]
 -- bass fragments over sparse texture
 d8 $ degradeBy 0.45 $ bassMain # lpf 240
 d5 $ degradeBy 0.3 spaceTex
 
--- final: bass only
+-- silence the bass
 d5 silence
 xfadeIn 8 16 silence
 
