@@ -21,22 +21,22 @@ setbpm 125
 -- No percussion: motion comes from the arp, bass pulse and slow filter moves.
 -- ---------------------------------------------------------------------------
 let
-  -- d1 sub drone (one root per chord)
+  -- sub drone (one root per chord)
   subDrone = slow 4 $ note "<bf1 gf1 df2 af1>" # s "hedge_sine"
     # sustain 6 # gain 0.86 # lpf 160 # lpq 0.1
     # room 0.3 # size 0.5
   --
-  -- d2 low pad (i–VI–III–VII, one chord every 4 cycles)
+  -- low pad (i–VI–III–VII, one chord every 4 cycles)
   lowPad = slow 4 $ n "<[bf2,df3,f3] [gf2,bf2,df3] [df2,f2,af2] [af2,c3,ef3]>" # s "hedge_pad"
     # sustain 6 # lpf (range 380 1100 $ slow 16 sine)
     # room 0.55 # size 0.75
   --
-  -- d3 high pad (same harmonic rhythm, colour above the low pad)
+  -- high pad (same harmonic rhythm, colour above the low pad)
   highPad = slow 4 $ n "<[bf4,df5,f5,af5] [gf4,bf4,df5,f5] [df4,f4,af4,c5] [af4,c5,ef5,g5]>" # s "hedge_pad"
     # sustain 6 # gain 0.8 # hpf 260 # lpf (range 900 2400 $ slow 12 sine)
     # room 0.7 # size 0.8
   --
-  -- d4 arpeggio (16 notes per chord; follows the progression)
+  -- arpeggio (16 notes per chord; follows the progression)
   arpSeq :: Pattern Note
   arpSeq = cat [
     "bf4 df5 f5 df5 bf4 f5 df5 f5 bf4 df5 af5 f5 df5 bf4 f5 df5",
@@ -49,7 +49,7 @@ let
     # delay 0.32 # delaytime (3/16) # delayfb 0.28
     # room 0.45 # size 0.55
   --
-  -- d5 lead (one note per cycle; follows the four chords)
+  -- lead (one note per cycle; follows the four chords)
   leadSeq :: Pattern Note
   leadSeq = "bf4 df5 f5 df5 gf4 bf4 df5 bf4 df4 f4 af4 f4 af4 c5 ef5 c5"
   lead = slow 16 $ n leadSeq # s "casio"
@@ -64,18 +64,18 @@ let
     # delay 0.35 # delaytime (3/16) # delayfb 0.4
     # room 0.65 # size 0.75
   --
-  -- d6 bell / counter line (one note per cycle, chord tones)
+  -- bell / counter line (one note per cycle, chord tones)
   bellSeq :: Pattern Note
   bellSeq = "bf6 f6 df6 f6 gf6 df6 bf5 df6 df6 af5 f6 af5 af6 ef6 c6 ef6"
   bell = slow 16 $ note bellSeq # s "pluck"
     # gain 0.74 # delay 0.6 # delaytime (3/16) # delayfb 0.45
     # lpf 3200 # room 0.7 # size 0.8
   --
-  -- d7 filtered noise bed / slow air
+  -- filtered noise bed / slow air
   noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.6
     # lpf (range 220 1400 $ slow 24 sine) # room 0.85 # size 0.85
   --
-  -- d8 soft synth bass (8ths; one bar per chord, no percussion)
+  -- soft synth bass (8ths; one bar per chord, no percussion)
   bassSeq :: Pattern Note
   bassSeq = cat [
     "bf2 ~ bf2 ~ df3 ~ bf2 ~ f2 ~ bf2 ~ df3 ~ bf2 ~",
@@ -88,13 +88,12 @@ let
   bassLong = slow 4 $ note "<bf2 gf2 df2 af2>" # s "hedge_sine"
     # sustain 3 # gain 0.88 # lpf 240 # lpq 0.1 # room 0.35 # size 0.55
   --
-  -- d9 sample shimmer (synthapella sparkle, no rhythm)
+  -- sample shimmer (synthapella sparkle, no rhythm)
   shimmer = degradeBy 0.5 $ slow 4 $ s "space:2*8?" # speed (range 0.8 2 $ rand)
     # gain 0.66 # hpf 1200 # lpf 7000 # room 0.7 # size 0.75
   --
-  -- convenience: fade several streams to silence at once (helpers live in
-  -- boot/BootTidal.hs), e.g. fadeSilence 8 [4,5,6,9]
-  allOrbits = [1..9]
+  -- every stream in this track, for bulk fades
+  allOrbits = [1,2,3,4,5,6,7,8,9]
 
 -- 1. Emergence — sub drone and low pad only
 
@@ -103,7 +102,7 @@ d1 subDrone
 xfadeIn 2 16 $ lowPad # lpf 520
 
 -- let the room breathe before adding anything else
-xfadeIn 7 24 noiseBed
+xfadeIn 3 24 noiseBed
 
 -- 2. Ascent — high pad, soft bass, first arp hint
 
@@ -111,79 +110,79 @@ xfadeIn 7 24 noiseBed
 d1 subDrone
 xfadeIn 2 8 lowPad
 fadeMulti 16 [
-  (3, highPad # lpf 1500),
-  (8, bassPulse),
-  (7, noiseBed)]
+  (4, highPad # lpf 1500),
+  (5, bassPulse),
+  (3, noiseBed)]
 
 -- enter the arp before the expansion. Melodic
-xfadeIn 4 24 $ arp # lpf 1800
+xfadeIn 6 24 $ arp # lpf 1800
 
 -- 3. Expansion — full synth palette (still no drums)
 
 fadeMulti 8 [
-  (3, highPad), -- without the lpf
-  (4, arp)] -- without the lpf
+  (4, highPad), -- without the lpf
+  (6, arp)] -- without the lpf
 
 -- punctuation
 fadeMulti 16 [
-  (5, lead),
-  (6, bell),
+  (7, lead),
+  (8, bell),
   (9, shimmer)]
 
 -- longer melody option instead of the lead
-xfadeIn 5 16 melody
+xfadeIn 7 16 melody
 
 -- 4. Suspension — harmony floats, the pulse loosens
 
 let f (s, p) = (s, p # lpf 2000) in
   fadeMulti 16 $ f <$> [
     (2, lowPad),
-    (3, highPad),
-    (4, arp)]
+    (4, highPad),
+    (6, arp)]
 
 fadeMulti 16 [
   -- the bass pulse gives way to long roots
-  (8, bassLong),
+  (5, bassLong),
   -- the lower lead gives way to the higher, sparser melody
-  (5, melody),
+  (7, melody),
   -- optional: let the arp drift further back
-  (4, arp # lpf 1800)]
+  (6, arp # lpf 1800)]
 
 fadeMulti 16 [
-  (6, bell),
-  (7, noiseBed),
+  (8, bell),
+  (3, noiseBed),
   (9, shimmer)]
 
 -- 5. Drift — strip lead/bell/arp, keep pads, texture and long bass
 
 let
-  l1 = (, silence) <$> [4,5,6,9]
+  l1 = (, silence) <$> [6,7,8,9]
   l2 = [
-    (3, highPad # lpf 1200),
-    (7, noiseBed # lpf 900),
-    (8, bassLong # lpf 220)]
+    (4, highPad # lpf 1200),
+    (3, noiseBed # lpf 900),
+    (5, bassLong # lpf 220)]
   in fadeMulti 16 (l1 <> l2)
 
 -- keep the low pad but darker
 xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700
 -- eventually leave a single arp note drifting
-xfadeIn 4 24 $ degradeBy 0.6 $ arp # gain 0.56
+xfadeIn 6 24 $ degradeBy 0.6 $ arp # gain 0.56
 
 -- 6. Dissolve — pads and drone only, then silence
 
--- fade the remaining moving layers together (keep d1/d2/d3 for the tail)
+-- fade the remaining moving layers together (keep the drone and pads for the tail)
 let
-  l1 = ( , silence) <$> [4,5,6,7,8,9]
+  l1 = ( , silence) <$> [3,5,6,7,8,9]
   l2 = [
     -- leave the low pad and sub
     (1, subDrone # lpf 140),
     (2, lowPad # lpf 500),
     -- let the last chord ring, then hush
-    (3, highPad # lpf 900)]
+    (4, highPad # lpf 900)]
   in
   fadeMulti 24 $ l1 <> l2
 
 -- final silence
-fadeSilence 16 [1,2,3]
+fadeSilence 16 [1,2,4]
 
 hush

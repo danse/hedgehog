@@ -35,6 +35,9 @@ Open a track under `tracks/` and evaluate the setup block at the top of its
 `.tidal` file first, then work through the sections below (the file header lists
 the order).
 
+Within a track, `dN` numbers follow the order the streams first enter, so `d1`
+is always the opening sound.
+
 | Key | Action |
 |---|---|
 | `C-RET` | eval the block under point (blank-line separated) |

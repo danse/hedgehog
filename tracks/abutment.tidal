@@ -27,7 +27,7 @@ let
   -- Cantilever is D dorian and ends in the snap; Abutment answers in D major:
   -- the same ensemble and room, but the low register carries the argument and
   -- the cadences are plagal (G–D).
-  -- --- d4/d5 harmony: D major, through-composed --------------------------
+  -- --- harmony: D major, through-composed --------------------------------
   -- Harmony uses Sound.Tidal.Chords (chordAt), not hand-written voicings.
   -- The unresolved sus chords are the load; the six-nine and maj-nine chords
   -- are the reassurance.
@@ -38,7 +38,7 @@ let
   hTrans = chordAt "<d4 d4 g4 a4 d4>" "<sus4 major sixNine sevenSus4 sixNine>"
   hOcc = chordAt "<g4 d4 a4 d4>" "<sixNine maj9 add9 sixNine>"
   hSteady = chordAt "<d4 b3 g4 d4>" "<maj9 min9 sixNine sixNine>"
-  -- --- d4/d5 piano: pluck samples tuned to their natural pitches ----------
+  -- --- piano: pluck samples tuned to their natural pitches ----------------
   -- pluck:5 is C3, pluck:8 is D4 (scientific pitch; Tidal c4/d5). Written
   -- pitches are Tidal letter names, one octave above scientific pitch. Each
   -- voice plays its sample once; `sustain` decides how long it rings.
@@ -69,7 +69,7 @@ let
   colourAbut = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoColour ((slow 2 hAbut) |+ 12)))
   colourTrans = swing16 (struct "~ ~ t ~ ~ ~ t ~" (pianoColour ((slow 2 hTrans) |+ 12)))
   colourOcc = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoColour ((slow 2 hOcc) |+ 12)))
-  -- --- d6 double bass: bass1:0 is C2 (Tidal c3) ---------------------------
+  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
   -- The bass is the abutment: it stays low and gains weight through the middle.
   bassPedal = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ ~ ~ ~ ~"
     # sustain 2.8 # release 1.2 # lpf 480 # lpq 0.18
@@ -92,7 +92,7 @@ let
   bassSteady = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 2 # release 1 # lpf 520 # lpq 0.18
     # room 0.55 # size 0.72 # amp 0.78
-  -- --- d1/d2/d3 kick, brushes, ride: gretsch acoustic kit ----------------
+  -- --- kick, brushes, ride: gretsch acoustic kit --------------------------
   kickSoft = s "~ gretsch ~ gretsch" # n 13 # sustain 0.45 # release 0.15
     # lpf 340 # room 0.16 # size 0.28 # amp 0.7
   kickSparse = slow 2 $ s "gretsch" # n 13 # sustain 0.45 # release 0.18
@@ -109,7 +109,7 @@ let
     # sustain 0.35 # release 0.15 # lpf 5600 # room 0.24 # size 0.38 # amp 0.55
   rideBell = swing8 $ s "~ ~ ~ gretsch:18 ~ ~ ~ ~" # sustain 0.3 # release 0.2
     # lpf 6400 # room 0.3 # size 0.48 # amp 0.42
-  -- --- d9 tools / site sounds ---------------------------------------------
+  -- --- tools / site sounds ------------------------------------------------
   woodTick = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0
     # room 0.3 # size 0.38 # amp 0.38
   plumb = degradeBy 0.35 $ slow 2 $ s "~ ~ glasstap ~" # n (irand 3)
@@ -122,7 +122,7 @@ let
     # room 0.58 # size 0.76 # amp 0.28
   wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0
     # room 0.3 # size 0.38 # amp 0.34
-  -- --- d10 air / room -----------------------------------------------------
+  -- --- air / room ---------------------------------------------------------
   air = slow 8 $ s "breath" # n 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82 # amp 0.34
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
@@ -130,7 +130,7 @@ let
   gravel = degradeBy 0.6 $ slow 8 $ s "pebbles"
     # speed (range 0.6 1.1 $ slow 8 rand) # hpf 500 # lpf 3000
     # room 0.7 # size 0.85 # amp 0.12
-  -- --- d7 sax: sax:5 is C3 (Tidal c4) -------------------------------------
+  -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
   reedShore = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~"
     # sustain 2 # release 0.9 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.62 # size 0.8 # amp 0.32
@@ -143,7 +143,7 @@ let
   reedOcc = slow 2 $ s "sax" # n 5 # speedAt "c4" "g4 ~ a4 ~ d5 ~ b4 ~"
     # sustain 1.2 # release 0.55 # hpf 160 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.42
-  -- --- d8 trumpet: high, distant, never featured -------------------------
+  -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7). slow 16 means each
   -- written note lands once every 16 cycles; expect long silences between stabs.
   trumpetOcc = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
@@ -160,31 +160,31 @@ let
 -- from the tempo current at call time. Leave each section long enough to finish.
 glideBpm 90 16
 -- clear the previous piece's working streams
-fadeSilence 8 [1,2,3,7,8,9]
+fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]
 
 -- the surviving mass: a low D pedal and a sus2 piano
-d4 pianoPedal
-d6 $ bassPedal # amp 0.2
+d1 pianoPedal
+d2 $ bassPedal # amp 0.2
 -- the room breathes
-d10 air
+d3 air
 -- one high shadow, far away
-xfadeIn 5 24 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
+xfadeIn 4 24 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
 
 -- 2. Survey — the wreck is measured from the abutment; it becomes the datum.
 -- ~36 cycles (~96 s at 90 BPM).
 
 glideBpm 90 16
 -- the datum holds: bass and low piano
-d6 $ bassSurvey # amp 0.3
-xfadeIn 4 16 compSurvey
+d2 $ bassSurvey # amp 0.3
+xfadeIn 1 16 compSurvey
 
 -- plumb-line ticks and a cautious swing
 fadeMulti 12 [
-  (9, stack [plumb, woodTick]),
-  (2, brushSoft),
-  (3, rideSoft),
+  (5, stack [plumb, woodTick]),
+  (6, brushSoft),
+  (7, rideSoft),
   -- first colour above
-  (5, pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200)]
+  (4, pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200)]
 
 -- Act II. Repair
 
@@ -193,38 +193,38 @@ fadeMulti 12 [
 
 glideBpm 90 16
 -- the load returns to the abutment
-d6 $ bassShore # amp 0.3
-xfadeIn 4 16 compShore
+d2 $ bassShore # amp 0.3
+xfadeIn 1 16 compShore
 
 -- work rhythm
 fadeMulti 16 [
-  (1, kickSoft),
-  (2, brushWork),
-  (3, ride),
-  (9, stack [woodTick, knock])]
+  (8, kickSoft),
+  (6, brushWork),
+  (7, ride),
+  (5, stack [woodTick, knock])]
 -- a distant reed hears the work
-xfadeIn 7 32 reedShore
+xfadeIn 9 32 reedShore
 
 -- 4. Abutment — the old block is underpinned; new mass is keyed in behind it.
 -- ~40 cycles (~102 s at 94 BPM).
 
 glideBpm 94 16
-d2 brush
-d3 $ stack [ride, rideBell]
-xfadeIn 5 24 colourAbut
+d6 brush
+d7 $ stack [ride, rideBell]
+xfadeIn 4 24 colourAbut
 -- light swing
-d6 $ bassAbut # amp 0.5
-xfadeIn 4 16 compAbut
+d2 $ bassAbut # amp 0.5
+xfadeIn 1 16 compAbut
 
 -- the reed enters properly
-xfadeIn 7 24 reedAbut
+xfadeIn 9 24 reedAbut
 
 -- the reed doesn't seem to stop
-xfadeIn 7 24 silence
+xfadeIn 9 24 silence
 
 -- the new mass: wood, metal and site air
-xfadeIn 9 16 $ degradeBy 0.4 (stack [woodTick, metalTool])
-xfadeIn 10 32 $ stack [air, gravel]
+xfadeIn 5 16 $ degradeBy 0.4 (stack [woodTick, metalTool])
+xfadeIn 3 32 $ stack [air, gravel]
 
 -- Act III. Return
 
@@ -232,40 +232,40 @@ xfadeIn 10 32 $ stack [air, gravel]
 -- ~36 cycles (~94 s at 92 BPM).
 
 glideBpm 92 16
-d1 kickSparse
-d2 brush
-d3 ride
-d6 $ bassTrans # amp 0.5
-xfadeIn 4 16 compTrans
-xfadeIn 5 24 colourTrans
+d8 kickSparse
+d6 brush
+d7 ride
+d2 $ bassTrans # amp 0.5
+xfadeIn 1 16 compTrans
+xfadeIn 4 24 colourTrans
 
 -- the reed holds one long note
-d7 reedTrans
+d9 reedTrans
 
 -- tools withdraw
-fadeSilence 8 [9]
+fadeSilence 8 [5]
 
 -- air returns
-xfadeIn 10 24 $ stack [air, windBed]
+xfadeIn 3 24 $ stack [air, windBed]
 
 -- 6. Occupancy — the span is rebuilt; people return; the abutment disappears
 -- under the approach. ~40 cycles (~107 s at 90 BPM).
 
 glideBpm 90 16
-d1 kickSoft
-d2 brush
-d3 (stack [ride, rideBell])
-d6 bassOcc
-xfadeIn 4 16 compOcc
-xfadeIn 5 24 colourOcc
+d8 kickSoft
+d6 brush
+d7 (stack [ride, rideBell])
+d2 bassOcc
+xfadeIn 1 16 compOcc
+xfadeIn 4 24 colourOcc
 
 -- the warm melody
-d7 reedOcc
+d9 reedOcc
 fadeMulti 24 [
-  (8, trumpetOcc),
-  (9, degradeBy 0.5 wood),
-  (10, stack [air, gravel]),
-  (7, silence)]
+  (10, trumpetOcc),
+  (5, degradeBy 0.5 wood),
+  (3, stack [air, gravel]),
+  (9, silence)]
 
 -- Act IV. Rest
 
@@ -274,23 +274,23 @@ fadeMulti 24 [
 
 glideBpm 86 16
 -- strip the rhythm and the high projection
-fadeSilence 16 [1,2,3,7,8,9]
+fadeSilence 16 [5,6,7,8,9,10]
 
 -- the abutment remains: low piano, bass and air
 
-d6 $ bassSteady # amp 0.4 -- slowing down
+d2 $ bassSteady # amp 0.4 -- slowing down
 
-d4 pianoSteady
-xfadeIn 10 24 $ stack [air, windBed, gravel]
+d1 pianoSteady
+xfadeIn 3 24 $ stack [air, windBed, gravel]
 
 -- a last high shadow
 fadeMulti 24 [
-  (5, pianoAfter # amp 0.3),
-  (8, trumpetSteady)]
+  (4, pianoAfter # amp 0.3),
+  (10, trumpetSteady)]
                  
 -- leave this ringing, then evaluate the two steps below separately:
 -- first fade everything still sounding (24 cycles), and only after the room
 -- has decayed, evaluate `hush` on its own.
-fadeSilence 24 [4,5,6,8,10]
+fadeSilence 24 [1,2,3,4,10]
 
 hush

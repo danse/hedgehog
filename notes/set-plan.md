@@ -9,9 +9,9 @@ One cycle = 4 beats ≈ 3.33 s. `slow 4` = a chord every 13 s, `slow 8` ≈ 27 s
 | # | Movement | Time | Streams | Action |
 |---|---|---|---|---|
 | 1 | Emergence | 0:00–3:00 | d1, d2 | Pads and sub only. No pulse. Let the room hear the drone. |
-| 2 | Slow pulse | 3:00–6:00 | + d5 | Add `tick`. Add air (d4) quietly at 5:00. |
-| 3 | Bloom | 6:00–10:00 | + d6, d7 | Pad progression and plucked melody. Open filters slowly. |
-| 4 | Drift | 10:00–13:00 | − d7, d5 | Strip the melody, half-time pulse, darken the pad. |
+| 2 | Slow pulse | 3:00–6:00 | + d4 | Add `tick`. Add air (d3) quietly at 5:00. |
+| 3 | Bloom | 6:00–10:00 | + d5, d6 | Pad progression and plucked melody. Open filters slowly. |
+| 4 | Drift | 10:00–13:00 | − d6, d4 | Strip the melody, half-time pulse, darken the pad. |
 | 5 | Dissolve | 13:00–16:00 | d1, d2 | Remove everything but bed and drone. Slow fade to `hush`. |
 
 ## Cue sheet
@@ -29,33 +29,33 @@ Wait at least two pad cycles (~53 s) before touching anything.
 
 ### 2 — Slow pulse
 ```
-d5 $ tick
-d4 $ air
+d4 $ tick
+d3 $ air
 ```
 Resist adding more. The pulse should be felt, not counted.
 
 ### 3 — Bloom
 ```
-d6 $ pad
-d7 $ degradeBy 0.3 $ pluck
+d5 $ pad
+d6 $ degradeBy 0.3 $ pluck
 ```
-Filter opening: `d6 $ pad # lpf (range 500 3500 $ slow 16 sine)`.
+Filter opening: `d5 $ pad # lpf (range 500 3500 $ slow 16 sine)`.
 Change the phrase length of the melody rather than the notes:
-`d7 $ degradeBy 0.15 $ slow 2 $ pluck`.
+`d6 $ degradeBy 0.15 $ slow 2 $ pluck`.
 
 ### 4 — Drift
 ```
-d7 $ silence
-d5 $ slow 4 $ tick
-d6 $ pad # lpf 700 # gain 0.35
+d6 $ silence
+d4 $ slow 4 $ tick
+d5 $ pad # lpf 700 # gain 0.35
 ```
 This section is allowed to be almost empty.
 
 ### 5 — Dissolve
 ```
-d6 $ silence
-d4 $ silence
 d5 $ silence
+d3 $ silence
+d4 $ silence
 d1 $ bed # lpf 600 # gain 0.35
 ```
 Finally `hush` and let the room/hall tail ring.
@@ -64,7 +64,7 @@ Finally `hush` and let the room/hall tail ring.
 
 - `xfadeIn STREAM CYCLES $ pattern` — crossfade a new pattern in.
 - `xfadeIn STREAM CYCLES $ silence` — crossfade out.
-- `d9 $ riser` / `d9 $ silence` — noise swell into a new section.
+- `once $ slow 8 riser` — noise swell into a new section.
 - `hush` — emergency stop.
 
 ## Recovery
