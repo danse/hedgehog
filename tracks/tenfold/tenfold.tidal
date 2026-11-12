@@ -90,3 +90,96 @@ let
   -- convenience: fade several streams to silence at once (helpers live in
   -- boot/BootTidal.hs), e.g. fadeSilence 8 [4,5,6,9]
   allOrbits = [1..9]
+
+-- 1. Emergence — sub drone and low pad only
+-- Eval 00-setup.tidal first.
+
+d1 subDrone
+-- the low pad appears under the drone
+xfadeIn 2 16 $ lowPad # lpf 520
+
+-- let the room breathe before adding anything else
+xfadeIn 7 24 noiseBed
+
+-- 2. Ascent — high pad, soft bass, first arp hint
+
+-- texture
+d1 subDrone
+xfadeIn 2 8 lowPad
+fadeMulti 16 [
+  (3, highPad # lpf 1500),
+  (8, bassPulse),
+  (7, noiseBed)]
+
+-- enter the arp before the expansion. Melodic
+xfadeIn 4 24 $ arp # lpf 1800
+
+-- 3. Expansion — full synth palette (still no drums)
+
+fadeMulti 8 [
+  (3, highPad), -- without the lpf
+  (4, arp)] -- without the lpf
+
+-- punctuation
+fadeMulti 16 [
+  (5, lead),
+  (6, bell),
+  (9, shimmer)]
+
+-- longer melody option instead of the lead
+xfadeIn 5 16 melody
+
+-- 4. Suspension — harmony floats, the pulse loosens
+
+let f (s, p) = (s, p # lpf 2000) in
+  fadeMulti 16 $ f <$> [
+    (2, lowPad),
+    (3, highPad),
+    (4, arp)]
+
+fadeMulti 16 [
+  -- the bass pulse gives way to long roots
+  (8, bassLong),
+  -- the lower lead gives way to the higher, sparser melody
+  (5, melody),
+  -- optional: let the arp drift further back
+  (4, arp # lpf 1800)]
+
+fadeMulti 16 [
+  (6, bell),
+  (7, noiseBed),
+  (9, shimmer)]
+
+-- 5. Drift — strip lead/bell/arp, keep pads, texture and long bass
+
+let
+  l1 = (, silence) <$> [4,5,6,9]
+  l2 = [
+    (3, highPad # lpf 1200),
+    (7, noiseBed # lpf 900),
+    (8, bassLong # lpf 220)]
+  in fadeMulti 16 (l1 <> l2)
+
+-- keep the low pad but darker
+xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700
+-- eventually leave a single arp note drifting
+xfadeIn 4 24 $ degradeBy 0.6 $ arp # gain 0.56
+
+-- 6. Dissolve — pads and drone only, then silence
+
+-- fade the remaining moving layers together (keep d1/d2/d3 for the tail)
+let
+  l1 = ( , silence) <$> [4,5,6,7,8,9]
+  l2 = [
+    -- leave the low pad and sub
+    (1, subDrone # lpf 140),
+    (2, lowPad # lpf 500),
+    -- let the last chord ring, then hush
+    (3, highPad # lpf 900)]
+  in
+  fadeMulti 24 $ l1 <> l2
+
+-- final silence
+fadeSilence 16 [1,2,3]
+
+hush
