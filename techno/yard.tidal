@@ -1,0 +1,143 @@
+-- Yard — downtempo techno / Cantilever's trio over a drum machine
+-- 104 BPM · D dorian. The same piano and double bass as Cantilever (pluck,
+-- bass1), the acoustic hats kept, the jazz kit replaced by an 808 kick. No
+-- swing, no fixed arrangement: a bed to audition the following tracks over,
+-- with a turn, a melodic emphasis and a coda when you want them.
+-- The beat turns over a four-bar phrase: a drop and a fill, then repeat.
+--
+-- Eval the section lines in order, then leave it running. Patterns stay
+-- inline unless another section reuses them; `piano` is the only binding.
+--
+-- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
+
+setbpm 104
+
+-- 1. Foundation — the grid. Kick and bass, one four-bar phrase.
+--    Bar 3 drops the last kick; bar 4 answers with a pickup.
+d1 $ s "<808bd*4 [808bd*4] [808bd 808bd 808bd ~] [808bd 808bd 808bd [808bd 808bd]]>"
+  # n 0 # lpf 260 # amp 1.05
+  # room 0.04 # size 0.12
+--    The bass walks the same four bars and turns up to d3 on the fourth.
+d2 $ s "bass1" # n 2
+  # speedAt "c3" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
+  # sustain 0.5 # release 0.2 # lpf 650 # lpq 0.22
+  # room 0.2 # size 0.38 # amp 0.92
+
+-- 2. Yard — acoustic hats and a Dm9 / G6/9 stab. This is the audition bed.
+--    The hats double to 16ths on the fill bar and breathe over eight cycles.
+d3 $ whenmod 4 3 (fast 2) $ degradeBy 0.1 $ s "gretsch:4*8"
+  # sustain 0.06 # release 0.03 # lpf (range 7000 9500 $ slow 8 sine)
+  # room 0.1 # size 0.2 # amp 0.45
+d4 $ struct "~ ~ t ~" $ slow 2 $ s "pluck" # n 5
+  # speedAt "c4" (chordAt "<d4 g4>" "<min9 sixNine>")
+  # sustain 1.6 # release 0.7 # lpf 1200 # lpq 0.2
+  # room 0.55 # size 0.7 # amp 0.55
+
+-- 3. Extras — try them over the bed. Each block is its own paragraph, so
+--    evaluate just the one you want. Blocks sharing a stream replace each
+--    other; evaluating the whole section at once will be dense on purpose.
+
+-- d5 · woodblock, 3 against 4 — Cantilever's `wood3`, stripped back
+d5 $ degradeBy 0.3 $ fast 3 (s "east" # n 0)
+  # amp 0.38 # pan 0.4 # room 0.3 # size 0.4
+
+-- d5 · tick on the offbeat — alternative to the woodblock
+d5 $ s "~ click:2 ~ click:2" # amp 0.4 # pan 0.55
+  # room 0.2 # size 0.3
+
+-- d5 · clap backbeat — if it should read as a groove; `808sd` is fatter
+d5 $ s "~ cp ~ cp" # amp 0.5 # room 0.25 # size 0.35
+
+-- d6 · high piano answer — the Cantilever motif on `pluck:8` (D5)
+piano = s "pluck" # n 8
+  # speedAt "d5" "<a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~>"
+  # sustain 0.5 # release 0.25 # lpf 3600
+  # room 0.45 # size 0.6 # amp 0.5
+d6 $ slow 2 piano
+
+-- d7 · dub stab — `stab` is a chord sample; `n` picks the chord
+d7 $ struct "~ ~ ~ t" $ s "stab" # n 5
+  # amp 0.32 # lpf 1400 # lpq 0.2 # room 0.55 # size 0.7
+
+-- d8 · air — one breath every four cycles
+d8 $ slow 4 $ s "breath" # sustain 0.5
+  # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.55
+
+-- d8 · creak — sparse metal, tuned by `speed`
+d8 $ degradeBy 0.55 $ slow 2 $ s "metal" # n (irand 10)
+  # sustain 0.5 # speed (range 0.5 0.9 $ slow 4 rand)
+  # amp 0.3 # hpf 300 # lpf 2400 # room 0.6 # size 0.75
+
+-- d8 · reed — the trio's other voice, high and thin
+d8 $ slow 2 $ s "sax" # n 5
+  # speedAt "c4" "d5 ~ f5 ~ a5 ~ g5 ~"
+  # release 0.6 # amp 0.32 # hpf 150 # lpf 1600 # lpq 0.25
+  # room 0.6 # size 0.8
+
+-- Pitch reminder: `n` picks the file, `note`/`speedAt` is the pitch.
+-- pluck:8 → d5, sax:5 → c4, bass1:2 → c3, moog:2 (C4) → c5.
+-- `stab` and `arpy` have no documented pitch — tune those by ear.
+
+-- 4. Turn — a second take on the beat. Evaluate a stream to replace its bed
+--    version; the others keep running, so mix and match with sections 1–2.
+--    Re-evaluate the section 1/2 lines to come back to the bed.
+
+-- d1 · half-time: kick on 1 and 3, the rest is space
+d1 $ s "808bd ~ 808bd ~" # n 0 # lpf 230 # amp 1.1
+  # room 0.07 # size 0.2
+
+-- d2 · broken walk: same register and notes, pushed off the beat
+d2 $ s "bass1" # n 2
+  # speedAt "c3" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a2 ~ c3 ~] [d3 f3 a2 c3 d3 ~ ~ ~]>"
+  # sustain 0.45 # release 0.2 # lpf 700 # lpq 0.22
+  # room 0.2 # size 0.38 # amp 0.9
+
+-- d3 · open offbeats: `gretsch:17` is the open hat; it answers the kick
+d3 $ degradeBy 0.1 $ s "~ gretsch:17 ~ gretsch:17 ~ gretsch:17 ~ gretsch:17"
+  # sustain 0.3 # release 0.2 # lpf 9000
+  # room 0.15 # size 0.28 # amp 0.5
+
+-- 5. Emphasis — after the turn, d5 stops ticking and starts singing: a slow
+--    sax line in D dorian. d6 takes the piano motif and runs it at 16x — a
+--    flicker of notes against the half-time bed. Evaluate the two together.
+
+d5 $ slow 2 $ s "sax" # n 5
+  # speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~ f4 ~ e4 ~] [d4 ~ ~ ~ ~ ~ ~ ~]>"
+  # sustain 1.2 # release 1.0 # amp 0.4 # hpf 150 # lpf 1800 # lpq 0.25
+  # room 0.65 # size 0.82
+
+-- d6 · fast answer: the trio's motif, sped up into a shimmer
+d6 $ fast 16 piano
+
+-- 6. Coda — leave section 5 running and evaluate these in order, a few bars
+--    apart. The melody goes first and each layer below it takes longer to
+--    leave, so the bottom of the track is the last thing holding. One cycle
+--    is ~2.3 s at 104 BPM.
+
+-- the fast piano goes, then the sax; the beat is left alone
+fadeSilence 8 [6]
+fadeSilence 8 [5]
+
+-- the open hats follow; the kick holds on a little longer
+fadeSilence 8 [3]
+fadeSilence 12 [1]
+
+-- the bass drops to a low D pedal and the bed's piano plays one last Dm9
+xfadeIn 2 8 $ slow 4 $ s "bass1" # n 2
+  # speedAt "c3" "d3 ~ ~ ~"
+  # sustain 2.4 # release 1.2 # lpf 480 # lpq 0.16
+  # room 0.5 # size 0.72 # amp 0.8
+xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
+  # speedAt "c4" (chordAt "d4" "min9")
+  # sustain 3.2 # release 2.0 # lpf 1000 # lpq 0.2
+  # room 0.8 # size 0.9 # amp 0.6
+
+-- let the chord ring a few bars, then it and the pedal go under a last
+-- breath; the reverb tail is the end
+xfadeIn 8 16 $ slow 4 $ s "breath" # sustain 0.5
+  # hpf 450 # lpf 2000 # room 0.8 # size 0.88 # amp 0.6
+fadeSilence 24 [2, 4, 7]
+fadeSilence 16 [8]
+
+-- `hush` after a beat
+hush
