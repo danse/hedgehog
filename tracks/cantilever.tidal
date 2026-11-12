@@ -12,8 +12,6 @@
 --
 -- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4 (trim with gain).
 
-setbpm 92
-
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Harmony: D dorian, voiced with Sound.Tidal.Chords.
@@ -100,7 +98,7 @@ let
   kickSparse = slow 2 $ s "gretsch" # n 13 # gain 0.82 # sustain 0.5 # release 0.18
     # lpf 320 # room 0.18 # size 0.3
   brushFoot = s "~ ~ gretsch ~" # n 3 # sustain 0.3 # release 0.15
-    # lpf 2600 # room 0.35 # size 0.5
+    # lpf 2600 # room 0.35 # size 0.5 # amp 4
   brush = swing8 $ s "~ gretsch ~ gretsch" # n "<3 2>" # gain 0.68 # sustain 0.3 # release 0.16
     # lpf 3000 # room 0.28 # size 0.42
   brushGhost = s "~ ~ gretsch ~" # n 3 # gain 0.5 # sustain 0.25 # release 0.12
@@ -119,7 +117,7 @@ let
   wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0 # gain 0.5 # room 0.3 # size 0.38
   -- wood3 is fast-3 against the 4/4 pulse and shime is fast-5; several harmonic
   -- phrases use slow 3/4 against the bass, so the layers drift in and out.
-  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # room 0.35 # size 0.42)
+  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # room 0.35 # size 0.42) # amp 4
   shime = degradeBy 0.4 $ fast 5 (s "east" # n 5 # gain 0.34 # room 0.4 # size 0.48)
   rub = slow 2 $ s "gretsch" # n 8 # gain 0.42 # sustain 2.4 # release 1.1
     # hpf 220 # lpf 2200 # room 0.62 # size 0.78
@@ -171,7 +169,6 @@ d6 bassFoot
 d2 brushFoot
 -- a low piano pedal appears under the bass
 d4 pianoPedal
-
 -- first hint of the room: a single breath
 d10 $ slow 2 air
 
@@ -190,7 +187,7 @@ xfadeIn 4 24 compSpan
 xfadeIn 5 32 colourSpan
 
 -- implied polymeter: three woodblock hits per cycle against the 4/4 pulse
-d9 $ wood3 # amp 4
+d9 wood3
 
 -- the bass phrase stretches over four cycles
 d6 bassWalk4
@@ -199,13 +196,11 @@ d6 bassWalk4
 -- ~40 cycles (~104 s at 92 BPM).
 
 d1 kickSoft
-d2 brush
-d3 ride
 xfadeIn 4 16 compLoad
 xfadeIn 5 24 colourLoad
 
 -- the reed joins from the back of the room
-d7 $ reedCall # gain 0.7
+d7 $ degrade $ reedCall # gain 0.7
 
 -- add a little ride bell for lift
 d3 $ stack [ride, rideBell]
@@ -220,7 +215,7 @@ d3 $ stack [ride, rideBell]
 glideBpm 98 16
 d1 kickSoft
 d2 brush
-d3 (stack [ride, rideBell])
+d3 $ stack [ride, rideBell]
 d6 bassLoad
 xfadeIn 4 16 compOver
 xfadeIn 5 24 colourOver
@@ -244,16 +239,17 @@ d5 $ pianoHi $ slow 3 hOver |+ 12
 glideBpm 86 16
 -- the kit and the trumpet fall away; a cymbal rub remains
 fadeSilence 8 [1,2,8]
-xfadeIn 3 16 rub
 xfadeIn 9 12 creak
+xfadeIn 3 16 rub
 xfadeIn 10 32 air
 
--- bass becomes a long pedal; piano turns to low clusters
-d6 bassCreak
-d4 pianoCreak
-xfadeIn 5 32 $ pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400
-
 -- breathe
+
+-- bass becomes a long pedal, piano turns to low clusters
+fadeMulti 32 [
+  (6, bassCreak),
+  (4, pianoCreak),
+  (5, pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400)]
 
 -- the reed stretches out
 d7 reedCreak
@@ -268,21 +264,22 @@ xfadeIn 9 24 $ degradeBy 0.7 metalSpark
 
 -- this adds rhythm
 glideBpm 96 16
-d1 kickSoft
-d2 brushSnap
-d3 ride
-d6 bassSnap
-xfadeIn 4 8 compSnap
-xfadeIn 9 8 $ stack [metalSpark, wood]
+fadeMulti 16 [
+  (1, kickSoft),
+  (2, brushSnap),
+  (3, ride),
+  (6, bassSnap),
+  (4, compSnap),
+  (9, stack [metalSpark, wood])]
 
 -- breathe
 
 -- Step 2 (after ~8 cycles): the hole — everything but the trumpet drops out
-fadeSilence 4 [1,2,3,4,5,6,7,9]
-xfadeIn 8 8 trumpetSnap
+fadeSilence 16 [1,2,3,4,5,6,7,9]
+xfadeIn 8 16 trumpetSnap
 -- together it's a sharp transition
 -- Step 3 (after the stab): bass alone, then Settle
-xfadeIn 6 8 bassSettle
+xfadeIn 6 16 bassSettle
 
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
@@ -316,14 +313,11 @@ xfadeIn 10 32 (stack [air, windBed])
 
 -- the bass returns once, very low
 xfadeIn 6 24 $ bassAfter # gain 0.82
-
--- breathe
-
 -- the last chord: let it ring
 xfadeIn 4 32 $ pianoLo (slow 8 hAfter) # lpf 1200 # room 0.8 # size 0.85
 
--- Open coda: the last chord rings, then fadeSilence and hush are separate
--- steps — evaluate them in order, with a pause between.
+-- breathe
+
 -- final fade: everything still sounding (piano, bass, trumpet, metal, air)
 fadeSilence 24 [4,5,6,8,9,10]
 
