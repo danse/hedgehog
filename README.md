@@ -3,9 +3,9 @@
 Live-coded tracks. TidalCycles → SuperDirt → PipeWire JACK, edited in a
 project-contained Emacs.
 
-Tracks live in `tracks/`; each track is a single `<track>.tidal` file with its
-setup block and sections. Evaluate the setup block at the top first. See
-`tracks/hedgehog.tidal` for the main ambient set.
+Tracks live in one folder per genre (`ambient/`, `techno/`); each track is a
+single `<track>.tidal` file with its setup block and sections. Evaluate the
+setup block at the top first. See `ambient/hedgehog.tidal` for a complete set.
 
 ## Status
 
@@ -23,7 +23,7 @@ setup block and sections. Evaluate the setup block at the top first. See
 ```sh
 scripts/check.sh        # verify binaries, audio, Tidal, samples, disk, tracks
 scripts/up.sh           # start SuperDirt
-scripts/edit.sh         # open Emacs on tracks/
+scripts/edit.sh         # open Emacs on the project
 ```
 
 `up.sh --no-emacs` starts only SuperCollider. `scripts/down.sh` stops it.
@@ -31,9 +31,9 @@ Logs go to `logs/superdirt.log`.
 
 ## Playing
 
-Open a track under `tracks/` and evaluate the setup block at the top of its
-`.tidal` file first, then work through the sections below (the file header lists
-the order).
+Open a track under `ambient/` or `techno/` and evaluate the setup block at the
+top of its `.tidal` file first, then work through the sections below (the file
+header lists the order).
 
 Within a track, `dN` numbers follow the order the streams first enter, so `d1`
 is always the opening sound.
@@ -57,10 +57,10 @@ Indented statements and continuation lines are handled.
 
 Each area documents itself:
 
-- `tracks/` — one `.tidal` file per track
+- `ambient/`, `techno/` — one folder per genre, one `.tidal` file per track
 - `scripts/` — see `scripts/README.md`
 - `visuals/` — see `visuals/README.md`
-- `notes/` — see `notes/set-plan.md`
+- `notes/` — set plan, TODO, learning notes in `notes/learning/`
 - `samples/` — see `samples/README.md`
 
 `boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config,

@@ -1,6 +1,6 @@
 # Post notes: the bass that wouldn't change pitch
 
-Raw material, not a draft. Track: `tracks/daywork.tidal`; the fix landed as
+Raw material, not a draft. Track: `ambient/daywork.tidal`; the fix landed as
 `3fa570b fix the work tune`.
 
 ## Symptom

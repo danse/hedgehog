@@ -16,7 +16,7 @@ One cycle = 4 beats ≈ 3.33 s. `slow 4` = a chord every 13 s, `slow 8` ≈ 27 s
 
 ## Cue sheet
 
-Eval the setup block at the top of `tracks/hedgehog.tidal`, then work
+Eval the setup block at the top of `ambient/hedgehog.tidal`, then work
 through the movement blocks below it. Keys: `C-RET` evals the
 block under the cursor, `C-c C-h` hushes, `C-c C-s` starts/stops the Tidal REPL.
 

@@ -7,7 +7,7 @@ visuals. Paths are relative to the repo root.
 
 | Script | Purpose |
 |---|---|
-| `up.sh` | Start SuperDirt (via `pw-jack sclang`) and open Emacs on `tracks/`. `--no-emacs` starts only SuperCollider. |
+| `up.sh` | Start SuperDirt (via `pw-jack sclang`) and open Emacs on the project. `--no-emacs` starts only SuperCollider. |
 | `down.sh` | Stop SuperDirt and project `scsynth`. |
 | `edit.sh` | Open the project-contained Emacs. |
 
@@ -35,5 +35,5 @@ See [visuals/README.md](../visuals/README.md) and
 | Script | Purpose |
 |---|---|
 | `check.sh` | Environment sanity check: binaries, audio, Tidal, samples, disk, reverb limits, and a silent typecheck of every track. |
-| `check-tidal.sh [file ...]` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to `tracks/*.tidal`. |
+| `check-tidal.sh [file ...]` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `*/*.tidal` track. |
 | `check-tidal.py` | Convert `.tidal` blocks to GHCi `:{ :}` commands for syntax checks (output can be piped into ghci). |

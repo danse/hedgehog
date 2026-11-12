@@ -4,7 +4,7 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ "$#" -eq 0 ]; then
-  set -- "$root/tracks"
+  set -- "$root"
 fi
 
 exec emacs -q --init-directory "$root/emacs" -l "$root/emacs/init.el" "$@"

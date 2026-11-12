@@ -382,7 +382,7 @@ xfadeIn 6 24 $ stack [air, windBed]
 fadeMulti 8 [
   (1, switchOff),
   (3, bassStand # amp 0.4),
-  {4, pianoCoda)]
+  (4, pianoCoda)]
 glideBpm 84 16 -- from 92
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [2,5,7,8,9,10]
