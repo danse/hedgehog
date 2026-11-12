@@ -17,3 +17,12 @@ may be newer, so confirm version-specific behaviour in its source.
 
 `visuals/hydra/` is this project's own Hydra page and sketches, not the Hydra
 library checkout.
+
+## Writing a track
+
+- `dN` numbers follow the order streams first enter: `d1` is the opening sound,
+  and each new layer takes the next free number. Keep that order when adding
+  sections.
+- Keep a pattern inline at its section if it is used only once; name it in the
+  setup `let` block only when another section reuses it. A bare audition track
+  may have no `let` block at all.
