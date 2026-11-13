@@ -109,12 +109,11 @@ xfadeIn 3 24 noiseBed
 -- texture
 xfadeIn 2 8 lowPad -- -lpf
 fadeMulti 16 [
-  (4, highPad # lpf 1500),
-  (5, bassPulse),
-  (3, noiseBed)]
+  (4, highPad # lpf 1000),
+  (5, bassPulse)]
 
 -- enter the arp before the expansion. Melodic
-xfadeIn 6 24 $ arp # lpf 1800
+xfadeIn 6 24 $ arp # lpf 800
 
 -- 3. Expansion — full synth palette (still no drums)
 
@@ -127,9 +126,6 @@ fadeMulti 16 [
   (7, lead),
   (8, bell),
   (9, shimmer)]
-
--- longer melody option instead of the lead
-xfadeIn 7 16 melody
 
 -- 4. Suspension — harmony floats, the pulse loosens
 

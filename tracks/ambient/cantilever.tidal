@@ -208,17 +208,17 @@ d5 $ stack [ride, rideBell]
 -- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
 -- ~40 cycles (~98 s at 98 BPM).
 
--- you get here with a very present reedCall on a main downbeat
--- xfadeIn 9 16 silence
+-- you get here with a reedCall on the foreground
+xfadeIn 9 16 silence
 -- if it's silenced we can listen to the rest of the texture for a bit
 
 glideBpm 98 16
 d1 bassLoad
 d2 brush
-xfadeIn 3 16 compOver
 d5 $ stack [ride, rideBell]
-xfadeIn 6 24 colourOver
 d8 kickSoft
+xfadeIn 3 16 compOver
+xfadeIn 6 24 colourOver
 
 -- two distant trumpet stabs, never a solo
 d10 trumpetOver
@@ -242,8 +242,6 @@ fadeSilence 8 [2,8,10]
 xfadeIn 7 12 creak
 xfadeIn 5 16 rub
 xfadeIn 4 32 air
-
--- breathe
 
 -- bass becomes a long pedal, piano turns to low clusters
 fadeMulti 32 [
@@ -274,12 +272,12 @@ fadeMulti 16 [
 
 -- breathe until it catches rhythm, then the snap
 
--- Step 2 (after ~8 cycles): the hole — everything but the trumpet drops out
-fadeSilence 2 [1,2,3,5,6,7,8,9]
-xfadeIn 10 2 trumpetSnap
+-- the hole — everything but the trumpet drops out
+fadeSilence 16 [1,2,3,5,6,7,8,9]
+xfadeIn 10 16 trumpetSnap
 -- together it's a sharp transition
 -- Step 3 (after the stab): bass alone, then Settle
-xfadeIn 1 2 bassSettle
+xfadeIn 1 32 bassSettle
 
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
@@ -307,7 +305,9 @@ fadeSilence 16 [1,2,3,5,6,7,8,9,10]
 xfadeIn  6 24 pianoAfter
 xfadeIn  7 24 metalSpark
 xfadeIn 10 32 trumpetAfter
-xfadeIn  4 32 (stack [air, windBed])
+xfadeIn  4 32 $ stack [air, windBed]
+
+-- let the bass silence before touching it
 
 -- the bass returns once, very low
 xfadeIn 1 24 $ bassAfter # gain 0.82
