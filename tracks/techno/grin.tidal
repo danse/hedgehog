@@ -11,7 +11,8 @@
 -- line up. Section 5 is the breakdown; section 6 is the coda. After the
 -- breakdown, play 6 straight away, or bring the grid back with 4 for a last
 -- chorus and then play 6. Section 7 is optional: it plays the coda again on
--- machine samples, and the ending block at the end of the file stops it.
+-- machine samples. Section 8 is its coda: the band leaves by stream group, a
+-- stage every two bars, so evaluate it one stage at a time.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- One cycle is one bar (2 s at 120 BPM).
@@ -23,7 +24,8 @@
 -- speedAt runs from those.
 -- trump:2 is E5 (Tidal e6); the tight stabs are B5, E5, G5 at n 0/2/3 and a
 -- sampled chord at n 9. trump:4 is a 3.2 s funk phrase at 107 BPM.
--- Pitch reminder: jvbass:0 → fs2, pluck:8 → d5, trump:2 → e6, ho:0 → ds5.
+-- Pitch reminder: jvbass:0 → fs2, pluck:8 → d5, trump:2 → e6, ho:0 → ds5,
+-- sax:5 → c4, moog:1 → c3, moog:2 → c4.
 -- Mini-notation spellings: accidentals are `s`/`f` (cs4, fs2, bf3), never
 -- `#`, and each chord needs its own brackets inside an alternation —
 -- `<[e4,g4,b4] [a3,cs4,e4]>`, not `<e4,g4,b4 a3,cs4,e4>`. Both mistakes pass
@@ -180,8 +182,7 @@ d10 $ slow 4 $ s "ho" # n 2 -- not loud at all
 
 -- the beat you have been waiting for. Kick doubling into sixteenths
 -- at the end of the fourth bar
-d2 $ s "<909*4 909*4 909*4 [909*4 909*8]>"
-  # amp 1 # lpf 320 # room 0.04 # size 0.1
+d2 $ s "<909*4 909*4 909*4 [909*4 909*8]>" # amp 1 # room 0.04 # size 0.1
 
 -- 6. Coda — the pocket returns for one turnaround: Em9 | A13 | Bb13 | B7#9.
 --    The bass climbs A -> Bb -> B, the clav, the horns and the cowbell change
@@ -236,9 +237,11 @@ xfadeIn 7 16 silence
 -- 7. The grin was too easy — the machine learned the coda in one pass. Same
 --    notes, same kick (1, 2&, 4), same dynamics, but an 808 and a Moog and no
 --    swing anywhere: nothing is late and nothing breathes. The pad is the same
---    synth it always was. The trumpet is the only person left, so it is also
---    the only thing still swinging, and it only arrives for the second half of
---    each eight-bar phrase. Evaluate instead of the ending block above.
+--    synth it always was. The one person left is a sax holding a single note
+--    a bar — the third of each chord, g / cs / d / ds, the notes that spell
+--    the grin — and it can stay on stage because each note is a four-second
+--    tone, not a 0.4 s stab. Evaluate instead of the ending block above, then
+--    go on into 8.
 d1 $ s "moog" # n 1
   # speedAt "c3" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
   # sustain 0.16 # release 0.06 # lpf 1200 # lpq 0.2
@@ -266,11 +269,42 @@ d6 $ struct "t ~ ~ t ~ ~ t ~ ~ t ~ t ~ ~ t ~"
 d7 $ s "hedge_pad" # n (hCoda |+ 12)
   # sustain 1.8 # amp 0.38 # room 0.45 # size 0.58
 
-d8 $ swing16 $ s "trump" # n 2
-  # speedAt "e6" "<~ ~ ~ ~ [e6 ~ ~ g6 ~ ~ b5 ~ ~ ~ e6 ~ ~ ~ ~ ~] [cs6 ~ ~ e6 ~ ~ g6 ~ ~ ~ e6 ~ ~ ~ ~ ~] [d6 ~ ~ f6 ~ ~ af6 ~ ~ g6 ~ f6 ~ ~ ~ ~] [ds6 ~ ~ fs6 ~ ~ a6 ~ ~ ~ fs6 ~ ~ ds6 ~ c6]>"
-  # sustain 0.14 # release 0.08 # lpf 3600 # lpq 0.3
-  # hpf 220 # room 0.3 # size 0.5 # amp 0.5 # pan 0.56
+d8 $ s "sax" # n 5
+  # speedAt "c4" "<g4 cs4 d4 ds4>"
+  # sustain 1.7 # release 0.5 # lpf 3200 # lpq 0.2
+  # hpf 180 # room 0.35 # size 0.52 # amp 0.62 # pan 0.55
 
 d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~"
   # amp 0.3 # pan 0.36 # room 0.08 # size 0.18
+
+-- 8. The answer — the machine has nothing left to learn, so it leaves by
+--    stream group, about four stages, one every two bars, each fading rather
+--    than stopping dead. The surface goes first (hats, ghost, bell), then the
+--    backbeat (snare, comp), then the weight (bass, kick). The pad does not
+--    fade: it stops modulating and lands on Em9 an octave up — the room the
+--    track ends in. The sax keeps the coda's guide tones through the exits, so
+--    its last D# falls on the B7#9 bar; when the pad lands the sax resolves
+--    that D# up a semitone to E, and then lets go.
+--    Evaluate one stage every two bars; the last two lines are the ring-out.
+
+-- surface
+fadeSilence 2 [3, 5, 10]
+
+-- backbeat
+fadeSilence 2 [4, 6]
+
+-- weight
+fadeSilence 2 [1, 2]
+
+-- the voice: the pad stops moving, the sax answers
+xfadeIn 7 2 $ s "hedge_pad" # n "[g5,b5,d6,fs6]"
+  # sustain 4 # amp 0.42 # room 0.6 # size 0.78
+d8 $ s "sax" # n 5
+  # speedAt "c4" "e4"
+  # sustain 1.9 # release 0.8 # lpf 3200 # lpq 0.2
+  # hpf 180 # room 0.4 # size 0.58 # amp 0.62 # pan 0.55
+
+-- out: the sax lets go, the pad holds Em9 for sixteen bars
+fadeSilence 4 [8]
+xfadeIn 7 16 silence
 
