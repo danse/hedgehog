@@ -91,9 +91,6 @@ let
   -- sample shimmer (synthapella sparkle, no rhythm)
   shimmer = degradeBy 0.5 $ slow 4 $ s "space:2*8?" # speed (range 0.8 2 $ rand)
     # gain 0.66 # hpf 1200 # lpf 7000 # room 0.7 # size 0.75
-  --
-  -- every stream in this track, for bulk fades
-  allOrbits = [1,2,3,4,5,6,7,8,9]
 
 -- 1. Emergence — sub drone and low pad only
 
