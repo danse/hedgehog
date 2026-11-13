@@ -109,6 +109,9 @@ d6 $ swing16 $ struct "t ~ ~ t ~ ~ t ~ ~ t ~ t ~ ~ t ~"
 d3 $ s "~ gretsch:16 ~ gretsch:16 ~ gretsch:16 ~ gretsch:16"
   # amp 0.3 # hpf 400 # room 0.12 # size 0.24
 
+-- the trump in the foreground is d8 and will be muted anyway in bed b
+-- xfadeIn 8 16 silence
+
 -- 4. Bed B — the grid. Same sixteen bars, recut: four to the floor, straight
 --    sixteenths, the bass quantised to a root/octave pulse, a machine clav on
 --    the eighths, a rimshot on the offbeats. The pad drops to one rootless
@@ -130,12 +133,12 @@ fadeMulti 24
       # speedAt "d5" hClav
       # sustain 0.11 # release 0.06 # lpf 1800 # lpq 0.2
       # room 0.18 # size 0.34 # amp 0.34)
-  , (8, silence)
-  , (9, silence)
+  , (8, silence) -- trump
+  , (9, silence) -- trump
   , (10, s "~ ~ drumtraks:2 ~ ~ ~ drumtraks:2 ~ ~ ~ drumtraks:2 ~ ~ ~ drumtraks:2 ~"
       # amp 0.3 # pan 0.36 # room 0.08 # size 0.18)
   ]
-fadeMulti 32
+fadeMulti 48
   [ (1, s "jvbass" # n 0
       # speedAt "fs2" "<[e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2] [b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2]>"
       # amp "0.95 0.55 0.75 0.55 0.9 0.55 0.75 0.55 0.95 0.55 0.75 0.55 0.9 0.55 0.75 0.6"
@@ -147,16 +150,18 @@ fadeMulti 32
 
 -- 5. Breakdown — the grid thins to the kick, a bass pedal, the pad and the
 --    horn. The trumpet phrase (trump:4, a 107 BPM funk line) is dropped a
---    semitone so its notes (C# D E G) sit in E dorian. The shout answers.
---    Then the kick doubles into a machine fill in the fourth bar.
-fadeSilence 4 [3, 4, 5, 6, 10]
+--    semitone so its notes (C# D E G) sit in E dorian, and it enters on the
+--    and of 1 — half a beat behind the kick, so the pocket pulls against the
+--    grid. The shout answers underneath. Then the kick doubles into a machine
+--    fill in the fourth bar.
+fadeSilence 16 [3, 4, 5, 6, 10]
 
 xfadeIn 1 4 $ slow 4 $ s "jvbass" # n 0
   # speedAt "fs2" "e2"
   # sustain 6 # release 2 # lpf 420 # lpq 0.15
   # room 0.5 # size 0.7 # amp 0.85
 
-d8 $ slow 2 $ s "trump" # n 4
+d8 $ rotR 0.125 $ slow 2 $ s "trump" # n 4
   # speedAt "d5" "cs5"
   # sustain 3.4 # release 0.2 # lpf 3400 # lpq 0.3
   # room 0.45 # size 0.62 # amp 0.6
@@ -172,7 +177,7 @@ d2 $ s "<909*4 909*4 909*4 [909*4 909*8]>"
 --    The bass climbs A -> Bb -> B, the clav, the horns and the cowbell change
 --    with it, and the kit comes back with them. Play it twice, then stop on
 --    the one and let the pad hold Em9.
-fadeMulti 2
+fadeMulti 32
   [ (1, swing16 $ s "jvbass" # n 0
       # speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
       # sustain 0.16 # release 0.06 # lpf 1100 # lpq 0.22
@@ -206,5 +211,4 @@ fadeSilence 0.5 [1, 2, 3, 4, 5, 6, 8, 10]
 xfadeIn 7 1 $ s "hedge_pad" # n "<g5,b5,d6,fs6>"
   # sustain 4 # amp 0.42 # room 0.6 # size 0.78
 
--- `hush` when the pad has died away
-hush
+xfadeIn 7 16 silence
