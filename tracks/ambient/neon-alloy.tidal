@@ -7,7 +7,7 @@
 --
 -- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4.
 
-setbpm 118
+glideBpm 118 16
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns (eval this whole block together)

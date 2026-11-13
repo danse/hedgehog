@@ -7,7 +7,7 @@ import Data.String (fromString)
 -- bed → texture → pulse → harmony → melody → transitions.
 -- See notes/set-plan.md for the movement plan and cue notes.
 
-setbpm 72
+glideBpm 72 16
 
 -- Layers. Each definition is one paragraph: eval once after boot.
 -- Re-eval a definition only when you want to change that instrument.
@@ -89,7 +89,7 @@ d6 $ degradeBy 0.3 pluck
 -- d6 $ degradeBy 0.6 $ slow 8 pluck
 
 -- Off.
--- d6 $ silence
+-- d6 silence
 
 -- Transitions. Eval one line at a time; the commented ones are cues.
 
@@ -99,4 +99,4 @@ d6 $ degradeBy 0.3 pluck
 
 once $ slow 8 riser
 
-fadeSilence 24 [1,2,3,4,5,6]
+fadeSilence 32 [1,2,3,4,5,6]

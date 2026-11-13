@@ -155,12 +155,12 @@ let
     (4, highPad # lpf 1200),
     (3, noiseBed # lpf 900),
     (5, bassLong # lpf 220)]
-  in fadeMulti 16 (l1 <> l2)
+  in fadeMulti 24 (l1 <> l2)
 
 -- keep the low pad but darker
 xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700
 -- eventually leave a single arp note drifting
-xfadeIn 6 24 $ degradeBy 0.6 $ arp # gain 0.56
+xfadeIn 6 32 $ degradeBy 0.6 $ arp # gain 0.56
 
 -- 6. Dissolve — pads and drone only, then silence
 
