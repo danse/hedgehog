@@ -274,7 +274,7 @@ d8 $ s "sax" # n 5
   # sustain 1.7 # release 0.5 # lpf 3200 # lpq 0.2
   # hpf 180 # room 0.35 # size 0.52 # amp 0.62 # pan 0.55
 
-d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~"
+d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~" -- metal bell
   # amp 0.3 # pan 0.36 # room 0.08 # size 0.18
 
 -- 8. The answer — the machine has nothing left to learn, so it leaves by
@@ -296,7 +296,7 @@ fadeSilence 2 [4, 6]
 -- weight
 fadeSilence 2 [1, 2]
 
--- the voice: the pad stops moving, the sax answers
+-- voice: the pad stops moving, the sax answers
 xfadeIn 7 2 $ s "hedge_pad" # n "[g5,b5,d6,fs6]"
   # sustain 4 # amp 0.42 # room 0.6 # size 0.78
 d8 $ s "sax" # n 5
