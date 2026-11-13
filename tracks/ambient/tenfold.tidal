@@ -11,7 +11,7 @@
 --
 -- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4.
 
-setbpm 125
+glideBpm 125 16
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET); keep it free

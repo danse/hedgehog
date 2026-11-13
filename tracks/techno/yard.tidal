@@ -19,7 +19,7 @@ d1 $ s "<808bd*4 [808bd*4] [808bd 808bd 808bd ~] [808bd 808bd 808bd [808bd 808bd
   # room 0.04 # size 0.12
 --    The bass walks the same four bars and turns up to d3 on the fourth.
 d2 $ s "bass1" # n 2
-  # speedAt "c3" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
+  # speedAt "c2" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
   # sustain 0.5 # release 0.2 # lpf 650 # lpq 0.22
   # room 0.2 # size 0.38 # amp 0.92
 
@@ -75,7 +75,7 @@ d8 $ slow 2 $ s "sax" # n 5
   # room 0.6 # size 0.8
 
 -- Pitch reminder: `n` picks the file, `note`/`speedAt` is the pitch.
--- pluck:8 → d5, sax:5 → c4, bass1:2 → c3, moog:2 (C4) → c5.
+-- pluck:8 → d5, sax:5 → c4, bass1:2 → c2, moog:2 (C4) → c5.
 -- `stab` and `arpy` have no documented pitch — tune those by ear.
 
 -- 4. Turn — a second take on the beat. Evaluate a stream to replace its bed
@@ -88,7 +88,7 @@ d1 $ s "808bd ~ 808bd ~" # n 0 # lpf 230 # amp 1.1
 
 -- d2 · broken walk: same register and notes, pushed off the beat
 d2 $ s "bass1" # n 2
-  # speedAt "c3" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a2 ~ c3 ~] [d3 f3 a2 c3 d3 ~ ~ ~]>"
+  # speedAt "c2" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a2 ~ c3 ~] [d3 f3 a2 c3 d3 ~ ~ ~]>"
   # sustain 0.45 # release 0.2 # lpf 700 # lpq 0.22
   # room 0.2 # size 0.38 # amp 0.9
 
@@ -115,8 +115,8 @@ d6 $ fast 16 piano
 --    is ~2.3 s at 104 BPM.
 
 -- the beat is left alone
-fadeSilence 8 [6] -- the fast piano
-fadeSilence 8 [5] -- the sax
+fadeSilence 24 [6] -- the fast piano
+fadeSilence 24 [5] -- the sax
 
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]
@@ -124,7 +124,7 @@ fadeSilence 12 [1]
 
 -- the bass drops to a low D pedal and the bed's piano plays one last Dm9
 xfadeIn 2 8 $ slow 4 $ s "bass1" # n 2
-  # speedAt "c3" "d3 ~ ~ ~"
+  # speedAt "c2" "d3 ~ ~ ~"
   # sustain 2.4 # release 1.2 # lpf 480 # lpq 0.16
   # room 0.5 # size 0.72 # amp 0.8
 xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5

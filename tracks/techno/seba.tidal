@@ -70,12 +70,15 @@ d7 $ s "moog" # n 2
   # room 0.3 # size 0.45 # amp 0.5
 
 -- 4. Extras — try over either bed. Blocks on d8 replace each other.
+
 -- d8 · rimshot on the offbeat
 d8 $ s "~ rs ~ rs ~ rs ~ rs" # n 0 # amp 0.32 # pan 0.45
   # room 0.2 # size 0.3
+
 -- d8 · sixteenth tick
 d8 $ s "click:2*16" # amp 0.2 # pan 0.55 # hpf 900
   # room 0.12 # size 0.2
+
 -- d8 · air, one breath every four cycles
 d8 $ slow 4 $ s "breath" # sustain 0.5
   # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.5

@@ -9,8 +9,6 @@
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 
-setbpm 96
-
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Harmony: G mixolydian, voiced with Sound.Tidal.Chords.
@@ -73,26 +71,28 @@ let
     # sustain 1.1 # release 0.45 # lpf 3600
     # room 0.5 # size 0.62 # amp 0.48
   --
-  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
-  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c3" "~ g2 ~ ~ ~ d3 ~ ~"
+  -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
+  -- The base must be c2, not c3: the samples are an octave lower than their
+  -- names suggest. With c3 every note came out an octave down (g2 -> 24 Hz).
+  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c2" "~ g2 ~ ~ ~ d3 ~ ~"
     # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
     # room 0.45 # size 0.64
-  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 ~ a2 ~ c3 ~ d3 ~"
+  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~"
     # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "c3 ~ e3 ~ a2 ~ g2 ~"
+  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "c3 ~ e3 ~ a2 ~ g2 ~"
     # sustain 1.3 # release 0.5 # lpf 680 # lpq 0.2
     # room 0.32 # size 0.5 # amp 0.86
-  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "g2 a2 c3 a2 g2 c3 a2 c3"
+  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 a2 c3 a2 g2 c3 a2 c3"
     # sustain 0.48 # release 0.2 # lpf 850 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
-  bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "c3 ~ e3 g3 ~ e3 c3 ~"
+  bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "c3 ~ e3 g3 ~ e3 c3 ~"
     # sustain 0.7 # release 0.28 # lpf 820 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassHand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ c3 ~"
+  bassHand = slow 2 $ s "bass1" # n 2 # speedAt "c2" "g2 ~ ~ ~ d3 ~ c3 ~"
     # sustain 1.5 # release 0.6 # lpf 620 # lpq 0.2
     # room 0.38 # size 0.56 # amp 0.84
-  bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c3" "g2 ~ ~ ~ d3 ~ ~ ~"
+  bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c2" "g2 ~ ~ ~ d3 ~ ~ ~"
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
   -- the work song: a plain 4/4 tune, eight notes to the bar; in G
@@ -231,14 +231,11 @@ let
 
 glideBpm 96 16
 -- clear anything left from the previous piece
-fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]
+fadeSilence 16 [1,2,3,4,5,6,7,8,9,10]
 
--- the first switches
-d1 switchOn
--- a boot on concrete
-d2 $ bootDawn # amp 0.2
--- the bass finds the floor
-d3 bassLight
+d1 switchOn -- the first switches
+d2 $ bootDawn # amp 0.2 -- a boot on concrete
+d3 bassLight -- the bass finds the floor
 
 -- the work song, first time: piano high, unaccompanied
 d4 $ motifPiano # amp 0.2
@@ -270,7 +267,7 @@ fadeMulti 24 [
   (7, stack [pigeon, ticket])]
 
 -- brushes and ride arrive with the first shift
-fadeMulti 24 [(2, stack [bootWork, brushSoft]), (1, rideSoft)]
+fadeMulti 24 [(1, rideSoft), (2, stack [bootWork, brushSoft])]
 
 -- 3. Lift — The hoist tries to lift the crate and stalls. Chain, motor, a
 -- bounce. The bass takes the work song low and slow.
@@ -293,6 +290,7 @@ xfadeIn 4 24 colourLift
 -- the reed hears the strain
 xfadeIn 9 24 reedLift
 
+-- quieter bass, change of rhythm
 xfadeIn 5 16 compLift
 -- one high spark from the top of the lift
 xfadeIn 10 32 trumpetSpark
@@ -304,11 +302,11 @@ xfadeIn 3 16 motifBass
 -- corner. Brushes, grit, a pigeon following the broom; the sax hums the round.
 -- ~40 cycles (~104 s at 92 BPM).
 
+glideBpm 92 30 -- from 88
 d2 $ stack [bootWork, brushWork]
 d8 $ stack [sweeperMiss, sweepBrush]
 -- the hoist gives way to the little machine
 fadeSilence 12 [1,5,8,9,10]
-glideBpm 92 16 -- from 88
 xfadeIn 3 16 bassSweep
 
 xfadeIn 5 16 compSweep
@@ -377,7 +375,7 @@ xfadeIn 6 24 $ stack [air, windBed]
 -- Leave the last chord and air ringing; `fadeSilence` and `hush` are separate
 -- steps, evaluated in that order after the room has decayed.
 
--- sharp drop, let the fadesilence decay before
+-- sharp drop, let the fadeSilence work before
 
 fadeMulti 8 [
   (1, switchOff),

@@ -12,8 +12,6 @@
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 
-setbpm 90
-
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Harmony: D major, voiced with Sound.Tidal.Chords.
@@ -69,27 +67,29 @@ let
   colourAbut = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoColour ((slow 2 hAbut) |+ 12)))
   colourTrans = swing16 (struct "~ ~ t ~ ~ ~ t ~" (pianoColour ((slow 2 hTrans) |+ 12)))
   colourOcc = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoColour ((slow 2 hOcc) |+ 12)))
-  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
+  -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
+  -- Base c2, not c3: the samples are an octave below their names, so c3 put
+  -- every note an octave down (d3 -> 36 Hz).
   -- The bass is the abutment: it stays low and gains weight through the middle.
-  bassPedal = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ ~ ~ ~ ~"
+  bassPedal = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ ~ ~ ~ ~"
     # sustain 2.8 # release 1.2 # lpf 480 # lpq 0.18
     # room 0.5 # size 0.65 # amp 0.82
-  bassSurvey = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "d3 ~ fs3 a3 ~ cs4 ~ a2"
+  bassSurvey = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "d3 ~ fs3 a3 ~ cs4 ~ a2"
     # sustain 0.7 # release 0.25 # lpf 780 # lpq 0.24
     # room 0.26 # size 0.4 # amp 0.88
-  bassShore = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "b2 ~ d3 fs3 ~ a3 ~ g2"
+  bassShore = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "b2 ~ d3 fs3 ~ a3 ~ g2"
     # sustain 0.8 # release 0.28 # lpf 720 # lpq 0.22
     # room 0.28 # size 0.44 # amp 0.88
-  bassAbut = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "g2 ~ d3 ~ a2 ~ b2 ~"
+  bassAbut = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "g2 ~ d3 ~ a2 ~ b2 ~"
     # sustain 0.6 # release 0.22 # lpf 900 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
-  bassTrans = swing8 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
+  bassTrans = swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.4 # release 0.5 # lpf 620 # lpq 0.2
     # room 0.35 # size 0.52 # amp 0.86
-  bassOcc = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "g2 ~ d3 ~ a2 ~ d3 ~"
+  bassOcc = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "g2 ~ d3 ~ a2 ~ d3 ~"
     # sustain 0.8 # release 0.3 # lpf 760 # lpq 0.22
     # room 0.3 # size 0.46 # amp 0.88
-  bassSteady = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
+  bassSteady = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 2 # release 1 # lpf 520 # lpq 0.18
     # room 0.55 # size 0.72 # amp 0.78
   -- --- kick, brushes, ride: gretsch acoustic kit --------------------------
@@ -193,7 +193,7 @@ fadeMulti 32 [
 
 -- the load returns to the abutment
 d2 $ bassShore # amp 0.3
-xfadeIn 1 16 compShore
+xfadeIn 1 16 $ compShore # amp 0.4
 
 -- work rhythm
 fadeMulti 32 [
@@ -208,12 +208,12 @@ xfadeIn 9 32 reedShore
 -- ~40 cycles (~102 s at 94 BPM).
 
 glideBpm 94 16 -- from 90
+d2 $ bassAbut # amp 0.5
 d6 brush
 d7 $ stack [ride, rideBell]
-xfadeIn 4 24 colourAbut
 -- light swing
-d2 $ bassAbut # amp 0.5
 xfadeIn 1 16 compAbut
+xfadeIn 4 24 colourAbut
 
 -- the reed enters properly
 once reedAbut

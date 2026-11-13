@@ -67,29 +67,31 @@ let
   colourSpan = swing16 (struct "~ ~ t ~ ~ ~ ~ t" (pianoCompHi ((slow 3 hSpan) |+ 12))) # gain 0.5
   colourLoad = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoCompHi ((slow 3 hLoad) |+ 12))) # gain 0.48
   colourOver = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoCompHi ((slow 3 hOver) |+ 12))) # gain 0.46
-  -- --- double bass: bass1:0 is C2 (Tidal c3) ------------------------------
-  bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
+  -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
+  -- Base c2, not c3: the samples are an octave below their names, so c3 put
+  -- every note an octave down (d3 -> 36 Hz).
+  bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.6 # release 0.55 # gain 0.9 # lpf 620 # lpq 0.2
     # room 0.3 # size 0.48
-  bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 ~ a2"
+  bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "d3 ~ f3 a3 ~ c4 ~ a2"
     # sustain 0.62 # release 0.22 # gain 0.9 # lpf 820 # lpq 0.25
     # room 0.24 # size 0.42
-  bassWalk4 = slow 4 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~"
+  bassWalk4 = slow 4 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~"
     # sustain 0.9 # release 0.3 # gain 0.9 # lpf 760 # lpq 0.22
     # room 0.26 # size 0.44
-  bassLoad = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c3" "d3 ~ f3 a3 ~ c4 d4 ~"
+  bassLoad = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "d3 ~ f3 a3 ~ c4 d4 ~"
     # sustain 0.5 # release 0.2 # gain 0.9 # lpf 900 # lpq 0.26
     # room 0.22 # size 0.4
-  bassCreak = slow 2 $ s "bass1" # n 14 # speedAt "c3" "d3 ~ ~ ~ ~ ~ ~ ~"
+  bassCreak = slow 2 $ s "bass1" # n 14 # speedAt "c2" "d3 ~ ~ ~ ~ ~ ~ ~"
     # sustain 2.6 # release 1.1 # gain 0.84 # lpf 420 # lpq 0.16
     # room 0.55 # size 0.7
-  bassSnap = swing16 $ s "bass1" # n 10 # speedAt "c3" "d3 d3 ~ f3 ~ a2 ~ c3"
+  bassSnap = swing16 $ s "bass1" # n 10 # speedAt "c2" "d3 d3 ~ f3 ~ a2 ~ c3"
     # sustain 0.24 # release 0.1 # gain 0.92 # lpf 1100 # lpq 0.3
     # room 0.18 # size 0.32
-  bassSettle = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c3" "d3 ~ f3 ~ a2 ~ c3 ~"
+  bassSettle = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "d3 ~ f3 ~ a2 ~ c3 ~"
     # sustain 0.8 # release 0.3 # gain 0.9 # lpf 720 # lpq 0.2
     # room 0.3 # size 0.46
-  bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c3" "d3 ~ ~ ~ a2 ~ ~ ~"
+  bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.8 # release 0.9 # lpf 540
     # room 0.52 # size 0.7
   -- --- kick, brushes, ride: gretsch acoustic kit --------------------------
@@ -180,7 +182,6 @@ d1 bassWalk
 -- 2. Span — the beam extends. Ride, comping, and a 3-against-4 woodblock.
 -- ~40 cycles (~104 s at 92 BPM).
 
-glideBpm 92 16
 xfadeIn 2 12 brush
 xfadeIn 5 24 ride
 xfadeIn 3 24 compSpan
@@ -212,7 +213,7 @@ d5 $ stack [ride, rideBell]
 xfadeIn 9 16 silence
 -- if it's silenced we can listen to the rest of the texture for a bit
 
-glideBpm 98 16
+glideBpm 98 16 -- from 92
 d1 bassLoad
 d2 brush
 d5 $ stack [ride, rideBell]
@@ -236,7 +237,7 @@ d6 $ pianoHi $ slow 3 hOver |+ 12
 -- 5. Creak — the structure complains. Tempo drops; the room takes over.
 -- ~32 cycles (~89 s at 86 BPM).
 
-glideBpm 86 16
+glideBpm 86 16 -- from 98
 -- the kit and the trumpet fall away; a cymbal rub remains
 fadeSilence 8 [2,8,10]
 xfadeIn 7 12 creak
@@ -261,8 +262,8 @@ xfadeIn 7 24 $ degradeBy 0.7 metalSpark
 -- creak is interesting at this point
 
 -- this adds rhythm
-glideBpm 96 16
-fadeMulti 16 [
+glideBpm 96 16 -- from 86
+fadeMulti 24 [
   (1, bassSnap),
   (2, brushSnap),
   (3, compSnap),
@@ -282,7 +283,7 @@ xfadeIn 1 32 bassSettle
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
 
-glideBpm 92 16
+glideBpm 92 16 -- from 96
 fadeSilence 8 [7,10]
 d8 kickSoft
 d2 brush
