@@ -3,21 +3,21 @@
 export const name = 'bloom';
 export default function run({ Motion }){
   const mb = (Motion && Motion.budget) ? Motion.budget : 0.6;
-  voronoi(5, 0.015)
+  voronoi(5, 0.15, 3)
     .rotate(() => time*0.0008)
     //.modulate(osc(8, 0.01), () => Math.max(0.001, (a.fft[1]||0)*0.02)*mb)
-    .color(() => 0.5 + (a.fft[0]||0)*0.0001, 0.6, 0.9)
+    .color(() => 0.5 + a.fft[0], 0.6, 0.9)
     .brightness(0.3)
     .saturate(1.2)
     .out(o0);
   src(o0)
     .scale(1.012)
     .rotate(0.0015)
-    .modulate(voronoi(6, () => a.fft[1]*0.005)) // speed
+    .modulate(voronoi(6, () => a.fft[1]*0.005, 3)) // speed
     //.modulate(voronoi(5, 0.15))
     //.modulate(noise(3, 0.01), () => (a.fft[2]||0)*0.0008*mb)
     //.blend(o0, 0.035)
-    .hue(() => (a.fft[1]||0)*0.000015)
+    //.hue(() => (a.fft[1]||0)*0.000015)
     .out(o1);
   render(o1);
 }

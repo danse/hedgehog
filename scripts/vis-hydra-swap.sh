@@ -12,8 +12,11 @@ if [[ ! "$n" =~ ^[1-9]$ ]]; then
   exit 1
 fi
 
-# Remember the cue so a page reload starts there too.
+# Remember the cue as the fallback for a fresh browser (no stored state).
+# The open page keeps its own cue in localStorage and in ?sketch=, so the live
+# swap is pressing the key there.
 printf '%s\n' "$n" > current.txt
 [ -L current.js ] && rm -f current.js
-echo "[vis-hydra-swap] Cue set to sketch 0${n} (current.txt = ${n})"
-echo "  Live swap: press $n in the browser. Reload also starts at 0${n}."
+echo "[vis-hydra-swap] current.txt set to 0${n} (fallback for a browser with no cue)."
+echo "  Live swap: press $n in the browser."
+echo "  Or open:   http://localhost:${PORT:-8000}/?sketch=${n}"

@@ -140,18 +140,57 @@ function resumeAudio() {
 window.addEventListener('pointerdown', resumeAudio);
 window.addEventListener('keydown', resumeAudio);
 
+// Which cue is showing. The page keeps it in localStorage so a reload (or a
+// restored tab) comes back to the same sketch. `?sketch=N` overrides it, which
+// makes a bookmark or a link to one cue work; `current.txt` is only the fallback
+// for a browser that has never swapped a cue.
+const SKETCH_KEY = 'hedgehog.sketch';
+
+function sketchNumber(v) {
+  const n = parseInt(v, 10);
+  return (n >= 1 && n <= 9) ? n : null;
+}
+
+function storedSketch() {
+  try {
+    return sketchNumber(localStorage.getItem(SKETCH_KEY));
+  } catch (e) {
+    return null; // storage can be disabled (private mode, blocked cookies)
+  }
+}
+
+function rememberSketch(n) {
+  try {
+    localStorage.setItem(SKETCH_KEY, String(n));
+  } catch (e) {}
+  // Keep the address in step too: a copied URL then carries the cue, and a
+  // stale `?sketch=` cannot win over a later keypress after a reload.
+  try {
+    const url = new URL(location.href);
+    if (url.searchParams.get('sketch') !== String(n)) {
+      url.searchParams.set('sketch', String(n));
+      history.replaceState(null, '', url);
+    }
+  } catch (e) {} // file:// origins may refuse history changes
+}
+
 async function initialSketch() {
+  const fromUrl = sketchNumber(new URLSearchParams(location.search).get('sketch'));
+  if (fromUrl) return fromUrl;
+  const stored = storedSketch();
+  if (stored) return stored;
   try {
     const res = await fetch('./sketches/current.txt', { cache: 'no-store' });
     if (res.ok) {
-      const n = parseInt((await res.text()).trim(), 10);
-      if (n >= 1 && n <= 9) return n;
+      const n = sketchNumber((await res.text()).trim());
+      if (n) return n;
     }
   } catch (e) {}
   return 1;
 }
 
 async function loadSketch(n) {
+  rememberSketch(n);
   const base = `0${n}`;
   const file = `${base}.js`;
   try {

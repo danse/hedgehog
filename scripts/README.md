@@ -25,7 +25,7 @@ visuals. Paths are relative to the repo root.
 |---|---|
 | `vis-audio-route.sh {start\|status\|stop}` | Create/link `Hydra-Virtual-Mic`, set it as default source, restore on stop. |
 | `vis-hydra-up.sh` | Start routing, serve `visuals/hydra` on `localhost:8000`, open the browser. |
-| `vis-hydra-swap.sh <n>` | Set the cue sketch (1-9): writes `current.txt` for reloads and prints the hotkey for a live swap. |
+| `vis-hydra-swap.sh <n>` | Set the fallback cue sketch (1-9) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
 
 See [visuals/README.md](../visuals/README.md) and
 [visuals/hydra/README.md](../visuals/hydra/README.md).

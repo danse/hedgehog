@@ -7,8 +7,12 @@ sketch name.
 `01.js -> 01-emergence.js`). `00-base.js` holds shared helpers and is not loaded
 as a sketch by itself.
 
-`current.txt` (gitignored) remembers the cue number to load on reload;
-`scripts/vis-hydra-swap.sh <n>` writes it. Live swaps are the hotkeys.
+The page stores the cue it is showing in `localStorage` (`hedgehog.sketch`) and
+mirrors it into the address as `?sketch=N`, so a reload or a restored tab comes
+back to the same sketch. `?sketch=N` in a link wins on load, which makes a
+bookmark to one cue work. `current.txt` (gitignored) is only the fallback for a
+browser that has no stored cue; `scripts/vis-hydra-swap.sh <n>` writes it for
+that case and prints the hotkey for the live swap.
 
 ## Cue sketches
 
