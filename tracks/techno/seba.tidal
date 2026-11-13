@@ -1,0 +1,148 @@
+-- Seba — disco-funk techno / the loop, twice
+-- 116 BPM · A major. F#m9 – Bm9 – E9 – Amaj9, one chord per bar. The track
+-- plays it twice: bed A is a warm, straight disco loop; bed B is the same
+-- sixteen bars recut — half-time 808, the bass on the thirds, B borrowed
+-- major, the pad left holding one rootless voicing. A filtered Moog line
+-- enters before the turn and opens after it. The coda brings the kit back
+-- for a last chorus over a turnaround, then stops short on one Amaj9.
+--
+-- Eval the setup block, then the sections in order. Sections 5 and 6 are
+-- replacements: evaluate them to turn the bed and open the lead. After the
+-- breakdown, re-evaluate 5, then 6 and 4 to come back.
+--
+-- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
+-- chordAt roots take `s`/`f` (fs4, bf3), not `#`/`b`. hedge_pad has a fixed
+-- 900 Hz LPF and a slow attack — it swells, it does not stab.
+
+setbpm 116
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. Everything else is inline at its section.
+-- One cycle is one bar (~2.07 s); the four-chord phrase spans four cycles.
+-- Keep this whole block one paragraph: C-RET evaluates the paragraph at point.
+-- ---------------------------------------------------------------------------
+let
+  -- Bed A harmony: the loop, root position, warm. Played `slow 2` it changes
+  -- every two bars. Kept named so other sections can derive from it.
+  hA :: Pattern Note
+  hA = chordAt "<fs4 b4 e4 a4>" "<min9 min9 dom9 maj9>"
+  -- Compose rather than retype: `slow 2 hA` for the bed, `hA |+ 12` an octave
+  -- up, `rotL 1 hA` / `rotR 1 hA` to start the loop on another chord, `n hA`
+  -- on any voice. The coda's turnaround (Bm9 – E9 – Amaj9 – Dmaj9) is not a
+  -- rotation of it, so that one stays literal.
+  -- The hook: A major pentatonic. Bar 2 uses only B, F# and C# so the line
+  -- sits over both Bm9 (bed A) and Bmaj9 (bed B) without a clash.
+  hook :: Pattern Note
+  hook = "<[a5 ~ cs6 ~ e6 ~ cs6 ~] [fs5 ~ cs6 ~ b5 ~ fs5 ~] [gs5 ~ b5 ~ e6 ~ b5 ~] [a5 ~ cs6 ~ e6 ~ a6 ~]>"
+
+-- 1. Bed A — the loop. Linn kick four to the floor, octave-disco bass,
+--    straight closed hats, a clap on the backbeat. Bar 4 drops its last
+--    kick. The pad runs at half speed, a chord every two bars.
+--
+--    The bed builds itself: every stream fades from silence, one reaching
+--    full gain 8 bars (one phrase) after the next — kick 8, clap 16, hats
+--    24, bass 32, pad 40. Full bed by bar 40 (~83 s at 116 BPM).
+xfadeIn 1 8 $ s "<kicklinn*4 kicklinn*4 kicklinn*4 [kicklinn kicklinn kicklinn ~]>"
+  # n 0 # amp 1.05 # room 0.05 # size 0.15
+xfadeIn 2 16 $ s "~ cp ~ cp" # n 0
+  # amp 0.55 # room 0.2 # size 0.32
+xfadeIn 3 24 $ s "hh:0*8" # amp "1 0.5 0.75 0.5"
+  # hpf 350 # room 0.06 # size 0.18
+xfadeIn 4 32 $ s "jvbass" # n 0
+  # speedAt "fs2" "<[fs2 fs2 fs3 fs2 ~ fs2 fs3 fs2] [b2 b2 b3 b2 ~ b2 b3 b2] [e2 e2 e3 e2 ~ e2 e3 e2] [a2 a2 a3 a2 ~ a2 a3 a2]>"
+  # sustain 0.16 # release 0.06 # lpf 620 # lpq 0.2
+  # room 0.08 # size 0.22 # amp 0.95
+xfadeIn 5 40 $ slow 2 $ s "hedge_pad" # n hA
+  # sustain 1.6 # amp 0.5 # room 0.4 # size 0.55
+
+-- 2. Colour — the guitar answers on the E and A bars only. It is a C-major
+--    sample transposed, so keep it off the two minor bars.
+d6 $ s "gtr" # n 0
+  # speedAt "c4" "~ ~ e4 a4"
+  # sustain 0.2 # release 0.15 # lpf 2800 # lpq 0.25
+  # room 0.35 # size 0.55 # amp 0.45
+
+-- 3. Hook — a Moog line filtered down to a mumble: a shape, not a tune,
+--    until section 6 opens it.
+d7 $ s "moog" # n 2
+  # speedAt "c5" hook
+  # sustain 0.24 # release 0.12 # lpf 850 # lpq 0.3
+  # room 0.3 # size 0.45 # amp 0.5
+
+-- 4. Extras — try over either bed. Blocks on d8 replace each other.
+-- d8 · rimshot on the offbeat
+d8 $ s "~ rs ~ rs ~ rs ~ rs" # n 0 # amp 0.32 # pan 0.45
+  # room 0.2 # size 0.3
+-- d8 · sixteenth tick
+d8 $ s "click:2*16" # amp 0.2 # pan 0.55 # hpf 900
+  # room 0.12 # size 0.2
+-- d8 · air, one breath every four cycles
+d8 $ slow 4 $ s "breath" # sustain 0.5
+  # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.5
+
+-- 5. Bed B — the turn. Same sixteen bars, recut: half-time 808, acoustic
+--    snare, open hats, the bass on the thirds, B borrowed major. The pad
+--    stops following the changes and holds B–F#–C#: no roots, and safe
+--    over every bar. Bar 3 keeps only the downbeat — bed A breaks on bar 4,
+--    bed B breaks here. Re-evaluate this (and 6) after the breakdown.
+d1 $ s "<[808bd ~ 808bd ~] [808bd ~ 808bd ~] [808bd ~ ~ ~] [808bd ~ 808bd [~ 808bd]]>"
+  # n 0 # lpf 220 # amp 1.05 # room 0.05 # size 0.18
+d2 $ s "~ sd:1 ~ sd:1" # n 0
+  # amp 0.6 # room 0.2 # size 0.32
+d3 $ s "~ hh:7 ~ hh:7 ~ hh:7 ~ hh:7" # n 0
+  # amp 0.42 # hpf 500 # room 0.12 # size 0.24
+d4 $ s "jvbass" # n 0
+  # speedAt "fs2" "<[a2 ~ a2 ~ cs3 ~ a2 gs2] [ds3 ~ ds3 ~ fs3 ~ ds3 as2] [gs2 ~ gs2 ~ b2 ~ gs2 d3] [cs3 ~ cs3 ~ e3 ~ cs3 gs2]>"
+  # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
+  # room 0.12 # size 0.28 # amp 0.9
+d5 $ slow 4 $ s "hedge_pad" # n "<b4,fs5,cs5>"
+  # sustain 2 # amp 0.45 # room 0.45 # size 0.6
+
+-- 6. Hook, open — the same line with the filter off. Over bed B it is the
+--    peak; over bed A it is the lift into bed B.
+d7 $ s "moog" # n 2
+  # speedAt "c5" hook
+  # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
+  # room 0.28 # size 0.42 # amp 0.55
+
+-- 7. Breakdown — the kit, the extras and the lead go; the room stays. The
+--    bass drops to an F# pedal and the guitar is left alone on the A bar.
+fadeSilence 64 [1, 2, 3, 7, 8]
+
+xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
+  # speedAt "fs2" "fs2"
+  # sustain 5 # release 2 # lpf 360 # lpq 0.15
+  # room 0.45 # size 0.65 # amp 0.85
+
+xfadeIn 4 8 $ s "gtr" # n 0
+  # speedAt "c4" "~ ~ ~ a4"
+  # sustain 0.6 # release 0.8 # lpf 1800 # lpq 0.3
+  # room 0.65 # size 0.8 # amp 0.4
+
+-- 8. Coda — the last chorus. Re-evaluate section 5, then these two lines:
+--    a new bass and lead over a turnaround, Bm9 – E9 – Amaj9 – Dmaj9, on
+--    the same four-bar form. Play it twice, then stop short.
+d4 $ s "jvbass" # n 0
+  # speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
+  # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
+  # room 0.12 # size 0.28 # amp 0.9
+
+d7 $ s "moog" # n 2
+  # speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e6 ~ cs6 ~] [d6 ~ fs6 ~ a6 ~ fs6 ~]>"
+  # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
+  # room 0.28 # size 0.42 # amp 0.55
+
+-- after the second pass: the kit and lead stop on the downbeat, the bass
+-- holds A, and the pad becomes one last Amaj9
+fadeSilence 0.25 [1, 2, 3, 7]
+xfadeIn 4 2 $ slow 4 $ s "jvbass" # n 0
+  # speedAt "fs2" "a2"
+  # sustain 3 # release 1.5 # lpf 380 # lpq 0.15
+  # room 0.4 # size 0.6 # amp 0.85
+xfadeIn 5 2 $ slow 2 $ s "hedge_pad"
+  # n "<a4,cs5,e5,gs5,b5>"
+  # sustain 3 # amp 0.5 # room 0.6 # size 0.78
+fadeSilence 2 [4, 5]
+
+-- `hush` after a beat
+hush
