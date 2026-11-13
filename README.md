@@ -65,8 +65,9 @@ Each area documents itself:
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`
 - `samples/` — see `samples/README.md`
 
-`boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config,
-and `recordings/` the gitignored takes. `boot/BootTidal.hs` also defines the
+`boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config
+(which loads `~/.emacs` last, so personal preferences win; batch checks skip
+it), and `recordings/` the gitignored takes. `boot/BootTidal.hs` also defines the
 shared track helpers (`speedAt`, `swing8`, `swing16`, `chordAt`, `fadeSilence`,
 `fadeMulti`, `glideBpm`), so each track's setup block only defines its own
 voices and arrangements.

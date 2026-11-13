@@ -289,5 +289,15 @@ as part of the name (for example `substruct'')."
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; Personal settings -------------------------------------------------------
+;; scripts/edit.sh runs `emacs -q`, so ~/.emacs is never read automatically.
+;; Load it last, on purpose: personal preferences win over the project
+;; defaults. Skipped in batch runs so scripts/check.sh stays independent of
+;; whatever config happens to sit in the current user's home.
+(unless noninteractive
+  (let ((personal (expand-file-name "~/.emacs")))
+    (when (file-readable-p personal)
+      (load personal 'noerror))))
+
 (provide 'init)
 ;;; init.el ends here
