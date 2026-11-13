@@ -114,9 +114,9 @@ d6 $ fast 16 piano
 --    leave, so the bottom of the track is the last thing holding. One cycle
 --    is ~2.3 s at 104 BPM.
 
--- the fast piano goes, then the sax; the beat is left alone
-fadeSilence 8 [6]
-fadeSilence 8 [5]
+-- the beat is left alone
+fadeSilence 8 [6] -- the fast piano
+fadeSilence 8 [5] -- the sax
 
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]
@@ -131,6 +131,8 @@ xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
   # speedAt "c4" (chordAt "d4" "min9")
   # sustain 3.2 # release 2.0 # lpf 1000 # lpq 0.2
   # room 0.8 # size 0.9 # amp 0.6
+
+-- here it may sound stuck but it has some surprising blinks
 
 -- let the chord ring a few bars, then it and the pedal go under a last
 -- breath; the reverb tail is the end
