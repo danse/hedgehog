@@ -77,7 +77,7 @@ xfadeIn 1 8 $ s "house:0*4"
   # amp 1 # lpf 380 # room 0.04 # size 0.12
 xfadeIn 5 8 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
   # amp 0.55 # room 0.22 # size 0.34
-xfadeIn 6 16 $ struct "~ t ~ t ~ t ~ t"
+xfadeIn 6 16 $ struct "~ t ~ t t ~ ~ t"
   $ s "pluck" # n 8
   # speedAt "d5" stabs
   # sustain 0.14 # release 0.1 # lpf 2400 # lpq 0.3
@@ -138,6 +138,9 @@ fadeMulti 2
   , (8, s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
       # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34)
   ]
+xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
+  # speedAt "ds5" "a4"
+  # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 fadeMulti 4
   [ (2, every 8 (fast 2) $ s "house:3*16"
       # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
@@ -156,9 +159,6 @@ fadeMulti 4
       # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
       # room 0.32 # size 0.5 # amp 0.46 # pan 0.6)
   ]
-xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
-  # speedAt "ds5" "a4"
-  # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 
 -- 7. Turn — 16 bars. The whole loop moves up a fourth: pad, bass, comp and
 --    hook are the same patterns with `|+ 5`. The drums stay exactly where they
