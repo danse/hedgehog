@@ -261,7 +261,7 @@ xfadeIn 7 24 $ degradeBy 0.7 metalSpark
 
 -- creak is interesting at this point
 
--- this adds rhythm
+-- this adds rhythm but have to wait for the whole fade in
 glideBpm 96 16 -- from 86
 fadeMulti 24 [
   (1, bassSnap),
@@ -301,7 +301,7 @@ d9 reedCall -- the reed returns for one phrase
 
 glideBpm 92 16
 -- strip the rhythm and most of the harmony
-fadeSilence 16 [1,2,3,5,6,7,8,9,10]
+fadeSilence 16 [1,2,3,5,8,9]
 -- leave a high piano shadow, filtered trumpet, metal and air
 xfadeIn  6 24 pianoAfter
 xfadeIn  7 24 metalSpark

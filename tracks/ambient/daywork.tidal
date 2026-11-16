@@ -244,7 +244,7 @@ d4 $ motifPiano # amp 0.2
 d5 $ slow 2 $ pianoPedal (slow 4 hLight) # amp 0.3
 
 -- a brush, half-awake
-fadeMulti 24 [
+fadeMulti 16 [
   (2, stack [bootDawn, brushSoft]),
   -- the yard breathes
   (6, stack [air, windBed]),

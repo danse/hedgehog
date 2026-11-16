@@ -288,13 +288,13 @@ d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~" -- metal bell
 --    Evaluate one stage every two bars; the last two lines are the ring-out.
 
 -- surface
-fadeSilence 2 [3, 5, 10]
+fadeSilence 24 [3, 5, 10]
 
 -- backbeat
-fadeSilence 2 [4, 6]
+fadeSilence 24 [4, 6]
 
 -- weight
-fadeSilence 2 [1, 2]
+fadeSilence 24 [1, 2]
 
 -- voice: the pad stops moving, the sax answers
 xfadeIn 7 2 $ s "hedge_pad" # n "[g5,b5,d6,fs6]"

@@ -19,6 +19,38 @@ visuals. Paths are relative to the repo root.
 | `audio-bt.sh` | Route SuperCollider output to Bluetooth headphones. |
 | `record.sh [name]` | Record the default monitor to 24-bit WAV in `recordings/`. |
 
+## JACK clients and the default sink
+
+`up.sh` starts scsynth under `pw-jack`, so it is a **JACK client**, not an
+application stream. Application streams follow the default sink when it changes
+(a headset connects, `wpctl set-default` runs). JACK clients do not: their
+`out_1`/`out_2` ports stay wherever they were linked, or nowhere.
+
+That produces two confusing symptoms:
+
+- **System sounds play, SuperDirt is silent.** Check `pw-link -l`:
+  `SuperCollider:out_1/2` should each have an arrow to some sink. If they have
+  none, link them by hand — a port can feed several sinks, so this does not
+  steal the audio from anywhere else:
+
+  ```
+  pw-link SuperCollider:out_1 bluez_output.<addr>.1:playback_FL
+  pw-link SuperCollider:out_2 bluez_output.<addr>.1:playback_FR
+  ```
+
+  Find `<addr>` with `wpctl status` or `pw-link -o`; for a USB device the sink
+  is `alsa_output.*` with the same `playback_FL/FR` ports.
+
+- **Audio is fine but Hydra is dark.** Hydra listens to the *default sink's
+  monitor*, not to scsynth. If the default sink changes after
+  `vis-audio-route.sh start` ran, the monitor links still point at the old sink
+  and the virtual mic goes quiet. Re-run `vis-audio-route.sh start` (it is
+  idempotent) after switching sinks, then check the HUD.
+
+`audio-bt.sh` predates this: it finds the headset by name (`Vultech octopus`,
+node `-133`), so it gives up on a device that reports as plain `Bluetooth` and
+leaves the ports unlinked. Use the `pw-link` lines above in that case.
+
 ## Visuals
 
 | Script | Purpose |

@@ -193,16 +193,16 @@ fadeMulti 32 [
 
 -- the load returns to the abutment
 d2 $ bassShore # amp 0.3
-xfadeIn 1 16 $ compShore # amp 0.4
+xfadeIn 1 16 $ compShore # amp 0.4 -- woody
 
 -- work rhythm
 fadeMulti 32 [
   (8, kickSoft),
   (6, brushWork),
   (7, ride),
-  (5, stack [woodTick, knock])]
--- a distant reed hears the work
-xfadeIn 9 32 reedShore
+  (5, stack [woodTick, knock]),
+  -- a distant reed hears the work
+  (9, reedShore)]
 
 -- 4. Abutment — the old block is underpinned; new mass is keyed in behind it.
 -- ~40 cycles (~102 s at 94 BPM).
@@ -255,7 +255,7 @@ d2 bassOcc
 xfadeIn 1 16 compOcc
 xfadeIn 4 24 colourOcc
 
--- the warm melody
+-- warm melody
 d9 reedOcc
 fadeMulti 24 [
   (10, trumpetOcc),

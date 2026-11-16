@@ -14,7 +14,7 @@
 -- chordAt roots take `s`/`f` (fs4, bf3), not `#`/`b`. hedge_pad has a fixed
 -- 900 Hz LPF and a slow attack — it swells, it does not stab.
 
-setbpm 116
+glideBpm 116 24
 
 -- ---------------------------------------------------------------------------
 -- Reused voices. Everything else is inline at its section.

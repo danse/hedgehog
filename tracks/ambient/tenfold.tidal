@@ -22,9 +22,8 @@ glideBpm 125 16
 -- ---------------------------------------------------------------------------
 let
   -- sub drone (one root per chord)
-  subDrone = slow 4 $ note "<bf1 gf1 df2 af1>" # s "hedge_sine"
-    # sustain 6 # gain 0.86 # lpf 160 # lpq 0.1
-    # room 0.3 # size 0.5
+  subDrone = slow 4 $ note "<bf2 gf2 df3 af2>" # s "hedge_sine"
+    # lpf 160
   --
   -- low pad (i–VI–III–VII, one chord every 4 cycles)
   lowPad = slow 4 $ n "<[bf2,df3,f3] [gf2,bf2,df3] [df2,f2,af2] [af2,c3,ef3]>" # s "hedge_pad"
@@ -170,6 +169,6 @@ let
   fadeMulti 24 $ l1 <> l2
 
 -- final silence
-fadeSilence 16 [1,2,4]
+fadeSilence 24 [1,2,4]
 
 hush

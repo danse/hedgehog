@@ -147,7 +147,7 @@ fadeMulti 16 [
 
 -- supporting
 fadeMulti 8 [
-  (5, stack [chords, arp]),
+  (5, stack [chords, arp]), -- melodic
   (7, silence),
   (6, silence)]
 

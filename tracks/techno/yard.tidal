@@ -137,9 +137,9 @@ xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
 -- let the chord ring a few bars, then it and the pedal go under a last
 -- breath; the reverb tail is the end
 xfadeIn 8 16 $ slow 4 $ s "breath" # sustain 0.5
+fadeSilence 16 [8]
   # hpf 450 # lpf 2000 # room 0.8 # size 0.88 # amp 0.6
 fadeSilence 24 [2, 4, 7]
-fadeSilence 16 [8]
 
 -- `hush` after a beat
 hush
