@@ -11,11 +11,9 @@
 --
 -- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4.
 
-glideBpm 125 16
+glideBpm 125 30
 
 -- ---------------------------------------------------------------------------
--- Voices / patterns. One `let` block: eval all at once (C-RET); keep it free
--- of blank lines if editing.
 -- Progression: i–VI–III–VII in B♭ minor (bfm – gf – df – af).
 -- Harmonic rhythm: one chord every 4 cycles; the full form is 16 cycles.
 -- No percussion: motion comes from the arp, bass pulse and slow filter moves.
@@ -71,7 +69,7 @@ let
     # lpf 3200 # room 0.7 # size 0.8
   --
   -- filtered noise bed / slow air
-  noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.6
+  noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.3
     # lpf (range 220 1400 $ slow 24 sine) # room 0.85 # size 0.85
   --
   -- soft synth bass (8ths; one bar per chord, no percussion)
@@ -116,7 +114,6 @@ xfadeIn 6 24 $ arp # lpf 800
 fadeMulti 8 [
   (4, highPad), -- -lpf
   (6, arp)] -- -lpf
-
 -- punctuation
 fadeMulti 16 [
   (7, lead),

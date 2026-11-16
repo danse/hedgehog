@@ -51,16 +51,9 @@ let
   pluck = slow 4 $ note "d5 ~ ~ f5 ~ a5 ~ ~" # s "pluck" # gain 0.85 # delay 0.7 # delaytime 0.375 # room 0.9 # size 0.8 # lpf 2600
   riser = s "hedge_noise" # sustain 4 # gain (range 0.5 0.88 $ slow 4 saw) # lpf (range 300 5000 $ slow 4 saw) # room 0.9
 
--- The bed and the sub. Open with these two.
-
 d1 $ bed # gain 0.88 -- 26-second atmospheric pad, looped by slow repetition
 
 d2 $ drone "c3" # amp 0.25 -- sub drone, long sustain, very little top end
-
--- Variation: thin the pad out once the set is moving.
-d1 $ bed # lpf 900 # gain 0.4
-
--- Field recordings and air.
 
 d3 air -- wind bed
 
