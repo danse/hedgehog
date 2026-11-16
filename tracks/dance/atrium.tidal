@@ -67,7 +67,7 @@ let
   -- The hook: one note per offbeat, four bars. It outlines the chord of the
   -- bar and leaves the strong beats empty, so it sits over the comp.
   hook :: Pattern Note
-  hook = "<[a4 ~ c5 ~ e5 ~ d5 c5] [a4 ~ c5 ~ a4 ~ ~ ~] [g4 ~ a4 ~ c5 ~ e5 ~] [d5 ~ b4 ~ g4 ~ ~ ~]>"
+  hook = "<[a4 c5 ~ ~ e5 ~ d5 c5] [a4 ~ c5 ~ a4 ~ ~ ~] [g4 ~ a4 ~ c5 ~ e5 ~] [d5 ~ b4 ~ g4 ~ ~ ~]>"
 
 -- 1. Doors — 32 bars. The room fills: kick, then hats, then the sub, then the
 --    pad. All four are cued together with different fade lengths, so the build
@@ -103,7 +103,7 @@ xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
 -- 3. Hook — 32 bars. The rim tick and the lead enter, the lead still behind a
 --    filter: a shape, not yet a tune. The hats stay 16ths; the open hat is
 --    already there.
-d8 $ s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+d8 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
   # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
 d9 $ s "moog" # n 2
   # speedAt "c4" hook
@@ -221,7 +221,7 @@ xfadeIn 10 4 $ slow 4 $ s "ho" # n 0
 xfadeIn 2 8 $ s "<house:3*16 house:3*16 house:3*16 house:3*32>"
   # amp (range 0.2 0.45 $ slow 16 saw)
   # hpf 520 # room 0.06 # size 0.16
-xfadeIn 6 8 $ struct "~ t ~ t ~ t ~ t"
+xfadeIn 6 8 $ struct "t ~ ~ t ~ t ~ t"
   $ s "pluck" # n 8
   # speedAt "d5" (stabs |+ 5)
   # sustain 0.16 # release 0.1
