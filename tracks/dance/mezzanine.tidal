@@ -1,0 +1,69 @@
+-- Mezzanine — UK garage / first draft
+-- 130 BPM · G minor. Four-bar loop: Gm9 | Gm9 | Ebmaj9 | F6/9, one chord per
+-- bar. This is an audition, not an arrangement: each of the ten streams appears
+-- once, with the sample it uses and the barest pattern that shows what it does.
+-- Evaluate the block whole, then change one seat at a time.
+--
+-- The 2-step is the point: kick on 1 and the "&" of 2, snare on 3, the rim
+-- answering on the "&" of 3, open hat on the "&" of 4, hats swung with
+-- swing16. Keep the swing on the hats and rim; never on the kick or the sub.
+--
+-- dN is a seat: 1 kick, 2 hats, 3 sub, 4 keys, 5 snare, 6 organ, 7 open hat,
+-- 8 rim, 9 vocal chop, 10 air. Nothing is arranged yet — the sections come
+-- after the voices sound right.
+--
+-- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals in mini-notation
+-- are `s`/`f` (cs4, bf3). Sample bases: moog:3 is G1, juno:7 is C3, juno:5 is
+-- C5, diphone:26 is A♭4 — speedAt tunes each of them to the loop.
+--
+-- `ho` is NOT a voice: it is the HHOD bank, open hi-hats. For vocals use
+-- diphone (sung vowels, ~A♭2-A♭4), alphabet (spoken letters) or hmm (a hum).
+
+glideBpm 130 8
+
+-- d1 · kick. feel:0 ("BD 04 d"). 2-step: 1 and the "&" of 2.
+d1 $ s "feel:0 ~ ~ feel:0 ~ ~ ~ ~"
+  # amp 0.95 # room 0.04 # size 0.1
+
+-- d2 · closed hats. feel:1 ("HH 003b"). Sixteenths, swung; accents every four.
+d2 $ swing16 $ s "feel:1*16"
+  # amp "0.5 0.22 0.34 0.22" # hpf 700 # room 0.06 # size 0.16
+
+-- d3 · sub. Chord roots, one per bar; moog:3 is G1.
+d3 $ s "moog:3" # speedAt "g1" "<g1 g1 ef1 f1>"
+  # sustain 0.5 # release 0.25 # lpf 240 # lpq 0.2 # amp 2
+
+-- d4 · keys. A chord per bar, juno:7 (release mid at C3) left to ring.
+d4 $ s "juno:7"
+  # speedAt "c3" "<[g3,bf3,d4,f4] [g3,bf3,d4,f4] [ef3,g3,bf3,d4] [f3,a3,c4,d4]>"
+  # sustain 0.5 # release 0.6 # lpf 2400 # room 0.55 # size 0.7 # amp 0.3
+
+-- d5 · snare. feel:2 ("Sd 139"). Beat 3, the anchor of the 2-step.
+d5 $ s "~ ~ ~ ~ feel:2 ~ ~ ~"
+  # amp 0.62 # room 0.22 # size 0.4
+
+-- d6 · organ stab. juno:5 (chorus high at C5): offbeat eighths, short.
+d6 $ struct "~ t ~ t ~ t ~ t"
+  $ s "juno:5"
+  # speedAt "c5" "<[g4,bf4,d5] [g4,bf4,d5] [ef4,g4,bf4] [f4,a4,c5]>"
+  # sustain 0.12 # release 0.12 # lpf 2200 # room 0.3 # size 0.45 # amp 0.34
+
+-- d7 · open hat. jungle:7 ("jungle4openhh"). The "&" of 4.
+d7 $ s "~ ~ ~ ~ ~ ~ ~ jungle:7"
+  # amp 1 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
+
+-- d8 · rim. Answers the snare on the "&" of 3.
+d8 $ s "~ ~ ~ ~ ~ ~ rs ~"
+  # amp 0.6 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+
+-- d9 · vocal chop. diphone:26 ("kd1_028") is a sung A♭4; begin/end trims the
+-- phrase down to the vowel, speedAt moves it onto the chord.
+d9 $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
+  # begin 0.2 # end 0.62
+  # speedAt "gs4" "<a4 a4 c5 ef5>"
+  # sustain 0.06 # release 0.12 # hpf 300 # lpf 6000
+  # room 0.3 # size 0.5 # amp 0.5
+
+-- d10 · air. A slow wind swell every four bars; risers land here later.
+d10 $ slow 4 $ s "wind:1"
+  # speed 0.35 # hpf 300 # lpf 1200 # room 0.4 # size 0.6 # amp 0.4
