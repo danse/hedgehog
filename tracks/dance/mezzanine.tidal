@@ -50,11 +50,11 @@ d6 $ struct "~ t ~ t ~ t ~ t"
 
 -- d7 · open hat. jungle:7 ("jungle4openhh"). The "&" of 4.
 d7 $ s "~ ~ ~ ~ ~ ~ ~ jungle:7"
-  # amp 1 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
+  # amp 2 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
 
 -- d8 · rim. Answers the snare on the "&" of 3.
 d8 $ s "~ ~ ~ ~ ~ ~ rs ~"
-  # amp 0.6 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+  # amp 0.8 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
 
 -- d9 · vocal chop. diphone:26 ("kd1_028") is a sung A♭4; begin/end trims the
 -- phrase down to the vowel, speedAt moves it onto the chord.
@@ -62,7 +62,7 @@ d9 $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
   # begin 0.2 # end 0.62
   # speedAt "gs4" "<a4 a4 c5 ef5>"
   # sustain 0.06 # release 0.12 # hpf 300 # lpf 6000
-  # room 0.3 # size 0.5 # amp 0.5
+  # room 0.3 # size 0.5 # amp 5
 
 -- d10 · air. A slow wind swell every four bars; risers land here later.
 d10 $ slow 4 $ s "wind:1"
