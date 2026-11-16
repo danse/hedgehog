@@ -2,23 +2,24 @@
 -- 124 BPM · A minor. Am9 | Fmaj9 | Cmaj9 | G6/9, one chord per bar:
 -- i–VI–III–VII. The track walks that loop three times with the same band. It
 -- opens with kick, hats, bass and pad; adds clap, stabs and open hat; lets the
--- hook in; breaks; drops; and then moves the whole loop up a fourth — Dm9 |
--- Bbmaj9 | Fmaj9 | C6/9 — for the second half (sections 7-10), before the
--- outro resolves it back to Am9. The drums never change key and the hook is
--- the same shape a fourth up, so the lift is one decision, not a new tune.
+-- hook in; breaks; drops; then builds (not breaks again) into the second peak
+-- while the whole loop moves up a fourth — Dm9 | Bbmaj9 | Fmaj9 | C6/9 — for
+-- the second half (sections 7-10), before the outro resolves it back to Am9.
+-- The drums never change key and the hook is the same shape a fourth up, so
+-- the lift is one decision, not a new tune.
 --
--- Eval the setup block, then the sections in order. Sections 5 and 9 are the
--- breaks, 6 and 10 are the drops; evaluate a break and its drop as two
--- paragraphs, a bar or two apart, so the fades line up. 11 and 12 are the
--- outro; `hush` after the last chord has rung out.
+-- Eval the setup block, then the sections in order. Section 5 is the break and
+-- 6 its drop; evaluate them as two paragraphs, a bar or two apart, so the
+-- fades line up. Section 9 is a build, so 10 lands on top of a band that never
+-- left. 11 and 12 are the outro; `hush` after the last chord has rung out.
 --
 -- dN is a seat in the band, not a pattern: 1 kick, 2 closed hats, 3 bass,
 -- 4 pad, 5 clap, 6 stabs, 7 open hat, 8 rim, 9 lead, 10 vocal / air. A section
 -- replaces a seat with xfadeIn, fadeMulti or fadeSilence, so the numbers keep
 -- their meaning all night.
 --
--- Bar counts are in the section comments; the whole thing is ~272 bars, about
--- 8:45 at 124 BPM, longer if you let a section run.
+-- Bar counts are in the section comments; the whole thing is ~280 bars, about
+-- 9:00 at 124 BPM, longer if you let a section run.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- Accidentals in mini-notation are `s`/`f` (cs4, bf3), never `#`; every chord
@@ -117,7 +118,7 @@ xfadeIn 1 2 $ s kick
 xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
   # speedAt "ds5" "a4"
   # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
-xfadeIn 6 4 $ struct "~ t ~ t ~ t ~ t"
+xfadeIn 6 4 $ struct "~ t ~ t ~ ~ t t"
   $ s "pluck" # n 8
   # speedAt "d5" stabs
   # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
@@ -205,50 +206,52 @@ xfadeIn 6 8 $ slow 2 $ struct "~ t ~ ~ ~ t ~ ~"
   # sustain 0.3 # release 0.3 # lpf 1200 # lpq 0.28
   # room 0.55 # size 0.72 # amp 0.4 # pan 0.42
 
--- 9. Break two — 8 bars. Kick, clap, comp and rim go; the sub drops to a D
---    pedal and the riser returns, an octave higher than the first one.
-fadeSilence 4 [1, 5, 6, 8]
-xfadeIn 3 4 $ slow 4 $ s "jvbass" # n 0
-  # speedAt "fs2" "d3"
-  # sustain 6 # release 2 # lpf 460 # lpq 0.15
-  # room 0.5 # size 0.7 # amp 0.8
-xfadeIn 10 8 $ s "hedge_noise"
-  # sustain 8 # lpf (range 800 7000 $ slow 8 sine)
-  # room 0.4 # size 0.6 # amp 0.28
+-- 9. Lift — 16 bars. The second approach is not a break: nobody leaves, and
+--    the build happens on top of the band. Hats return and double to 32nds,
+--    the clap rolls into the last bar of every four, the comp's filter opens
+--    across the sixteen bars but only to 2.2 kHz and a voice climbs through the
+--    D-minor chord. The lead and the open hat are held back, so section 10
+--    arrives by addition — the first peak came after subtraction, this one
+--    after pressure.
+xfadeIn 5 4 $ s "<[~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ [cp:0 cp:0 cp:0 cp:0]]>"
+  # amp (range 0.4 0.6 $ slow 16 saw) # room 0.24 # size 0.36
+xfadeIn 10 4 $ slow 4 $ s "ho" # n 0
+  # speedAt "ds5" "<d4 f4 a4 d5>"
+  # sustain 0.5 # release 0.4 # room 0.35 # size 0.55 # amp 0.42
+xfadeIn 2 8 $ s "<house:3*16 house:3*16 house:3*16 house:3*32>"
+  # amp (range 0.2 0.45 $ slow 16 saw)
+  # hpf 520 # room 0.06 # size 0.16
+xfadeIn 6 8 $ struct "~ t ~ t ~ t ~ t"
+  $ s "pluck" # n 8
+  # speedAt "d5" (stabs |+ 5)
+  # sustain 0.16 # release 0.1
+  # lpf (range 700 2200 $ slow 16 saw) # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
 
--- 10. Peak two — 32 bars. The D-minor drop: the same band and the same
---     patterns as section 6, a fourth up, and the tempo lifts two beats over
---     sixteen bars. Shout every eight. This is the top of the track.
+-- 10. Peak two — 32 bars. The lift tops out: the comp's filter snaps open, the
+--     open hat returns and the lead enters with the hook a fourth up. Kick,
+--     sub and pad never stopped, so nothing is rebuilt — the peak is three
+--     arrivals, not a second drop. Tempo lifts two beats over thirty bars.
 glideBpm 126 30
+xfadeIn 2 1 $ every 8 (fast 2) $ s "house:3*16"
+  # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
+  # hpf 520 # room 0.06 # size 0.16
+xfadeIn 5 1 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
+  # amp 0.55 # room 0.22 # size 0.34
+xfadeIn 6 1 $ struct "~ t ~ t ~ t ~ t"
+  $ s "pluck" # n 8
+  # speedAt "d5" (stabs |+ 5)
+  # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
+xfadeIn 7 2 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+  # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56
+xfadeIn 9 2 $ s "moog" # n 2
+  # speedAt "c4" (hook |+ 5)
+  # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
+  # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
   # speedAt "ds5" "a4"
   # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
-fadeMulti 2
-  [ (1, s kick # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1)
-  , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34)
-  , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
-      # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
-  , (8, s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
-      # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34)
-  ]
-fadeMulti 4
-  [ (2, every 8 (fast 2) $ s "house:3*16"
-      # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
-      # hpf 520 # room 0.06 # size 0.16)
-  , (3, s "jvbass" # n 0
-      # speedAt "fs2" (bassA |+ 5)
-      # sustain 0.2 # release 0.08 # lpf 720 # lpq 0.22
-      # shape 0.2 # room 0.08 # size 0.2 # amp 0.95)
-  , (6, struct "~ t ~ t ~ t ~ t"
-      $ s "pluck" # n 8
-      # speedAt "d5" (stabs |+ 5)
-      # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
-      # room 0.32 # size 0.52 # amp 0.46 # pan 0.42)
-  , (9, s "moog" # n 2
-      # speedAt "c4" (hook |+ 5)
-      # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
-      # room 0.32 # size 0.5 # amp 0.46 # pan 0.6)
-  ]
 
 -- 11. Outro — 16 bars. The loop comes back down to A minor: pad, sub, comp and
 --     kick. Everything melodic goes over eight bars, the tempo settles, and
