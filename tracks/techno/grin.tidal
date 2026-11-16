@@ -24,8 +24,10 @@
 -- speedAt runs from those.
 -- trump:2 is E5 (Tidal e6); the tight stabs are B5, E5, G5 at n 0/2/3 and a
 -- sampled chord at n 9. trump:4 is a 3.2 s funk phrase at 107 BPM.
--- Pitch reminder: jvbass:0 → fs2, pluck:8 → d5, trump:2 → e6, ho:0 → ds5,
--- sax:5 → c4, moog:1 → c3, moog:2 → c4.
+-- Pitch reminder: jvbass:0 → fs2, pluck:8 → d5, trump:2 → e6, sax:5 → c4,
+-- moog:1 → c3, moog:2 → c4.
+-- The shout is alphabet:14, a spoken "oh" with wide formants; filter
+-- it and drown it in reverb.
 -- Mini-notation spellings: accidentals are `s`/`f` (cs4, fs2, bf3), never
 -- `#`, and each chord needs its own brackets inside an alternation —
 -- `<[e4,g4,b4] [a3,cs4,e4]>`, not `<e4,g4,b4 a3,cs4,e4>`. Both mistakes pass
@@ -95,8 +97,9 @@ d9 $ slow 4 $ s "trump" # n 9
   # speedAt "e6" "e6"
   # sustain 0.5 # release 0.25 # lpf 3200 # lpq 0.3
   # room 0.35 # size 0.55 # amp 0.42
-d10 $ slow 4 $ s "ho" # n 0
-  # speedAt "ds5" "e5" # amp 0.75 # room 0.25 # size 0.4
+d10 $ slow 4 $ s "alphabet:14" -- the shout
+  # lpf 2600 # hpf 200 # sustain 0.4 # release 0.4
+  # room 0.45 # size 0.7 # amp 0.75
 
 -- d10 · then the cowbell (not-metal) takes over from the shout
 d10 $ s "~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~"
@@ -176,8 +179,9 @@ d8 $ rotR 0.125 $ slow 2 $ s "trump" # n 4
   # sustain 3.4 # release 0.2 # lpf 3400 # lpq 0.3
   # room 0.45 # size 0.62 # amp 0.6
 
-d10 $ slow 4 $ s "ho" # n 2 -- not loud at all
-  # speedAt "ds5" "e5" # amp 0.7 # room 0.3 # size 0.45
+d10 $ slow 4 $ s "alphabet:14" -- the same shout, darker
+  # lpf 1100 # hpf 180 # sustain 0.4 # release 0.5
+  # room 0.5 # size 0.8 # amp 0.6
 
 -- the beat you have been waiting for. Kick doubling into sixteenths
 -- at the end of the fourth bar
