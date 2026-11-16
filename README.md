@@ -4,8 +4,8 @@ Live-coded tracks. TidalCycles → SuperDirt → PipeWire JACK, edited in a
 project-contained Emacs.
 
 Tracks live under `tracks/`, one folder per genre (`tracks/ambient/`,
-`tracks/techno/`); each track is a single `<track>.tidal` file with its setup
-block and sections. Evaluate the setup block at the top first. See
+`tracks/techno/`, `tracks/dance/`); each track is a single `<track>.tidal` file
+with its setup block and sections. Evaluate the setup block at the top first. See
 `tracks/ambient/hedgehog.tidal` for a complete set.
 
 ## Status
@@ -32,9 +32,9 @@ Logs go to `logs/superdirt.log`.
 
 ## Playing
 
-Open a track under `tracks/ambient/` or `tracks/techno/` and evaluate the setup
-block at the top of its `.tidal` file first, then work through the sections
-below (the file header lists the order).
+Open a track under `tracks/ambient/`, `tracks/techno/` or `tracks/dance/` and
+evaluate the setup block at the top of its `.tidal` file first, then work
+through the sections below (the file header lists the order).
 
 Within a track, `dN` numbers follow the order the streams first enter, so `d1`
 is always the opening sound.
@@ -58,8 +58,8 @@ Indented statements and continuation lines are handled.
 
 Each area documents itself:
 
-- `tracks/` — one folder per genre (`ambient/`, `techno/`), one `.tidal` file
-  per track; `scripts/edit.sh` opens Emacs here
+- `tracks/` — one folder per genre (`ambient/`, `techno/`, `dance/`), one
+  `.tidal` file per track; `scripts/edit.sh` opens Emacs here
 - `scripts/` — see `scripts/README.md`
 - `visuals/` — see `visuals/README.md`
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`
