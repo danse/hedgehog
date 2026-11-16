@@ -116,7 +116,7 @@ xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
 -- 5. Break — 8 bars. Everything but the bass and the pad goes; the bass drops
 --    to an A pedal and the pad holds the loop. A noise riser takes the place
 --    of the shout and sweeps the eight bars. Evaluate 6 on the last bar.
-fadeSilence 4 [1, 2, 5, 6, 7, 8, 9]
+fadeSilence 16 [1, 2, 5, 6, 7, 8, 9]
 xfadeIn 3 4 $ slow 4 $ s "jvbass" # n 0
   # speedAt "fs2" "a2"
   # sustain 6 # release 2 # lpf 420 # lpq 0.15
@@ -206,7 +206,10 @@ xfadeIn 10 8 $ s "hedge_noise"
 -- 10. Peak two — 32 bars. The D-minor drop: the same band and the same
 --     patterns as section 6, a fourth up, and the tempo lifts two beats over
 --     sixteen bars. Shout every eight. This is the top of the track.
-glideBpm 126 16
+glideBpm 126 30
+xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
+  # speedAt "ds5" "a4"
+  # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 fadeMulti 2
   [ (1, s "house:0*4" # amp 1.05 # room 0.04 # size 0.1)
   , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34)
@@ -233,9 +236,6 @@ fadeMulti 4
       # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
       # room 0.32 # size 0.5 # amp 0.46 # pan 0.6)
   ]
-xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
-  # speedAt "ds5" "a4"
-  # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 
 -- 11. Outro — 16 bars. The loop comes back down to A minor: pad, sub, comp and
 --     kick. Everything melodic goes over eight bars, the tempo settles, and

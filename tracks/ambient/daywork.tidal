@@ -224,7 +224,8 @@ let
 -- piano. Sparse by design: let the room and the objects arrive one at a time.
 
 glideBpm 96 16
--- clear anything left from the previous piece
+-- clear anything left from the previous piece, or this won't grow
+-- gracefully from abutment
 fadeSilence 16 [1,2,3,4,5,6,7,8,9,10]
 
 d1 switchOn -- the first switches
@@ -324,7 +325,7 @@ xfadeIn 10 32 trumpetSpark
 -- under the table. The sax gets the tune.
 -- ~36 cycles (~86 s at 100 BPM).
 
--- the sweeper parks; the room fills with small objects
+-- rhythm change. The sweeper parks; the room fills with small objects
 fadeSilence 12 [2,5,7,9,10]
 glideBpm 100 16 -- from 92
 fadeMulti 16 [

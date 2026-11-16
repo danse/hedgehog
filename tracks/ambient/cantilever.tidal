@@ -183,7 +183,7 @@ d1 bassWalk
 
 xfadeIn 2 12 brush
 xfadeIn 5 24 ride
-xfadeIn 3 24 swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hSpan)))
+xfadeIn 3 24 . swing8 . struct "t ~ ~ t ~ ~ t ~" . pianoComp $ slow 3 hSpan
 xfadeIn 6 32 colourSpan
 
 -- implied polymeter: three woodblock hits per cycle against the 4/4
@@ -280,6 +280,7 @@ xfadeIn 1 32 bassSettle
 -- 7. Settle — the structure comes to rest. Tempo back to 92.
 -- ~40 cycles (~104 s at 92 BPM).
 
+-- change of rhythm
 glideBpm 92 16 -- from 96
 fadeSilence 8 [7,10]
 d8 kickSoft

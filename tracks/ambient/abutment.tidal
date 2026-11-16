@@ -139,7 +139,7 @@ let
     # room 0.6 # size 0.78 # amp 0.4
   reedTrans = slow 8 $ s "sax" # n 5 # speedAt "c4" "a4 ~ ~ ~ ~ ~ ~ ~"
     # sustain 5 # release 2.2 # hpf 140 # lpf 1100 # lpq 0.2
-    # room 0.72 # size 0.85 # amp 0.34
+    # room 0.72 # size 0.85 # amp 0.54
   reedOcc = s "sax" # n 5 # speedAt "c4" "g4 ~ a4 ~ d5 ~ b4 ~"
     # sustain 1.2 # release 0.55 # hpf 160 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.42
@@ -166,7 +166,7 @@ fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]
 -- one high shadow, far away
 xfadeIn 4 8 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
 -- the surviving mass: a low D pedal and a sus2 piano
-fadeMulti 32 [
+fadeMulti 24 [
   (1, pianoPedal),
   (2, bassPedal # amp 0.2),
   -- the room breathes
