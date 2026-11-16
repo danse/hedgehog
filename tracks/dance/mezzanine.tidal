@@ -44,13 +44,12 @@ d4 $ s "juno:7"
   # sustain 0.5 # release 0.6 # lpf 2400 # room 0.55 # size 0.7 # amp 0.3
 
 -- d4 · alt "melody" — the same seat, an octave up (juno:8, release high at
--- C5), playing a four-bar line instead of the chord: G A Bb C D / D C Bb A G /
--- G Bb Eb D Bb / C A G F over Gm9 Gm9 Ebmaj9 F6/9. The harmony is implied by
--- the sub and the line, so drop d6 while this plays. Straight or swung, both
--- work; the envelope is short because the 16th runs would otherwise smear.
-d4 $ swing16 $ s "juno:8"
-  # speedAt "c5" "<[g4 ~ ~ a4 ~ ~ bf4 ~ c5 d5 ~ ~ ~ ~ ~ ~] [d5 ~ c5 ~ ~ ~ bf4 ~ ~ a4 ~ g4 ~ ~ ~ ~] [g4 ~ ~ bf4 ~ ~ ef5 ~ d5 ~ ~ bf4 ~ ~ ~ ~] [c5 ~ ~ ~ a4 ~ ~ ~ ~ g4 ~ ~ f4 ~ ~ ~]>"
-  # sustain 0.1 # release 0.15 # lpf 2800 # room 0.5 # size 0.65 # amp 0.3
+-- C5), playing a four-bar line instead of the chord: G Bb D / C Bb A /
+-- G Eb D / C A G over Gm9 Gm9 Ebmaj9 F6/9. The harmony is implied by the
+-- sub and the line, so drop d6 while this plays. Straight or swung, both work;
+-- the gaps are deliberate — the line answers the 2-step instead of filling it.
+d4 $ swing16 $ speedAt "c5" "<[g4 ~ ~ ~ ~ ~ ~ bf4 ~ d5 ~ ~ ~ ~ ~ ~] [c5 ~ ~ ~ ~ ~ bf4 ~ ~ ~ ~ a4 ~ ~ ~ ~] [g4 ~ ~ ~ ~ ~ ~ ef5 ~ ~ d5 ~ ~ ~ ~ ~] [c5 ~ ~ ~ ~ ~ a4 ~ ~ ~ ~ ~ g4 ~ ~ ~]>" # s "juno:8"
+  # sustain 0.12 # release 0.18 # lpf 2800 # room 0.5 # size 0.65 # amp 0.3
 
 -- d5 · snare. feel:2 ("Sd 139"). Beat 3, the anchor of the 2-step.
 d5 $ s "~ ~ ~ ~ feel:2 ~ ~ ~"
