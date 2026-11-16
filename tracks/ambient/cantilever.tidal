@@ -41,15 +41,6 @@ let
   pianoHi p = s "pluck" # n 8 # speedAt "d5" p
     # gain 0.6 # sustain 1 # release 0.25 # lpf 4200
     # room 0.58 # size 0.75
-  pianoComp p = s "pluck" # n 5 # speedAt "c4" p
-    # gain 0.72 # sustain 0.5 # release 0.18 # lpf 3400 # lpq 0.3
-    # room 0.32 # size 0.45
-  pianoCompHi p = s "pluck" # n 8 # speedAt "d5" p
-    # gain 0.56 # sustain 0.4 # release 0.15 # lpf 4800
-    # room 0.4 # size 0.55
-  pianoPedal = s "pluck" # n 5 # speedAt "c4" (chordAt "d4" "5")
-    # gain 0.58 # sustain 1.4 # release 0.7 # lpf 1700 # lpq 0.25
-    # room 0.62 # size 0.78
   pianoCreak = pianoLo (slow 4 hCreak)
     # gain 0.56 # sustain 1.8 # release 1 # lpf 1500
     # room 0.68 # size 0.8
@@ -59,20 +50,22 @@ let
   -- --- comping: chords on a rhythm, then swung -----------------------------
   -- swing8 = swingBy (1/5) 4, swing16 = swingBy (1/5) 8. The delay is in the
   -- second half of each slice, so the offbeats lean back.
-  compSpan = swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hSpan)))
+  pianoComp p = s "pluck" # n 5 # speedAt "c4" p
+    # gain 0.72 # sustain 0.5 # release 0.18 # lpf 3400 # lpq 0.3
+    # room 0.32 # size 0.45
   compLoad = swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hLoad)))
   compOver = swing8 (struct "t t ~ ~ t ~ ~ t" (pianoComp (slow 3 hOver)))
   compSnap = swing16 (struct "t t ~ t ~ t ~ ~" (pianoComp hSnap))
   compSettle = swing8 (struct "t ~ t ~ ~ t ~ ~" (pianoComp (slow 3 hSettle)))
+  pianoCompHi p = s "pluck" # n 8 # speedAt "d5" p
+    # gain 0.56 # sustain 0.4 # release 0.15 # lpf 4800
+    # room 0.4 # size 0.55
   colourSpan = swing16 (struct "~ ~ t ~ ~ ~ ~ t" (pianoCompHi ((slow 3 hSpan) |+ 12))) # gain 0.5
   colourLoad = swing16 (struct "~ ~ t ~ ~ t ~ ~" (pianoCompHi ((slow 3 hLoad) |+ 12))) # gain 0.48
   colourOver = swing16 (struct "~ t ~ ~ t ~ ~ t" (pianoCompHi ((slow 3 hOver) |+ 12))) # gain 0.46
   -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
   -- Base c2, not c3: the samples are an octave below their names, so c3 put
   -- every note an octave down (d3 -> 36 Hz).
-  bassFoot = swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
-    # sustain 1.6 # release 0.55 # gain 0.9 # lpf 620 # lpq 0.2
-    # room 0.3 # size 0.48
   bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "d3 ~ f3 a3 ~ c4 ~ a2"
     # sustain 0.62 # release 0.22 # gain 0.9 # lpf 820 # lpq 0.25
     # room 0.24 # size 0.42
@@ -89,7 +82,7 @@ let
     # sustain 0.24 # release 0.1 # gain 0.92 # lpf 1100 # lpq 0.3
     # room 0.18 # size 0.32
   bassSettle = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "d3 ~ f3 ~ a2 ~ c3 ~"
-    # sustain 0.8 # release 0.3 # gain 0.9 # lpf 720 # lpq 0.2
+    # sustain 0.8 # release 0.3 # gain 0.8 # lpf 720 # lpq 0.2
     # room 0.3 # size 0.46
   bassAfter = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
     # sustain 1.8 # release 0.9 # lpf 540
@@ -165,12 +158,18 @@ let
 -- from the tempo current at call time. Leave each section long enough to finish.
 glideBpm 92 16
 
-d1 bassFoot
+d1 . swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
+  # sustain 1.6 # release 0.55 # lpf 620 # lpq 0.2
+  # room 0.3 # size 0.48 # amp 0.2
 
 -- brushes arrive like a foot keeping time, not a drum kit
 d2 brushFoot
+
 -- a low piano pedal appears under the bass
-d3 pianoPedal
+d3 . degrade $ s "pluck" # n 5 # speedAt "c4" (chordAt "d4" "5")
+  # sustain 1.4 # release 0.7 # lpf 1700 # lpq 0.25
+  # room 0.62 # size 0.78
+
 -- first hint of the room: a single breath
 d4 $ slow 2 air
 
@@ -184,7 +183,7 @@ d1 bassWalk
 
 xfadeIn 2 12 brush
 xfadeIn 5 24 ride
-xfadeIn 3 24 compSpan
+xfadeIn 3 24 swing8 (struct "t ~ ~ t ~ ~ t ~" (pianoComp (slow 3 hSpan)))
 xfadeIn 6 32 colourSpan
 
 -- implied polymeter: three woodblock hits per cycle against the 4/4
@@ -202,7 +201,7 @@ xfadeIn 3 16 compLoad
 xfadeIn 6 24 colourLoad
 
 -- the reed joins from the back of the room
-d9 $ degrade $ reedCall # gain 0.7
+d9 . degrade $ reedCall # gain 0.7
 -- add a little ride bell for lift
 d5 $ stack [ride, rideBell]
 
@@ -216,7 +215,6 @@ xfadeIn 9 16 silence
 glideBpm 98 16 -- from 92
 d1 bassLoad
 d2 brush
-d5 $ stack [ride, rideBell]
 d8 kickSoft
 xfadeIn 3 16 compOver
 xfadeIn 6 24 colourOver
@@ -229,8 +227,8 @@ d10 trumpetOver
 
 -- tiny 5-against-4 shime shimmer
 d7 shime
--- let the piano high voice ring
-d6 $ pianoHi $ slow 3 hOver |+ 12
+-- let the piano high voice ring (sparse)
+d6 $ pianoHi hOver # amp 2
 
 -- gives another break to prepare `creak`
 
@@ -245,7 +243,7 @@ xfadeIn 5 16 rub
 xfadeIn 4 32 air
 
 -- bass becomes a long pedal, piano turns to low clusters
-fadeMulti 32 [
+fadeMulti 24 [
   (1, bassCreak),
   (3, pianoCreak),
   (6, pianoHi (slow 4 hCreak |+ 12) # gain 0.42 # lpf 1400)]
@@ -276,8 +274,7 @@ fadeMulti 24 [
 -- the hole — everything but the trumpet drops out
 fadeSilence 16 [1,2,3,5,6,7,8,9]
 xfadeIn 10 16 trumpetSnap
--- together it's a sharp transition
--- Step 3 (after the stab): bass alone, then Settle
+-- bass alone
 xfadeIn 1 32 bassSettle
 
 -- 7. Settle — the structure comes to rest. Tempo back to 92.

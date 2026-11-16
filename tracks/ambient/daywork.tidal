@@ -74,12 +74,6 @@ let
   -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
   -- The base must be c2, not c3: the samples are an octave lower than their
   -- names suggest. With c3 every note came out an octave down (g2 -> 24 Hz).
-  bassLight = slow 2 $ s "bass1" # n 2 # speedAt "c2" "~ g2 ~ ~ ~ d3 ~ ~"
-    # sustain 2 # release 0.9 # lpf 520 # lpq 0.18
-    # room 0.45 # size 0.64
-  bassGate = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~"
-    # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
-    # room 0.28 # size 0.44 # amp 0.88
   bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "c3 ~ e3 ~ a2 ~ g2 ~"
     # sustain 1.3 # release 0.5 # lpf 680 # lpq 0.2
     # room 0.32 # size 0.5 # amp 0.86
@@ -235,7 +229,8 @@ fadeSilence 16 [1,2,3,4,5,6,7,8,9,10]
 
 d1 switchOn -- the first switches
 d2 $ bootDawn # amp 0.2 -- a boot on concrete
-d3 bassLight -- the bass finds the floor
+-- the bass finds the floor
+d3 . slow 2 $ s "bass1" # n "d3" # up "<0 0 1 0 2 1 2 ~>"
 
 -- the work song, first time: piano high, unaccompanied
 d4 $ motifPiano # amp 0.2
@@ -256,9 +251,13 @@ fadeMulti 16 [
 
 -- the gate takes over the pulse
 d8 $ stack [gateTick, degradeBy 0.25 gateClang]
-fadeMulti 16 [(2, bootWork), (5, compGate)]
+fadeMulti 16 [
+  (2, bootWork),
+  (5, compGate)] -- expressive
 
-d3 $ bassGate # amp 0.4
+d3 $ swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~"
+  # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
+  # room 0.28 # size 0.44 # amp 0.4
 
 fadeMulti 24 [
   -- the high colour of the fence
@@ -273,13 +272,15 @@ fadeMulti 24 [(1, rideSoft), (2, stack [bootWork, brushSoft])]
 -- bounce. The bass takes the work song low and slow.
 -- ~40 cycles (~109 s at 88 BPM).
 
+glideBpm 88 30 -- from 96
 d2 $ stack [bootWork, liftStall]
 -- the gate falls away; the hoist is the new pulse
-glideBpm 88 32 -- from 96
 fadeSilence 32 [1,5,8]
 xfadeIn 3 32 bassLift
 
--- getting clumsy on the high pings
+-- there is enough variety here for many cycles before adding next
+-- block where we get clumsy on the high pings
+
 p9 = stack [liftChain, crateScrape]
 -- chain and crate
 xfadeIn 7 16 $ p9 # amp 0.5
@@ -332,7 +333,7 @@ fadeMulti 16 [
   (3, bassCant),
   (8, stack [cupTick, canteenBell])]
 xfadeIn 4 24 colourCant
-xfadeIn 5 64 compCant
+xfadeIn 5 32 compCant
 
 -- trays, cutlery and a drink being poured
 xfadeIn 7 16 $ stack [tray, cutlery, pour]
@@ -377,11 +378,11 @@ xfadeIn 6 24 $ stack [air, windBed]
 
 -- sharp drop, let the fadeSilence work before
 
+glideBpm 84 30 -- from 92
 fadeMulti 8 [
   (1, switchOff),
   (3, bassStand # amp 0.4),
   (4, pianoCoda)]
-glideBpm 84 16 -- from 92
 -- the last machine stops; the room gets bigger
 fadeSilence 16 [2,5,7,8,9,10]
 -- the last low chord, very sparse

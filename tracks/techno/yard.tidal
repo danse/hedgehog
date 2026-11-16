@@ -10,7 +10,7 @@
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 
-setbpm 104
+glideBpm 104 60
 
 -- 1. Foundation — the grid. Kick and bass, one four-bar phrase.
 --    Bar 3 drops the last kick; bar 4 answers with a pickup.
@@ -115,14 +115,16 @@ d6 $ fast 16 piano
 --    is ~2.3 s at 104 BPM.
 
 -- the beat is left alone
-fadeSilence 24 [6] -- the fast piano
-fadeSilence 24 [5] -- the sax
+fadeSilence 16 [
+  5, -- the sax
+  6] -- the fast piano
 
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]
-fadeSilence 12 [1]
+fadeSilence 16 [1]
 
--- the bass drops to a low D pedal and the bed's piano plays one last Dm9
+-- we are closing. The bass drops to a low D pedal and the bed's piano
+-- plays one last Dm9
 xfadeIn 2 8 $ slow 4 $ s "bass1" # n 2
   # speedAt "c2" "d3 ~ ~ ~"
   # sustain 2.4 # release 1.2 # lpf 480 # lpq 0.16
@@ -137,8 +139,8 @@ xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
 -- let the chord ring a few bars, then it and the pedal go under a last
 -- breath; the reverb tail is the end
 xfadeIn 8 16 $ slow 4 $ s "breath" # sustain 0.5
-fadeSilence 16 [8]
   # hpf 450 # lpf 2000 # room 0.8 # size 0.88 # amp 0.6
+fadeSilence 16 [8]
 fadeSilence 24 [2, 4, 7]
 
 -- `hush` after a beat
