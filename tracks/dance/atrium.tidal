@@ -23,8 +23,10 @@
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- Accidentals in mini-notation are `s`/`f` (cs4, bf3), never `#`; every chord
 -- in an alternation needs its own brackets — `<[a4,c5,e5] [f4,a4,c5]>`.
--- hedge_pad has a fixed 900 Hz LPF and a slow attack — it swells, it does not
--- stab. One cycle is one bar (~1.94 s at 124 BPM).
+-- The pad is juno:8, a 1.5 s Juno release tone at C5 with only an octave
+-- partial, so it can take any chord tone. Slowed to a3-b4 each note blooms
+-- for most of a bar and hands over to the next chord — `speedAt "c5"` keeps
+-- it in tune. One cycle is one bar (~1.94 s at 124 BPM).
 -- house:0 kick, 1 cowbell, 3 closed hat, 4 open hat, 5/6 perc, 7 snare.
 -- cp:0 is the clap, rs the rimshot. jvbass:0 is the sub, pluck:8 the comp,
 -- moog:2 the lead; speedAt keeps them in their own samples.
@@ -33,15 +35,20 @@ glideBpm 124 8
 
 -- ---------------------------------------------------------------------------
 -- Reused voices. Everything else is inline at its section.
--- The four-bar loop is named once and moved by `|+ 5` in the turn; the outro
--- moves it back. Keep this whole block one paragraph: C-RET evaluates the
--- paragraph at point.
+-- The four-bar loop, the comp, the bass, the hook and the kick phrase are
+-- named once; the harmonic ones move by `|+ 5` in the turn. Keep this whole
+-- block one paragraph: C-RET evaluates the paragraph at point.
 -- ---------------------------------------------------------------------------
 let
-  -- The loop, root position, one chord per bar. Played an octave up on the
-  -- pad; the rootless voicings below sit above the bass.
+  -- The loop, root position, one chord per bar. The pad plays these notes as
+  -- written (a3-b4); the rootless voicings below sit above them.
   hA :: Pattern Note
   hA = chordAt "<a3 f3 c3 g3>" "<min9 maj9 maj9 sixNine>"
+  -- Four-bar kick phrase. The pulse stays square, but the third bar doubles on
+  -- beat four and the fourth drops it, so the phrase leans into the next one
+  -- instead of ticking the same four hits all night.
+  kick :: Pattern String
+  kick = "<house:0*4 house:0*4 [house:0 house:0 house:0 [house:0 house:0]] [house:0 house:0 house:0 ~]>"
   -- Rootless stabs: 3-5-7-9 over each chord, written high so the comp cuts
   -- through the pad instead of muddying it.
   stabs :: Pattern Note
@@ -58,8 +65,8 @@ let
 --    pad. All four are cued together with different fade lengths, so the build
 --    is one gesture: full bed at bar 28. The kick is filtered down to a thud;
 --    section 2 opens it.
-xfadeIn 1 4 $ s "house:0*4"
-  # amp 0.95 # lpf 240 # room 0.04 # size 0.12
+xfadeIn 1 4 $ s kick
+  # amp "0.9 0.85 0.88 0.84" # lpf 240 # room 0.04 # size 0.12
 xfadeIn 2 12 $ s "house:3*16"
   # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
   # hpf 520 # room 0.06 # size 0.16
@@ -67,14 +74,16 @@ xfadeIn 3 20 $ s "jvbass" # n 0
   # speedAt "fs2" bassA
   # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22
   # shape 0.2 # room 0.08 # size 0.2 # amp 0.95
-xfadeIn 4 28 $ s "hedge_pad" # n (hA |+ 12)
-  # sustain 1.7 # amp 0.36 # room 0.45 # size 0.6
+xfadeIn 4 28 $ s "juno" # n 8
+  # speedAt "c5" hA
+  # sustain 1.6 # release 0.9 # hpf 140
+  # room 0.5 # size 0.66 # amp 0.55
 
 -- 2. Room — 32 bars. The backbeat and the comp arrive: clap on 2 and 4, the
 --    stabs on every offbeat, the open hat on every offbeat under them. The
 --    kick loses the blanket.
-xfadeIn 1 8 $ s "house:0*4"
-  # amp 1 # lpf 380 # room 0.04 # size 0.12
+xfadeIn 1 8 $ s kick
+  # amp "1 0.94 0.97 0.93" # lpf 380 # room 0.04 # size 0.12
 xfadeIn 5 8 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
   # amp 0.55 # room 0.22 # size 0.34
 xfadeIn 6 16 $ struct "~ t ~ t t ~ ~ t"
@@ -98,8 +107,8 @@ xfadeIn 9 16 $ s "moog" # n 2
 -- 4. Peak one — 24 bars. The filter opens on the lead and the comp, the kick
 --    is unfiltered, and a shout lands on the one every eight bars. Nothing new
 --    enters: the same six voices get louder and brighter.
-xfadeIn 1 2 $ s "house:0*4"
-  # amp 1.05 # room 0.04 # size 0.1
+xfadeIn 1 2 $ s kick
+  # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
 xfadeIn 6 4 $ struct "~ t ~ t ~ t ~ t"
   $ s "pluck" # n 8
   # speedAt "d5" stabs
@@ -131,7 +140,7 @@ xfadeIn 10 8 $ s "hedge_noise"
 --    before the harmony does.
 --    
 fadeMulti 2
-  [ (1, s "house:0*4" # amp 1.05 # room 0.04 # size 0.1)
+  [ (1, s kick # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1)
   , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34)
   , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
       # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
@@ -164,8 +173,10 @@ fadeMulti 4
 --    hook are the same patterns with `|+ 5`. The drums stay exactly where they
 --    were, so the key change is the only new information. Two-bar fades, so the
 --    old and new chords overlap for one bar and hand over.
-xfadeIn 4 2 $ s "hedge_pad" # n (hA |+ 17)
-  # sustain 1.7 # amp 0.36 # room 0.45 # size 0.6
+xfadeIn 4 2 $ s "juno" # n 8
+  # speedAt "c5" (hA |+ 5)
+  # sustain 1.6 # release 0.9 # hpf 140
+  # room 0.5 # size 0.66 # amp 0.55
 xfadeIn 3 2 $ s "jvbass" # n 0
   # speedAt "fs2" (bassA |+ 5)
   # sustain 0.2 # release 0.08 # lpf 720 # lpq 0.22
@@ -211,7 +222,7 @@ xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
   # speedAt "ds5" "a4"
   # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 fadeMulti 2
-  [ (1, s "house:0*4" # amp 1.05 # room 0.04 # size 0.1)
+  [ (1, s kick # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1)
   , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34)
   , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
       # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
@@ -242,8 +253,10 @@ fadeMulti 4
 --     the kick keeps the room open under the pad.
 glideBpm 124 8
 fadeSilence 8 [2, 5, 7, 8, 9, 10]
-xfadeIn 4 2 $ s "hedge_pad" # n (hA |+ 12)
-  # sustain 1.7 # amp 0.38 # room 0.5 # size 0.66
+xfadeIn 4 2 $ s "juno" # n 8
+  # speedAt "c5" hA
+  # sustain 1.6 # release 1.2 # hpf 140
+  # room 0.55 # size 0.7 # amp 0.55
 xfadeIn 3 2 $ s "jvbass" # n 0
   # speedAt "fs2" bassA
   # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22
@@ -254,11 +267,14 @@ xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"
   # sustain 0.2 # release 0.2 # lpf 1400 # lpq 0.28
   # room 0.42 # size 0.62 # amp 0.36 # pan 0.42
 
--- 12. End — 8 bars. The band leaves; the pad becomes one Am9 and the kick goes
---     with it. `hush` after the chord has rung out.
+-- 12. End — 8 bars. The band leaves; the pad becomes one Am9, re-blooming
+--     every two bars, and the kick goes with it. `hush` after the chord has
+--     rung out.
 fadeSilence 2 [1, 3, 6]
-xfadeIn 4 2 $ s "hedge_pad" # n "[a4,c5,e5,g5,b5]"
-  # sustain 4 # amp 0.42 # room 0.6 # size 0.78
+xfadeIn 4 2 $ slow 2 $ s "juno" # n 8
+  # speedAt "c5" "[a3,c4,e4,g4,b4]"
+  # sustain 3.4 # release 1.6 # hpf 140
+  # room 0.62 # size 0.8 # amp 0.55
 fadeSilence 8 [4]
 
 -- `hush` after the last chord
