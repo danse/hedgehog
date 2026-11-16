@@ -6,12 +6,15 @@
 -- while the whole loop moves up a fourth — Dm9 | Bbmaj9 | Fmaj9 | C6/9 — for
 -- the second half (sections 7-10), before the outro resolves it back to Am9.
 -- The drums never change key and the hook is the same shape a fourth up, so
--- the lift is one decision, not a new tune.
+-- the lift is one decision, not a new tune. Deep (8) can be stretched with an
+-- optional half-time passage (8b).
 --
 -- Eval the setup block, then the sections in order. Section 5 is the break and
 -- 6 its drop; evaluate them as two paragraphs, a bar or two apart, so the
 -- fades line up. Section 9 is a build, so 10 lands on top of a band that never
--- left. 11 and 12 are the outro; `hush` after the last chord has rung out.
+-- left. 8b is optional: evaluate it after 8 for an eight-bar half-time passage,
+-- or skip it and let 8 keep running. 11 and 12 are the outro; `hush` after the
+-- last chord has rung out.
 --
 -- dN is a seat in the band, not a pattern: 1 kick, 2 closed hats, 3 bass,
 -- 4 pad, 5 clap, 6 stabs, 7 open hat, 8 rim, 9 lead, 10 vocal / air. A section
@@ -19,7 +22,8 @@
 -- their meaning all night.
 --
 -- Bar counts are in the section comments; the whole thing is ~280 bars, about
--- 9:00 at 124 BPM, longer if you let a section run.
+-- 9:00 at 124 BPM — ~288 bars and 9:15 if you play 8b — longer if you let a
+-- section run.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- Accidentals in mini-notation are `s`/`f` (cs4, bf3), never `#`; every chord
@@ -206,13 +210,31 @@ xfadeIn 6 8 $ slow 2 $ struct "~ t ~ ~ ~ t ~ ~"
   # sustain 0.3 # release 0.3 # lpf 1200 # lpq 0.28
   # room 0.55 # size 0.72 # amp 0.4 # pan 0.42
 
+-- 8b. Deeper, half-time — 8 bars (optional). Evaluate this when 8 has said
+--     enough, or skip it and let 8 keep running. The kick drops to beats 1 and
+--     3 with a two-hit pickup at the end of every four bars, the clap moves
+--     from 2 to 3 (a one-drop) and the rim leaves, so the room gets heavier
+--     without getting busier; bass, pad and the sparse comp stay. Section 9
+--     puts the kick and rim back on straight time.
+xfadeIn 1 4
+  $ s "<[house:0 ~ house:0 ~] [house:0 ~ house:0 ~] [house:0 ~ house:0 ~] [house:0 ~ house:0 [house:0 house:0]]>"
+  # amp 0.95 # lpf 320 # room 0.06 # size 0.16
+xfadeIn 5 4 $ s "~ ~ ~ ~ cp:0 ~ ~ ~"
+  # amp 0.42 # room 0.34 # size 0.5
+xfadeIn 8 4 silence
+
 -- 9. Lift — 16 bars. The second approach is not a break: nobody leaves, and
 --    the build happens on top of the band. Hats return and double to 32nds,
 --    the clap rolls into the last bar of every four, the comp's filter opens
 --    across the sixteen bars but only to 2.2 kHz and a voice climbs through the
 --    D-minor chord. The lead and the open hat are held back, so section 10
 --    arrives by addition — the first peak came after subtraction, this one
---    after pressure.
+--    after pressure. The kick and rim are set outright rather than faded: skip
+--    8b and this is a no-op, play it and they snap back to straight time.
+d1 $ s kick
+  # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
+d8 $ s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
 xfadeIn 5 4 $ s "<[~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ [cp:0 cp:0 cp:0 cp:0]]>"
   # amp (range 0.4 0.6 $ slow 16 saw) # room 0.24 # size 0.36
 xfadeIn 10 4 $ slow 4 $ s "ho" # n 0
