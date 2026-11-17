@@ -66,13 +66,13 @@ let
   -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
   -- Base c2, not c3: the samples are an octave below their names, so c3 put
   -- every note an octave down (d3 -> 36 Hz).
-  bassWalk = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "d3 ~ f3 a3 ~ c4 ~ a2"
+  bassWalk = swing8 $ speedAt "c2" "d3 ~ f3 a3 ~ c4 ~ a2" # s "bass1" # n "<2 2 12 10>"
     # sustain 0.62 # release 0.22 # gain 0.9 # lpf 820 # lpq 0.25
     # room 0.24 # size 0.42
-  bassWalk4 = slow 4 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~"
+  bassWalk4 = slow 4 $ speedAt "c2" "d3 ~ f3 ~ a2 ~ c3 ~ d3 ~ f3 ~ a2 c3 ~ ~" # s "bass1" # n "<2 12 2 10>"
     # sustain 0.9 # release 0.3 # gain 0.9 # lpf 760 # lpq 0.22
     # room 0.26 # size 0.44
-  bassLoad = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "d3 ~ f3 a3 ~ c4 d4 ~"
+  bassLoad = swing8 $ speedAt "c2" "d3 ~ f3 a3 ~ c4 d4 ~" # s "bass1" # n "<2 12 2 10>"
     # sustain 0.5 # release 0.2 # gain 0.9 # lpf 900 # lpq 0.26
     # room 0.22 # size 0.4
   bassCreak = slow 2 $ s "bass1" # n 14 # speedAt "c2" "d3 ~ ~ ~ ~ ~ ~ ~"
@@ -112,7 +112,7 @@ let
   wood = swing8 $ s "~ ~ east ~ ~ ~ east ~" # n 0 # gain 0.5 # room 0.3 # size 0.38
   -- wood3 is fast-3 against the 4/4 pulse and shime is fast-5; several harmonic
   -- phrases use slow 3/4 against the bass, so the layers drift in and out.
-  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # gain 0.4 # room 0.35 # size 0.42) # amp 4
+  wood3 = degradeBy 0.25 $ fast 3 (s "east" # n 0 # room 0.35 # size 0.42)
   shime = degradeBy 0.4 $ fast 5 (s "east" # n 5 # gain 0.34 # room 0.4 # size 0.48)
   rub = slow 2 $ s "gretsch" # n 8 # gain 0.42 # sustain 2.4 # release 1.1
     # hpf 220 # lpf 2200 # room 0.62 # size 0.78
@@ -127,26 +127,26 @@ let
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
     # gain 0.12 # hpf 400 # lpf 1500 # room 0.7 # size 0.85
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedCall = s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~"
-    # release 0.7 # gain 0.42 # hpf 150 # lpf 1500 # lpq 0.25
-    # room 0.62 # size 0.8
-  reedLong = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~"
+  reedCall = speedAt "c4" "d4 ~ ~ ~ ~ ~ a4 ~ ~ ~ c5 ~ ~ ~ ~ ~" # s "sax" # n 5
+    # release 0.7 # hpf 150 # lpf 1500 # lpq 0.25
+    # room 0.62 # size 0.8 # amp 0.5
+  reedLong = slow 4 $ speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~" # s "sax" # n 5
     # sustain 2.4 # release 1.1 # gain 0.4 # hpf 140 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82
-  reedCreak = slow 8 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~"
+  reedCreak = slow 8 $ speedAt "c4" "d4 ~ ~ ~ ~ ~ ~ ~" # s "sax" # n 5
     # sustain 4 # release 2 # gain 0.36 # hpf 120 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85
   -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7). slow 16 means each
   -- written note lands once every 16 cycles; expect long silences between stabs.
-  trumpetOver = slow 16 $ s "trump" # n 5 # speedAt "b6" "d6 ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ~ ~ ~" # sustain 0.5
+  trumpetOver = slow 16 $ speedAt "b6" "d6 ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ~ ~ ~" # sustain 0.5 # s "trump" # n 5
     # gain 0.34 # release 0.3 # lpf 2200 # lpq 0.2 # room 0.72 # size 0.82
-  trumpetSnap = slow 16 $ s "trump" # n 7 # speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # sustain 0.5
+  trumpetSnap = slow 16 $ speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 7 # sustain 0.5
     # gain 0.36 # release 0.3 # lpf 3000 # room 0.6 # size 0.75
-  trumpetAfter = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # sustain 0.5
+  trumpetAfter = slow 16 $ speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 5 # sustain 0.5
     # gain 0.24 # release 0.4 # hpf 300 # lpf 1200 # lpq 0.25 # room 0.8 # size 0.85
   -- --- a small melodic answer for Settle --------------------------------
-  pianoMotif = slow 2 $ s "pluck" # n 8 # speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~"
+  pianoMotif = slow 2 $ speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~" # s "pluck" # n 8
     # gain 0.52 # sustain 0.5 # release 0.25 # lpf 3600
     # room 0.45 # size 0.6
   motifSettle = swing16 (degradeBy 0.15 pianoMotif)
@@ -158,15 +158,14 @@ let
 -- from the tempo current at call time. Leave each section long enough to finish.
 glideBpm 92 16
 
-d1 . swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
+d1 . swing8 $ speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~" # s "bass1" # n 2
   # sustain 1.6 # release 0.55 # lpf 620 # lpq 0.2
   # room 0.3 # size 0.48 # amp 0.2
-
 -- brushes arrive like a foot keeping time, not a drum kit
 d2 brushFoot
 
 -- a low piano pedal appears under the bass
-d3 . degrade $ s "pluck" # n 5 # speedAt "c4" (chordAt "d4" "5")
+d3 . degrade $ speedAt "c4" (chordAt "d4" "5") # s "pluck" # n 5
   # sustain 1.4 # release 0.7 # lpf 1700 # lpq 0.25
   # room 0.62 # size 0.78
 
@@ -189,7 +188,7 @@ xfadeIn 6 32 colourSpan
 -- implied polymeter: three woodblock hits per cycle against the 4/4
 -- pulse. Don't get here too late or there will be too little time to
 -- enjoy. Anyway the next block will leave it alive
-d7 wood3
+d7 $ wood3 # amp 0.7
 -- the bass phrase stretches over four cycles
 xfadeIn 1 32 bassWalk4
 
@@ -201,16 +200,12 @@ xfadeIn 3 16 compLoad
 xfadeIn 6 24 colourLoad
 
 -- the reed joins from the back of the room
-d9 . degrade $ reedCall # gain 0.7
+d9 . degrade $ reedCall
 -- add a little ride bell for lift
 d5 $ stack [ride, rideBell]
 
 -- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
 -- ~40 cycles (~98 s at 98 BPM).
-
--- you get here with a reedCall on the foreground
-xfadeIn 9 16 silence
--- if it's silenced we can listen to the rest of the texture for a bit
 
 glideBpm 98 16 -- from 92
 d1 bassLoad
