@@ -65,7 +65,7 @@ let
 --    The bed builds itself: every stream fades from silence, one reaching
 --    full gain four bars after the next — bass 4, kick 8, hats 12, snare 16,
 --    ghosts 20, clav 24, pad 28. Full bed by bar 28 (~56 s).
-xfadeIn 1 4 $ swing16 $ speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [e2 ~ e2 e3 ~ e2 ~ d3 ~ e3 ~ b2 a2 ~ g2 ~] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+xfadeIn 1 4 . swing16 $ speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [e2 ~ e2 e3 ~ e2 ~ d3 ~ e3 ~ b2 a2 ~ g2 ~] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
   # s "jvbass" # n 0
   # sustain 0.16 # release 0.06 # lpf 900 # lpq 0.22
   # shape 0.18 # room 0.1 # size 0.24 # amp 0.95
@@ -97,7 +97,7 @@ d9 $ slow 4 $ s "trump" # n 9
   # speedAt "e6" "e6"
   # sustain 0.5 # release 0.25 # lpf 3200 # lpq 0.3
   # room 0.35 # size 0.55 # amp 0.42
-d10 $ slow 4 $ s "alphabet:14" -- the shout
+d10 . degrade . slow 4 $ s "alphabet:14" -- the shout
   # lpf 2600 # hpf 200 # sustain 0.4 # release 0.4
   # room 0.45 # size 0.7 # amp 0.75
 
@@ -179,7 +179,7 @@ d8 $ rotR 0.125 $ slow 2 $ s "trump" # n 4
   # sustain 3.4 # release 0.2 # lpf 3400 # lpq 0.3
   # room 0.45 # size 0.62 # amp 0.6
 
-d10 $ slow 4 $ s "alphabet:14" -- the same shout, darker
+d10 . degradeBy 0.8 $ slow 4 $ s "alphabet:14" -- the same shout, darker
   # lpf 1100 # hpf 180 # sustain 0.4 # release 0.5
   # room 0.5 # size 0.8 # amp 0.6
 
@@ -225,6 +225,8 @@ fadeMulti 24
       # amp 0.25 # hpf 250 # room 0.1 # size 0.2)
   ]
 
+xfadeIn 8 16 silence -- trump
+
 -- it could finish with the following
 
 -- evaluate this offbeat: the band stops on the one; the pad holds Em9
@@ -250,7 +252,7 @@ d1 $ speedAt "c3" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2
   # room 0.08 # size 0.2 # amp 0.9
 
 d2 $ s "<[808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~] [808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~] [808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~] [808bd ~ ~ ~ ~ ~ 808bd ~ ~ ~ ~ ~ 808bd ~ ~ 808bd]>"
-  # amp 1 # lpf 400 # room 0.03 # size 0.1
+  # amp 3 # lpf 400 # room 0.03 # size 0.1
 
 d3 $ s "808hc*16"
   # amp "0.5 0.24 0.36 0.24 0.46 0.24 0.34 0.24 0.5 0.24 0.36 0.24 0.46 0.24 0.34 0.26"
@@ -258,7 +260,6 @@ d3 $ s "808hc*16"
 
 d4 $ s "~ ~ ~ ~ 808sd ~ ~ ~ ~ ~ ~ ~ 808sd ~ ~ ~"
   # amp 0.9 # room 0.08 # size 0.18
-
 d5 $ s "~ ~ 808sd ~ ~ ~ 808sd ~ ~ ~ 808sd ~ ~ ~ 808sd ~"
   # amp 0.22 # hpf 400 # room 0.05 # size 0.12
 
@@ -269,15 +270,15 @@ d6 $ struct "t ~ ~ t ~ ~ t ~ ~ t ~ t ~ ~ t ~"
   # room 0.12 # size 0.24 # amp 0.42
 
 d7 $ s "hedge_pad" # n (hCoda |+ 12)
-  # sustain 1.8 # amp 0.38 # room 0.45 # size 0.58
+  # sustain 1.8 # amp 0.5 # room 0.45 # size 0.58
+
+d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~" -- metal bell
+  # amp 0.3 # pan 0.36 # room 0.08 # size 0.18
 
 d8 $ s "sax" # n 5
   # speedAt "c4" "<g4 cs4 d4 ds4>"
   # sustain 1.7 # release 0.5 # lpf 3200 # lpq 0.2
   # hpf 180 # room 0.35 # size 0.52 # amp 0.7 # pan 0.55
-
-d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~" -- metal bell
-  # amp 0.3 # pan 0.36 # room 0.08 # size 0.18
 
 -- 8. The answer — the machine has nothing left to learn, so it leaves by
 --    stream group, about four stages, one every two bars, each fading rather
@@ -290,7 +291,7 @@ d10 $ s "~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~ ~ ~ cb ~" -- metal bell
 --    Evaluate one stage every two bars; the last two lines are the ring-out.
 
 -- surface
-fadeSilence 24 [3, 5, 10]
+fadeSilence 24 [3, 5, 8, 10]
 
 -- backbeat
 fadeSilence 24 [4, 6]

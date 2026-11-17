@@ -83,11 +83,14 @@ d8 $ s "click:2*16" # amp 0.4 # pan 0.55 # hpf 900
 d8 $ slow 4 $ s "breath" # sustain 0.5
   # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.5
 
--- 5. Bed B — the turn. Same sixteen bars, recut: half-time 808, acoustic
---    snare, open hats, the bass on the thirds, B borrowed major. The pad
---    stops following the changes and holds B–F#–C#: no roots, and safe
---    over every bar. Bar 3 keeps only the downbeat — bed A breaks on bar 4,
---    bed B breaks here. Re-evaluate this (and 6) after the breakdown.
+-- 5. Bed B — sparser
+--
+--    the turn. Same sixteen bars, recut: half-time 808, acoustic
+--    snare, open hats, the bass on the thirds, B borrowed major. The
+--    pad stops following the changes and holds B–F#–C#: no roots, and
+--    safe over every bar. Bar 3 keeps only the downbeat — bed A
+--    breaks on bar 4, bed B breaks here. Re-evaluate this (and 6)
+--    after the breakdown.
 d1 $ s "<[808bd ~ 808bd ~] [808bd ~ 808bd ~] [808bd ~ ~ ~] [808bd ~ 808bd [~ 808bd]]>"
   # n 0 # lpf 220 # amp 1.05 # room 0.05 # size 0.18
 d2 $ s "~ sd:1 ~ sd:1" # n 0
@@ -128,15 +131,15 @@ xfadeIn 4 8 $ speedAt "c4" "~ ~ ~ a4"
 d4 $ speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
   # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
-  # room 0.12 # size 0.28 # amp 0.9
+  # room 0.12 # size 0.28 # amp 1.3
 
 d7 $ speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e6 ~ cs6 ~] [d6 ~ fs6 ~ a6 ~ fs6 ~]>"
   # s "moog" # n 2
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
 
--- after the second pass: the kit and lead stop on the downbeat, the bass
--- holds A, and the pad becomes one last Amaj9
+-- sharp: after the second pass: the kit and lead stop on the
+-- downbeat, the bass holds A, and the pad becomes one last Amaj9
 fadeSilence 0.25 [1, 2, 3, 7]
 xfadeIn 4 2 $ slow 4 $ s "jvbass" # n 0
   # speedAt "fs2" "a2"

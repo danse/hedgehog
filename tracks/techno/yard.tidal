@@ -21,7 +21,7 @@ d1 $ s "<808bd*4 [808bd*4] [808bd 808bd 808bd ~] [808bd 808bd 808bd [808bd 808bd
 d2 $ speedAt "c2" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
   # s "bass1" # n 2
   # sustain 0.5 # release 0.2 # lpf 650 # lpq 0.22
-  # room 0.2 # size 0.38 # amp 0.92
+  # room 0.2 # size 0.38 # amp 0.7
 
 -- 2. Yard — acoustic hats and a Dm9 / G6/9 stab. This is the audition bed.
 --    The hats double to 16ths on the fill bar and breathe over eight cycles.
@@ -49,10 +49,10 @@ d5 $ s "~ click:2 ~ click:2" # amp 0.4 # pan 0.55
 d5 $ s "~ cp ~ cp" # amp 0.5 # room 0.25 # size 0.35
 
 -- d6 · high piano answer — the Cantilever motif on `pluck:8` (D5)
-piano = speedAt "d5" "<a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~>"
+piano = speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~"
   # s "pluck" # n 8
   # sustain 0.5 # release 0.25 # lpf 3600
-  # room 0.45 # size 0.6 # amp 0.5
+  # room 0.45 # size 0.6 # amp 1
 d6 $ slow 2 piano
 
 -- d7 · dub stab — `stab` is a chord sample; `n` picks the chord
@@ -107,7 +107,7 @@ d5 $ slow 2 $ speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~
   # room 0.65 # size 0.82
 
 -- d6 · fast answer: the trio's motif, sped up into a shimmer
-d6 $ fast 16 piano
+d6 piano
 
 -- 6. Coda — leave section 5 running and evaluate these in order, a few bars
 --    apart. The melody goes first and each layer below it takes longer to
@@ -116,8 +116,9 @@ d6 $ fast 16 piano
 
 -- the beat is left alone
 fadeSilence 16 [
-  5, -- the sax
-  6] -- the fast piano
+  5, -- sax
+  6, -- piano
+  8] -- other wind-brown sample
 
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]

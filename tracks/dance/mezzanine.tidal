@@ -19,7 +19,7 @@
 -- `ho` is NOT a voice: it is the HHOD bank, open hi-hats. For vocals use
 -- diphone (sung vowels, ~A♭2-A♭4), alphabet (spoken letters) or hmm (a hum).
 
-glideBpm 130 8
+glideBpm 130 30
 
 -- d1 · kick. feel:0 ("BD 04 d"). 2-step: 1 and the "&" of 2.
 d1 $ s "feel:0 ~ ~ feel:0 ~ ~ ~ ~"
@@ -71,7 +71,7 @@ d8 $ s "~ ~ ~ ~ ~ ~ rs ~"
 
 -- d9 · vocal chop. diphone:26 ("kd1_028") is a sung A♭4; begin/end trims the
 -- phrase down to the vowel, speedAt moves it onto the chord.
-d9 $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
+d9 . degrade $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
   # begin 0.2 # end 0.62
   # speedAt "gs4" "<a4 a4 c5 ef5>"
   # sustain 0.06 # release 0.12 # hpf 300 # lpf 6000
