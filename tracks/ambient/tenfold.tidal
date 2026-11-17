@@ -20,8 +20,8 @@ glideBpm 125 30
 -- ---------------------------------------------------------------------------
 let
   -- sub drone (one root per chord)
-  subDrone = slow 4 $ note "<bf2 gf2 df3 af2>" # s "hedge_sine"
-    # lpf 160
+  subDrone =
+    slow 4 $ note "<bf2 gf2 df3 af2>" # s "hedge_sine" # lpf 160 # amp 0.3
   --
   -- low pad (i–VI–III–VII, one chord every 4 cycles)
   lowPad = slow 4 $ n "<[bf2,df3,f3] [gf2,bf2,df3] [df2,f2,af2] [af2,c3,ef3]>" # s "hedge_pad"
@@ -29,7 +29,9 @@ let
     # room 0.55 # size 0.75
   --
   -- high pad (same harmonic rhythm, colour above the low pad)
-  highPad = slow 4 $ n "<[bf4,df5,f5,af5] [gf4,bf4,df5,f5] [df4,f4,af4,c5] [af4,c5,ef5,g5]>" # s "hedge_pad"
+  highPadChords = "<[bf4,df5,f5,af5] [gf4,bf4,df5,f5] [df4,f4,af4,c5] [af4,c5,ef5,g5]>"
+  highPadMelody = "<[bf4 df5 f5 af5] [gf4 bf4 df5 f5] [df4 f4 af4 c5] [af4 c5 ef5 g5]>"
+  highPad t = slow 4 $ n t # s "hedge_pad"
     # sustain 6 # gain 0.8 # hpf 260 # lpf (range 900 2400 $ slow 12 sine)
     # room 0.7 # size 0.8
   --
@@ -69,7 +71,7 @@ let
     # lpf 3200 # room 0.7 # size 0.8
   --
   -- filtered noise bed / slow air
-  noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.3
+  noiseBed = slow 16 $ s "hedge_noise" # sustain 12 # gain 0.7
     # lpf (range 220 1400 $ slow 24 sine) # room 0.85 # size 0.85
   --
   -- soft synth bass (8ths; one bar per chord, no percussion)
@@ -92,18 +94,17 @@ let
 -- 1. Emergence — sub drone and low pad only
 
 d1 subDrone
--- the low pad appears under the drone
-xfadeIn 2 16 $ lowPad # lpf 520
+xfadeIn 2 16 $ lowPad # lpf 520 -- the low pad appears under the drone
 
 -- let the room breathe before adding anything else
-xfadeIn 3 24 noiseBed
+d3 noiseBed
 
 -- 2. Ascent — high pad, soft bass, first arp hint
 
 -- texture
 xfadeIn 2 8 lowPad -- -lpf
 fadeMulti 16 [
-  (4, highPad # lpf 1000),
+  (4, highPad highPadChords # lpf 1000),
   (5, bassPulse)]
 
 -- enter the arp before the expansion. Melodic
@@ -112,7 +113,7 @@ xfadeIn 6 24 $ arp # lpf 800
 -- 3. Expansion — full synth palette (still no drums)
 
 fadeMulti 8 [
-  (4, highPad), -- -lpf
+  (4, highPad highPadChords), -- -lpf
   (6, arp)] -- -lpf
 -- punctuation
 fadeMulti 16 [
@@ -122,10 +123,10 @@ fadeMulti 16 [
 
 -- 4. Suspension — harmony floats, the pulse loosens
 
-let f (s, p) = (s, p # lpf 2000) in
+let f (s, p) = (s, p # lpf 1500) in
   fadeMulti 16 $ f <$> [
     (2, lowPad),
-    (4, highPad),
+    (4, highPad highPadChords),
     (6, arp)]
 
 fadeMulti 16 [
@@ -134,14 +135,14 @@ fadeMulti 16 [
   -- the lower lead gives way to the higher, sparser melody
   (7, melody),
   -- optional: let the arp drift further back
-  (6, arp # lpf 1800)]
+  (6, arp # lpf 1000)]
 
 -- 5. Drift — strip lead/bell/arp, keep pads, texture and long bass
 
 let
   l1 = (, silence) <$> [6,7,8,9]
   l2 = [
-    (4, highPad # lpf 1200),
+    (4, highPad highPadChords # lpf 1200),
     (3, noiseBed # lpf 900),
     (5, bassLong # lpf 220)]
   in fadeMulti 24 (l1 <> l2)
@@ -149,7 +150,7 @@ let
 -- keep the low pad but darker
 xfadeIn 2 16 $ lowPad # gain 0.8 # lpf 700
 -- eventually leave a single arp note drifting
-xfadeIn 6 32 $ degradeBy 0.6 $ arp # gain 0.56
+xfadeIn 6 32 . degrade $ arp # gain 0.56
 
 -- 6. Dissolve — pads and drone only, then silence
 
@@ -161,7 +162,7 @@ let
     (1, subDrone # lpf 140),
     (2, lowPad # lpf 500),
     -- let the last chord ring, then hush
-    (4, highPad # lpf 900)]
+    (4, highPad highPadChords # lpf 900)]
   in
   fadeMulti 24 $ l1 <> l2
 
