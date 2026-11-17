@@ -48,8 +48,8 @@ xfadeIn 2 16 $ s "~ cp ~ cp" # n 0
   # amp 0.55 # room 0.2 # size 0.32
 xfadeIn 3 24 $ s "hh:0*8" # amp "1 0.5 0.75 0.5"
   # hpf 350 # room 0.06 # size 0.18
-xfadeIn 4 32 $ s "jvbass" # n 0
-  # speedAt "fs2" "<[fs2 fs2 fs3 fs2 ~ fs2 fs3 fs2] [b2 b2 b3 b2 ~ b2 b3 b2] [e2 e2 e3 e2 ~ e2 e3 e2] [a2 a2 a3 a2 ~ a2 a3 a2]>"
+xfadeIn 4 32 $ speedAt "fs2" "<[fs2 fs2 fs3 fs2 ~ fs2 fs3 fs2] [b2 b2 b3 b2 ~ b2 b3 b2] [e2 e2 e3 e2 ~ e2 e3 e2] [a2 a2 a3 a2 ~ a2 a3 a2]>"
+  # s "jvbass" # n 0
   # sustain 0.16 # release 0.06 # lpf 620 # lpq 0.2
   # room 0.08 # size 0.22 # amp 0.95
 xfadeIn 5 40 $ slow 2 $ s "hedge_pad" # n hA
@@ -57,15 +57,15 @@ xfadeIn 5 40 $ slow 2 $ s "hedge_pad" # n hA
 
 -- 2. Colour — the guitar answers on the E and A bars only. It is a C-major
 --    sample transposed, so keep it off the two minor bars.
-d6 $ s "gtr" # n 0
-  # speedAt "c4" "~ ~ e4 a4"
+d6 $ speedAt "c4" "~ ~ e4 a4"
+  # s "gtr" # n 0
   # sustain 0.2 # release 0.15 # lpf 2800 # lpq 0.25
   # room 0.35 # size 0.55 # amp 0.45
 
 -- 3. Hook — a Moog line filtered down to a mumble: a shape, not a tune,
 --    until section 6 opens it.
-d7 $ s "moog" # n 2
-  # speedAt "c5" hook
+d7 $ speedAt "c5" hook
+  # s "moog" # n 2
   # sustain 0.24 # release 0.12 # lpf 850 # lpq 0.3
   # room 0.3 # size 0.45 # amp 0.5
 
@@ -94,8 +94,8 @@ d2 $ s "~ sd:1 ~ sd:1" # n 0
   # amp 0.6 # room 0.2 # size 0.32
 d3 $ s "~ hh:7 ~ hh:7 ~ hh:7 ~ hh:7" # n 0
   # amp 0.42 # hpf 500 # room 0.12 # size 0.24
-d4 $ s "jvbass" # n 0
-  # speedAt "fs2" "<[a2 ~ a2 ~ cs3 ~ a2 gs2] [ds3 ~ ds3 ~ fs3 ~ ds3 as2] [gs2 ~ gs2 ~ b2 ~ gs2 d3] [cs3 ~ cs3 ~ e3 ~ cs3 gs2]>"
+d4 $ speedAt "fs2" "<[a2 ~ a2 ~ cs3 ~ a2 gs2] [ds3 ~ ds3 ~ fs3 ~ ds3 as2] [gs2 ~ gs2 ~ b2 ~ gs2 d3] [cs3 ~ cs3 ~ e3 ~ cs3 gs2]>"
+  # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
   # room 0.12 # size 0.28 # amp 0.9
 d5 $ slow 4 $ s "hedge_pad" # n "<b4,fs5,cs5>"
@@ -103,8 +103,8 @@ d5 $ slow 4 $ s "hedge_pad" # n "<b4,fs5,cs5>"
 
 -- 6. Hook, open — the same line with the filter off. Over bed B it is the
 --    peak; over bed A it is the lift into bed B.
-d7 $ s "moog" # n 2
-  # speedAt "c5" hook
+d7 $ speedAt "c5" hook
+  # s "moog" # n 2
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
 
@@ -117,21 +117,21 @@ xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
   # sustain 5 # release 2 # lpf 360 # lpq 0.15
   # room 0.45 # size 0.65 # amp 0.85
 
-xfadeIn 4 8 $ s "gtr" # n 0
-  # speedAt "c4" "~ ~ ~ a4"
+xfadeIn 4 8 $ speedAt "c4" "~ ~ ~ a4"
+  # s "gtr" # n 0
   # sustain 0.6 # release 0.8 # lpf 1800 # lpq 0.3
   # room 0.65 # size 0.8 # amp 0.4
 
 -- 8. Coda — the last chorus. Re-evaluate section 5, then these two lines:
 --    a new bass and lead over a turnaround, Bm9 – E9 – Amaj9 – Dmaj9, on
 --    the same four-bar form. Play it twice, then stop short.
-d4 $ s "jvbass" # n 0
-  # speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
+d4 $ speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
+  # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
   # room 0.12 # size 0.28 # amp 0.9
 
-d7 $ s "moog" # n 2
-  # speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e6 ~ cs6 ~] [d6 ~ fs6 ~ a6 ~ fs6 ~]>"
+d7 $ speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e6 ~ cs6 ~] [d6 ~ fs6 ~ a6 ~ fs6 ~]>"
+  # s "moog" # n 2
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
 

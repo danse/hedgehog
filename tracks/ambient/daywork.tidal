@@ -49,7 +49,7 @@ let
   pianoHi p = s "pluck" # n 8 # speedAt "d5" p
     # sustain 0.8 # release 0.35 # lpf 4200
     # room 0.5 # size 0.65 # amp 0.55
-  pianoCoda = slow 2 $ s "pluck" # n 8 # speedAt "d5" "g5 ~ a5 c6 ~ ~ ~ ~"
+  pianoCoda = slow 2 $ speedAt "d5" "g5 ~ a5 c6 ~ ~ ~ ~" # s "pluck" # n 8
     # sustain 1.5 # release 0.8 # lpf 2800
     # room 0.68 # size 0.82 # amp 0.46
   --
@@ -67,26 +67,26 @@ let
   colourHand  = swing16 (struct "~ t ~ ~ t ~ ~ ~" (pianoHi ((slow 3 hHand) |+ 12)))
   --
   -- --- the work song on the piano high voice --------------------------------
-  motifPiano = slow 2 $ s "pluck" # n 8 # speedAt "d5" motifP
+  motifPiano = slow 2 $ speedAt "d5" motifP # s "pluck" # n 8
     # sustain 1.1 # release 0.45 # lpf 3600
     # room 0.5 # size 0.62 # amp 0.48
   --
   -- --- double bass: bass1:0-18 are C1 (Tidal c2), 19-29 are F1 ------------
   -- The base must be c2, not c3: the samples are an octave lower than their
   -- names suggest. With c3 every note came out an octave down (g2 -> 24 Hz).
-  bassLift = slow 2 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "c3 ~ e3 ~ a2 ~ g2 ~"
+  bassLift = slow 2 $ speedAt "c2" "c3 ~ e3 ~ a2 ~ g2 ~" # s "bass1" # n "<2 12 2 10>"
     # sustain 1.3 # release 0.5 # lpf 680 # lpq 0.2
     # room 0.32 # size 0.5 # amp 0.86
-  bassSweep = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 a2 c3 a2 g2 c3 a2 c3"
+  bassSweep = swing8 $ speedAt "c2" "g2 a2 c3 a2 g2 c3 a2 c3" # s "bass1" # n "<2 2 12 10>"
     # sustain 0.48 # release 0.2 # lpf 850 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
-  bassCant = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "c3 ~ e3 g3 ~ e3 c3 ~"
+  bassCant = swing8 $ speedAt "c2" "c3 ~ e3 g3 ~ e3 c3 ~" # s "bass1" # n "<2 12 2 12>"
     # sustain 0.7 # release 0.28 # lpf 820 # lpq 0.24
     # room 0.28 # size 0.44 # amp 0.88
-  bassHand = slow 2 $ s "bass1" # n 2 # speedAt "c2" "g2 ~ ~ ~ d3 ~ c3 ~"
+  bassHand = slow 2 $ speedAt "c2" "g2 ~ ~ ~ d3 ~ c3 ~" # s "bass1" # n 2
     # sustain 1.5 # release 0.6 # lpf 620 # lpq 0.2
     # room 0.38 # size 0.56 # amp 0.84
-  bassStand = slow 2 $ s "bass1" # n 2 # speedAt "c2" "g2 ~ ~ ~ d3 ~ ~ ~"
+  bassStand = slow 2 $ speedAt "c2" "g2 ~ ~ ~ d3 ~ ~ ~" # s "bass1" # n 2
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
   -- the work song: a plain 4/4 tune, eight notes to the bar; in G
@@ -158,9 +158,9 @@ let
     # hpf 400 # lpf 7000 # room 0.55 # size 0.7 # amp 0.3
   -- The glass and bottle are tuned from nominal bases: tink:0 = F#8 (fs9),
   -- bottle:0 = D#8 (ds9).
-  motifGlass = slow 2 $ s "tink" # n 0 # speedAt "fs9" motifG
+  motifGlass = slow 2 $ speedAt "fs9" motifG # s "tink" # n 0
     # hpf 500 # lpf 9000 # room 0.55 # size 0.7 # amp 0.22
-  bottleHoot = slow 4 $ s "bottle" # n 0 # speedAt "ds9" motifB
+  bottleHoot = slow 4 $ speedAt "ds9" motifB # s "bottle" # n 0
     # hpf 500 # lpf 9000 # room 0.6 # size 0.75 # amp 0.2
   --
   -- --- handoff: crate, toy, one pling -------------------------------------
@@ -196,25 +196,25 @@ let
     # sustain 6 # hpf 200 # lpf 2400 # room 0.7 # size 0.85 # amp 0.14
   --
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedLift = slow 4 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ c4 ~ ~ ~"
+  reedLift = slow 4 $ speedAt "c4" "e4 ~ ~ ~ c4 ~ ~ ~" # s "sax" # n 5
     # sustain 2.4 # release 1 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.68 # size 0.82 # amp 0.3
-  reedRound = slow 4 $ s "sax" # n 5 # speedAt "c4" motifS
+  reedRound = slow 4 $ speedAt "c4" motifS # s "sax" # n 5
     # sustain 1.8 # release 0.8 # hpf 160 # lpf 1500 # lpq 0.24
     # room 0.62 # size 0.8 # amp 0.36
-  reedCant = slow 2 $ s "sax" # n 5 # speedAt "c4" motifS
+  reedCant = slow 2 $ speedAt "c4" motifS # s "sax" # n 5
     # sustain 1.2 # release 0.55 # hpf 170 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.4
-  reedHand = slow 8 $ s "sax" # n 5 # speedAt "c4" "e4 ~ ~ ~ ~ ~ ~ ~"
+  reedHand = slow 8 $ speedAt "c4" "e4 ~ ~ ~ ~ ~ ~ ~" # s "sax" # n 5
     # sustain 4 # release 1.8 # hpf 140 # lpf 1100 # lpq 0.2
     # room 0.72 # size 0.85 # amp 0.3
-  reedStand = slow 8 $ s "sax" # n 5 # speedAt "c4" "g4 ~ ~ ~ e4 ~ ~ ~"
+  reedStand = slow 8 $ speedAt "c4" "g4 ~ ~ ~ e4 ~ ~ ~" # s "sax" # n 5
     # sustain 2.8 # release 1.2 # hpf 130 # lpf 900 # lpq 0.18
     # room 0.75 # size 0.85 # amp 0.26
   --
   -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); the spark drops to a high E.
-  trumpetSpark = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  trumpetSpark = slow 16 $ speedAt "b6" "~ ~ ~ ~ e6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 5
     # sustain 0.5 # release 0.35 # lpf 2800 # lpq 0.2
     # room 0.72 # size 0.82 # amp 0.2
 
@@ -256,7 +256,7 @@ fadeMulti 16 [
   (2, bootWork),
   (5, compGate)] -- expressive
 
-d3 $ swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~"
+d3 $ swing8 $ speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~" # s "bass1" # n "<2 2 12 10>"
   # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
   # room 0.28 # size 0.44 # amp 0.4
 

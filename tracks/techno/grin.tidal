@@ -65,8 +65,8 @@ let
 --    The bed builds itself: every stream fades from silence, one reaching
 --    full gain four bars after the next — bass 4, kick 8, hats 12, snare 16,
 --    ghosts 20, clav 24, pad 28. Full bed by bar 28 (~56 s).
-xfadeIn 1 4 $ swing16 $ s "jvbass" # n 0
-  # speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [e2 ~ e2 e3 ~ e2 ~ d3 ~ e3 ~ b2 a2 ~ g2 ~] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+xfadeIn 1 4 $ swing16 $ speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [e2 ~ e2 e3 ~ e2 ~ d3 ~ e3 ~ b2 a2 ~ g2 ~] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+  # s "jvbass" # n 0
   # sustain 0.16 # release 0.06 # lpf 900 # lpq 0.22
   # shape 0.18 # room 0.1 # size 0.24 # amp 0.95
 xfadeIn 2 8 $ s "<[gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ gretsch:13]>"
@@ -89,8 +89,8 @@ xfadeIn 7 28 $ s "hedge_pad" # n (hA |+ 12)
 -- 2. The one — the horns enter on the phrase and a shout lands on the one.
 --    Three tight stabs (E, G, B) answer the clav; the sampled chord marks the
 --    top of the phrase. After the shout, the cowbell takes its place.
-d8 $ swing16 $ s "trump" # n 2
-  # speedAt "e6" "<[e6 ~ ~ g6 ~ ~ b5 ~ ~ ~ e6 ~ ~ ~ ~ ~] [~ ~ g6 ~ ~ b5 ~ ~ e6 ~ ~ ~ ~ ~ ~ ~] [cs6 ~ ~ e6 ~ ~ g6 ~ ~ ~ e6 ~ ~ ~ ~ ~] [ds6 ~ ~ fs6 ~ ~ a6 ~ ~ ~ fs6 ~ ~ ds6 ~ c6]>"
+d8 $ swing16 $ speedAt "e6" "<[e6 ~ ~ g6 ~ ~ b5 ~ ~ ~ e6 ~ ~ ~ ~ ~] [~ ~ g6 ~ ~ b5 ~ ~ e6 ~ ~ ~ ~ ~ ~ ~] [cs6 ~ ~ e6 ~ ~ g6 ~ ~ ~ e6 ~ ~ ~ ~ ~] [ds6 ~ ~ fs6 ~ ~ a6 ~ ~ ~ fs6 ~ ~ ds6 ~ c6]>"
+  # s "trump" # n 2
   # sustain 0.14 # release 0.08 # lpf 3600 # lpq 0.3
   # hpf 220 # room 0.3 # size 0.5 # amp 0.5 # pan 0.56
 d9 $ slow 4 $ s "trump" # n 9
@@ -152,8 +152,8 @@ fadeMulti 32
       # amp 0.28 # hpf 400 # room 0.08 # size 0.16)
   ]
 fadeMulti 64
-  [ (1, s "jvbass" # n 0
-      # speedAt "fs2" "<[e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2] [b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2]>"
+  [ (1, speedAt "fs2" "<[e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2 e2 e2 e3 e2] [a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2 a2 a2 a3 a2] [b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2 b2 b2 b3 b2]>"
+      # s "jvbass" # n 0
       # amp "0.95 0.55 0.75 0.55 0.9 0.55 0.75 0.55 0.95 0.55 0.75 0.55 0.9 0.55 0.75 0.6"
       # sustain 0.13 # release 0.05 # lpf 1000 # lpq 0.2
       # shape 0.24 # room 0.08 # size 0.2)
@@ -201,8 +201,8 @@ fadeMulti 8
       # room 0.3 # size 0.48 # amp 0.46)
   , (7, s "hedge_pad" # n (hCoda |+ 12)
       # sustain 1.8 # amp 0.38 # room 0.45 # size 0.58)
-  , (8, swing16 $ s "trump" # n 2
-      # speedAt "e6" "<[e6 ~ ~ g6 ~ ~ b5 ~ ~ ~ e6 ~ ~ ~ ~ ~] [cs6 ~ ~ e6 ~ ~ g6 ~ ~ ~ e6 ~ ~ ~ ~ ~] [d6 ~ ~ f6 ~ ~ af6 ~ ~ g6 ~ f6 ~ ~ ~ ~] [ds6 ~ ~ fs6 ~ ~ a6 ~ ~ ~ fs6 ~ ~ ds6 ~ c6]>"
+  , (8, swing16 $ speedAt "e6" "<[e6 ~ ~ g6 ~ ~ b5 ~ ~ ~ e6 ~ ~ ~ ~ ~] [cs6 ~ ~ e6 ~ ~ g6 ~ ~ ~ e6 ~ ~ ~ ~ ~] [d6 ~ ~ f6 ~ ~ af6 ~ ~ g6 ~ f6 ~ ~ ~ ~] [ds6 ~ ~ fs6 ~ ~ a6 ~ ~ ~ fs6 ~ ~ ds6 ~ c6]>"
+      # s "trump" # n 2
       # sustain 0.14 # release 0.08 # lpf 3600 # lpq 0.3
       # hpf 220 # room 0.3 # size 0.5 # amp 0.5 # pan 0.56)
   , (10, s "~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~"
@@ -210,8 +210,8 @@ fadeMulti 8
   ]
 -- all the rest. Slightly weird before adding this one
 fadeMulti 24
-  [ (1, swing16 $ s "jvbass" # n 0
-      # speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+  [ (1, swing16 $ speedAt "fs2" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+      # s "jvbass" # n 0
       # sustain 0.16 # release 0.06 # lpf 1100 # lpq 0.22
       # shape 0.2 # room 0.1 # size 0.24 # amp 0.95)
   , (2, s "<[gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~] [gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ ~ ~ ~ gretsch:13 ~ ~ gretsch:13]>"
@@ -244,8 +244,8 @@ xfadeIn 7 16 silence
 --    the grin — and it can stay on stage because each note is a four-second
 --    tone, not a 0.4 s stab. Evaluate instead of the ending block above, then
 --    go on into 8.
-d1 $ s "moog" # n 1
-  # speedAt "c3" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+d1 $ speedAt "c3" "<[e2 ~ e2 e3 ~ e2 ~ g2 a2 ~ e2 ~ b2 ~ a2 g2] [a2 ~ a2 a3 ~ a2 ~ cs3 e3 ~ a2 ~ g2 e2 a2 cs3] [bf2 ~ bf2 bf3 ~ bf2 ~ d3 f3 ~ bf2 ~ af2 f2 ~ d3] [b2 ~ b2 b3 ~ b2 ~ ds3 fs3 ~ b2 ~ a2 fs2 ~ ds2]>"
+  # s "moog" # n 1
   # sustain 0.16 # release 0.06 # lpf 1200 # lpq 0.2
   # room 0.08 # size 0.2 # amp 0.9
 

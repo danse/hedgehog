@@ -71,25 +71,25 @@ let
   -- Base c2, not c3: the samples are an octave below their names, so c3 put
   -- every note an octave down (d3 -> 36 Hz).
   -- The bass is the abutment: it stays low and gains weight through the middle.
-  bassPedal = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ ~ ~ ~ ~"
+  bassPedal = slow 2 $ speedAt "c2" "d3 ~ ~ ~ ~ ~ ~ ~" # s "bass1" # n 2
     # sustain 2.8 # release 1.2 # lpf 480 # lpq 0.18
     # room 0.5 # size 0.65 # amp 0.82
-  bassSurvey = swing8 $ s "bass1" # n "<2 2 12 10>" # speedAt "c2" "d3 ~ fs3 a3 ~ cs4 ~ a2"
+  bassSurvey = swing8 $ speedAt "c2" "d3 ~ fs3 a3 ~ cs4 ~ a2" # s "bass1" # n "<2 2 12 10>"
     # sustain 0.7 # release 0.25 # lpf 780 # lpq 0.24
     # room 0.26 # size 0.4 # amp 0.88
-  bassShore = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "b2 ~ d3 fs3 ~ a3 ~ g2"
+  bassShore = swing8 $ speedAt "c2" "b2 ~ d3 fs3 ~ a3 ~ g2" # s "bass1" # n "<2 12 2 10>"
     # sustain 0.8 # release 0.28 # lpf 720 # lpq 0.22
     # room 0.28 # size 0.44 # amp 0.88
-  bassAbut = swing8 $ s "bass1" # n "<2 12 2 10>" # speedAt "c2" "g2 ~ d3 ~ a2 ~ b2 ~"
+  bassAbut = swing8 $ speedAt "c2" "g2 ~ d3 ~ a2 ~ b2 ~" # s "bass1" # n "<2 12 2 10>"
     # sustain 0.6 # release 0.22 # lpf 900 # lpq 0.26
     # room 0.24 # size 0.4 # amp 0.9
-  bassTrans = swing8 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
+  bassTrans = swing8 $ speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~" # s "bass1" # n 2
     # sustain 1.4 # release 0.5 # lpf 620 # lpq 0.2
     # room 0.35 # size 0.52 # amp 0.86
-  bassOcc = swing8 $ s "bass1" # n "<2 12 2 12>" # speedAt "c2" "g2 ~ d3 ~ a2 ~ d3 ~"
+  bassOcc = swing8 $ speedAt "c2" "g2 ~ d3 ~ a2 ~ d3 ~" # s "bass1" # n "<2 12 2 12>"
     # sustain 0.8 # release 0.3 # lpf 760 # lpq 0.22
     # room 0.3 # size 0.46 # amp 0.88
-  bassSteady = slow 2 $ s "bass1" # n 2 # speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~"
+  bassSteady = slow 2 $ speedAt "c2" "d3 ~ ~ ~ a2 ~ ~ ~" # s "bass1" # n 2
     # sustain 2 # release 1 # lpf 520 # lpq 0.18
     # room 0.55 # size 0.72 # amp 0.78
   -- --- kick, brushes, ride: gretsch acoustic kit --------------------------
@@ -131,24 +131,24 @@ let
     # speed (range 0.6 1.1 $ slow 8 rand) # hpf 500 # lpf 3000
     # room 0.7 # size 0.85 # amp 0.12
   -- --- sax: sax:5 is C3 (Tidal c4) ----------------------------------------
-  reedShore = slow 4 $ s "sax" # n 5 # speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~"
+  reedShore = slow 4 $ speedAt "c4" "d4 ~ ~ ~ a4 ~ ~ ~" # s "sax" # n 5
     # sustain 2 # release 0.9 # hpf 150 # lpf 1200 # lpq 0.2
     # room 0.62 # size 0.8 # amp 0.32
-  reedAbut = slow 2 $ s "sax" # n 5 # speedAt "c4" "d4 ~ fs4 ~ a4 ~ g4 ~"
+  reedAbut = slow 2 $ speedAt "c4" "d4 ~ fs4 ~ a4 ~ g4 ~" # s "sax" # n 5
     # sustain 1.4 # release 0.6 # hpf 150 # lpf 1500 # lpq 0.25
     # room 0.6 # size 0.78 # amp 0.4
-  reedTrans = slow 8 $ s "sax" # n 5 # speedAt "c4" "a4 ~ ~ ~ ~ ~ ~ ~"
+  reedTrans = slow 8 $ speedAt "c4" "a4 ~ ~ ~ ~ ~ ~ ~" # s "sax" # n 5
     # sustain 5 # release 2.2 # hpf 140 # lpf 1100 # lpq 0.2
     # room 0.72 # size 0.85 # amp 0.54
-  reedOcc = s "sax" # n 5 # speedAt "c4" "g4 ~ a4 ~ d5 ~ b4 ~"
+  reedOcc = speedAt "c4" "g4 ~ a4 ~ d5 ~ b4 ~" # s "sax" # n 5
     # sustain 1.2 # release 0.55 # hpf 160 # lpf 1700 # lpq 0.25
     # room 0.58 # size 0.76 # amp 0.42
   -- --- trumpet: high, distant, never featured -----------------------------
   -- trump:5 is B5 (Tidal b6); trump:7 is E6 (Tidal e7). slow 16 means each
   -- written note lands once every 16 cycles; expect long silences between stabs.
-  trumpetOcc = slow 16 $ s "trump" # n 5 # speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  trumpetOcc = slow 16 $ speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 5
     # sustain 0.5 # release 0.35 # lpf 3000 # lpq 0.2 # room 0.7 # size 0.8 # amp 0.22
-  trumpetSteady = slow 16 $ s "trump" # n 7 # speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  trumpetSteady = slow 16 $ speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 7
     # sustain 0.5 # release 0.4 # hpf 300 # lpf 1600 # lpq 0.25 # room 0.8 # size 0.85 # amp 0.16
 
 -- Act I. Assess

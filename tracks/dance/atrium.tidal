@@ -83,8 +83,8 @@ xfadeIn 1 4 $ s kick
 xfadeIn 2 12 $ s "house:3*16"
   # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
   # hpf 520 # room 0.06 # size 0.16
-xfadeIn 3 20 $ s "jvbass" # n 0
-  # speedAt "fs2" bassA
+xfadeIn 3 20 $ speedAt "fs2" bassA
+  # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22
   # shape 0.2 # room 0.08 # size 0.2 # amp 0.95
 xfadeIn 4 28 $ pad hA
@@ -109,8 +109,8 @@ xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
 --    already there.
 d8 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
   # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
-d9 $ s "moog" # n 2
-  # speedAt "c4" hook
+d9 $ speedAt "c4" hook
+  # s "moog" # n 2
   # sustain 0.26 # release 0.2 # lpf 900 # lpq 0.35
   # room 0.35 # size 0.55 # amp 0.42 # pan 0.6
 
@@ -127,8 +127,8 @@ xfadeIn 6 4 $ struct "~ t ~ t ~ ~ t t"
   # speedAt "d5" stabs
   # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
   # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
-xfadeIn 9 4 $ s "moog" # n 2
-  # speedAt "c4" hook
+xfadeIn 9 4 $ speedAt "c4" hook
+  # s "moog" # n 2
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 
@@ -164,8 +164,8 @@ fadeMulti 4
   [ (2, every 8 (fast 2) $ s "house:3*16"
       # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
       # hpf 520 # room 0.06 # size 0.16)
-  , (3, s "jvbass" # n 0
-      # speedAt "fs2" bassA
+  , (3, speedAt "fs2" bassA
+      # s "jvbass" # n 0
       # sustain 0.2 # release 0.08 # lpf 720 # lpq 0.22
       # shape 0.2 # room 0.08 # size 0.2 # amp 0.95)
   , (6, struct "~ t ~ t ~ t ~ t"
@@ -173,8 +173,8 @@ fadeMulti 4
       # speedAt "d5" stabs
       # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
       # room 0.32 # size 0.52 # amp 0.46 # pan 0.42)
-  , (9, s "moog" # n 2
-      # speedAt "c4" hook
+  , (9, speedAt "c4" hook
+      # s "moog" # n 2
       # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
       # room 0.32 # size 0.5 # amp 0.46 # pan 0.6)
   ]
@@ -184,8 +184,8 @@ fadeMulti 4
 --    were, so the key change is the only new information. Two-bar fades, so the
 --    old and new chords overlap for one bar and hand over.
 xfadeIn 4 2 $ pad (hA |+ 5)
-xfadeIn 3 2 $ s "jvbass" # n 0
-  # speedAt "fs2" (bassA |+ 5)
+xfadeIn 3 2 $ speedAt "fs2" (bassA |+ 5)
+  # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 720 # lpq 0.22
   # shape 0.2 # room 0.08 # size 0.2 # amp 0.95
 xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"
@@ -193,8 +193,8 @@ xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"
   # speedAt "d5" (stabs |+ 5)
   # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
   # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
-xfadeIn 9 2 $ s "moog" # n 2
-  # speedAt "c4" (hook |+ 5)
+xfadeIn 9 2 $ speedAt "c4" (hook |+ 5)
+  # s "moog" # n 2
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 
@@ -267,8 +267,8 @@ xfadeIn 6 1 $ struct "~ t ~ t ~ t ~ t"
   # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
 xfadeIn 7 2 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
   # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56
-xfadeIn 9 2 $ s "moog" # n 2
-  # speedAt "c4" (hook |+ 5)
+xfadeIn 9 2 $ speedAt "c4" (hook |+ 5)
+  # s "moog" # n 2
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
@@ -282,8 +282,8 @@ glideBpm 124 8
 fadeSilence 8 [2, 5, 7, 8, 9, 10]
 xfadeIn 4 2 $ pad hA
   # release 1.2 # room 0.55 # size 0.7
-xfadeIn 3 2 $ s "jvbass" # n 0
-  # speedAt "fs2" bassA
+xfadeIn 3 2 $ speedAt "fs2" bassA
+  # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22
   # shape 0.2 # room 0.12 # size 0.26 # amp 0.9
 xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"

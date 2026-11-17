@@ -58,7 +58,10 @@ let glideBpm :: Double -> Double -> IO ()
 -- and arrangements (plus any genuinely local `allOrbits`).
 :{
 let -- Sample calibration: map a written Tidal note to the playback rate of a
-    -- sample whose natural pitch is `base`.
+    -- sample whose natural pitch is `base`. Put the score first in the `#`
+    -- chain: `#` takes its `whole`/`steps` from the left, so
+    -- `swing8 $ speedAt base score # s "sample"` swings the notes; with `s`
+    -- first every note keeps a bar-length `whole` and the swing cannot move it.
     speedAt :: Pattern Note -> Pattern Note -> ControlPattern
     speedAt base p = speed $ 2 ** (unNote <$> (p |- base) / 12)
     --

@@ -18,8 +18,8 @@ d1 $ s "<808bd*4 [808bd*4] [808bd 808bd 808bd ~] [808bd 808bd 808bd [808bd 808bd
   # n 0 # lpf 260 # amp 1.05
   # room 0.04 # size 0.12
 --    The bass walks the same four bars and turns up to d3 on the fourth.
-d2 $ s "bass1" # n 2
-  # speedAt "c2" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
+d2 $ speedAt "c2" "<[d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 ~ a2 ~ g2 a2] [d3 ~ d3 ~ f3 ~ a2 c3] [d3 ~ f3 a2 c3 ~ d3 ~]>"
+  # s "bass1" # n 2
   # sustain 0.5 # release 0.2 # lpf 650 # lpq 0.22
   # room 0.2 # size 0.38 # amp 0.92
 
@@ -49,8 +49,8 @@ d5 $ s "~ click:2 ~ click:2" # amp 0.4 # pan 0.55
 d5 $ s "~ cp ~ cp" # amp 0.5 # room 0.25 # size 0.35
 
 -- d6 · high piano answer — the Cantilever motif on `pluck:8` (D5)
-piano = s "pluck" # n 8
-  # speedAt "d5" "<a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~>"
+piano = speedAt "d5" "<a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~>"
+  # s "pluck" # n 8
   # sustain 0.5 # release 0.25 # lpf 3600
   # room 0.45 # size 0.6 # amp 0.5
 d6 $ slow 2 piano
@@ -69,8 +69,8 @@ d8 . degrade . slow 2 $ s "metal" # n (irand 10)
   # amp 0.3 # hpf 300 # lpf 2400 # room 0.6 # size 0.75
 
 -- d8 · reed — the trio's other voice, high and thin
-d8 $ slow 2 $ s "sax" # n 5
-  # speedAt "c4" "d5 ~ f5 ~ a5 ~ g5 ~"
+d8 $ slow 2 $ speedAt "c4" "d5 ~ f5 ~ a5 ~ g5 ~"
+  # s "sax" # n 5
   # release 0.6 # amp 0.32 # hpf 150 # lpf 1600 # lpq 0.25
   # room 0.6 # size 0.8
 
@@ -87,8 +87,8 @@ d1 $ s "808bd ~ 808bd ~" # n 0 # lpf 230 # amp 1.1
   # room 0.07 # size 0.2
 
 -- d2 · broken walk: same register and notes, pushed off the beat
-d2 $ s "bass1" # n 2
-  # speedAt "c2" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a2 ~ c3 ~] [d3 f3 a2 c3 d3 ~ ~ ~]>"
+d2 $ speedAt "c2" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a2 ~ c3 ~] [d3 f3 a2 c3 d3 ~ ~ ~]>"
+  # s "bass1" # n 2
   # sustain 0.45 # release 0.2 # lpf 700 # lpq 0.22
   # room 0.2 # size 0.38 # amp 0.9
 
@@ -101,8 +101,8 @@ d3 $ degradeBy 0.1 $ s "~ gretsch:17 ~ gretsch:17 ~ gretsch:17 ~ gretsch:17"
 --    sax line in D dorian. d6 takes the piano motif and runs it at 16x — a
 --    flicker of notes against the half-time bed. Evaluate the two together.
 
-d5 $ slow 2 $ s "sax" # n 5
-  # speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~ f4 ~ e4 ~] [d4 ~ ~ ~ ~ ~ ~ ~]>"
+d5 $ slow 2 $ speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~ f4 ~ e4 ~] [d4 ~ ~ ~ ~ ~ ~ ~]>"
+  # s "sax" # n 5
   # sustain 1.2 # release 1.0 # amp 0.4 # hpf 150 # lpf 1800 # lpq 0.25
   # room 0.65 # size 0.82
 
@@ -125,8 +125,8 @@ fadeSilence 16 [1]
 
 -- we are closing. The bass drops to a low D pedal and the bed's piano
 -- plays one last Dm9
-xfadeIn 2 8 $ slow 4 $ s "bass1" # n 2
-  # speedAt "c2" "d3 ~ ~ ~"
+xfadeIn 2 8 $ slow 4 $ speedAt "c2" "d3 ~ ~ ~"
+  # s "bass1" # n 2
   # sustain 2.4 # release 1.2 # lpf 480 # lpq 0.16
   # room 0.5 # size 0.72 # amp 0.8
 xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
