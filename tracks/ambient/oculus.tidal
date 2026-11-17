@@ -34,6 +34,7 @@ let synth n = s "supersaw"
 -- so the changes crossfade instead of leaving a gap. Tune lpf/pitch1 first.
 xfadeIn 4 16 bed1
 
+
 -- creepy choir. Hmm, a hummed G♯3, transposed to the chord tones. Two
 -- bars per chord, long sustain, most of the reverb.
 d5 $ slow 2 $ s "hmm"
@@ -52,10 +53,12 @@ xfadeIn 4 24 $ synth "<[f3 ~ ~ af3 ~ ~ c4 ~] [ef4 ~ ~ c4 ~ ~ bf3 ~] [g3 ~ ~ bf3 
   # lpf 2600 # amp 0.1 # legato 3
 xfadeIn 5 24 silence -- choir
 
+
 fadeSilence 16 [
   1, -- "bells"
   2] -- guitar
 
 d4 bed1
 
-fadeSilence 16 [3,4]
+
+fadeSilence 24 [3,4]

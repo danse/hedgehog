@@ -81,8 +81,8 @@ let
 
 -- 1. Intro — establish texture fragments and complex bass form
 
-d1 $ spaceTex # gain 0.66
-d2 $ bassMain # lpf 260 # gain 0.86
+d1 . spaceTex # gain 0.66
+d2 . bassMain # lpf 260 # gain 0.86
 
 -- after a few cycles, add sparse glitch detail and a hint of harmony
 d1 $ stack [spaceTex, glitchTex]
@@ -115,15 +115,16 @@ d7 kick
 d6 hats
 d8 $ degradeBy 0.2 perc
 d1 $ stack [glitchTex, metalTex]
-xfadeIn 3 16 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
+xfadeIn 3 24 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
 
 xfadeIn 3 16 stabHit -- alternate melody
 
 d2 $ bassMain # lpf (range 200 780 $ slow 8 sine) # lpq 0.14
 -- melodic answer (sparse)
-d9 motif
+d9 $ motif # amp 0.5
 
-xfadeIn 9 8 motifArp -- denser
+
+xfadeIn 9 8 $ motifArp # amp 0.5 -- denser
 
 -- 4. Breakdown — strip rhythm/detail, expose bass structure
 
@@ -132,12 +133,12 @@ fadeSilence 8 [5,6,7,8,9]
 d2 bassBreak
 d4 $ bassAnchor # lpf 240
 
+
 -- switch harmony continuity, thinner (no pads/drones)
 d3 $ chordFlow # lpf 1300
 d1 spaceTex
 d10 burst
 
--- here the rhythmic texture is complex enough to indulge
 
 -- 5. Rebuild — pulse and detail resurface, bass takes the lead
 
@@ -153,17 +154,15 @@ fadeMulti 16 [
   (8, degrade perc),
   (10, silence)]
 
--- alternate harmony colour: pulsing casio + arpy stabs
-xfadeIn 1 8 $ stack [metalTex, degradeBy 0.25 spaceTex]
-xfadeIn 3 8 $ stack [chordPulse, chordStab]
+-- optional harmony colour: pulsing casio + arpy stabs
+fadeMulti 8 [
+  (1, stack [metalTex, degradeBy 0.25 spaceTex]),
+  (3, stack [chordPulse, chordStab])]
 
--- the pulsing casio is worth listening for a while
 
 fadeMulti 16 [
-  -- optional: add the kick for the last wave
-  (7, kick),
-  -- higher, more active motif
-  (9, motifArp)]
+  (7, kick),  -- optional: add the kick for the last wave
+  (9, motifArp)] -- higher, more active motif
 
 -- 6. Outro — dissolve to bass fragments and sparse texture, then silence
 
