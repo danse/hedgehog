@@ -57,14 +57,14 @@ xfadeIn 5 40 $ slow 2 $ s "hedge_pad" # n hA
 
 -- 2. Colour — the guitar answers on the E and A bars only. It is a C-major
 --    sample transposed, so keep it off the two minor bars.
-d6 $ speedAt "c4" "~ ~ e4 a4"
+d6 . degrade $ speedAt "c4" "~ ~ e4 a4"
   # s "gtr" # n 0
   # sustain 0.2 # release 0.15 # lpf 2800 # lpq 0.25
   # room 0.35 # size 0.55 # amp 0.45
 
 -- 3. Hook — a Moog line filtered down to a mumble: a shape, not a tune,
 --    until section 6 opens it.
-d7 $ speedAt "c5" hook
+d7 . degradeBy 0.3 $ speedAt "c5" hook
   # s "moog" # n 2
   # sustain 0.24 # release 0.12 # lpf 850 # lpq 0.3
   # room 0.3 # size 0.45 # amp 0.5
@@ -76,12 +76,12 @@ d8 $ s "~ rs ~ rs ~ rs ~ rs" # n 0 # amp 0.32 # pan 0.45
   # room 0.2 # size 0.3
 
 -- d8 · sixteenth tick
-d8 $ s "click:2*16" # amp 0.4 # pan 0.55 # hpf 900
+d8 $ s "click:2*16" # amp 0.6 # pan 0.55 # hpf 900
   # room 0.12 # size 0.2
 
 -- d8 · air, one breath every four cycles
 d8 $ slow 4 $ s "breath" # sustain 0.5
-  # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.5
+  # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 1
 
 -- 5. Bed B — sparser
 --
@@ -120,6 +120,7 @@ xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
   # sustain 5 # release 2 # lpf 360 # lpq 0.15
   # room 0.45 # size 0.65 # amp 0.85
 
+-- when faded out you may want to silence this soon
 xfadeIn 4 8 $ speedAt "c4" "~ ~ ~ a4"
   # s "gtr" # n 0
   # sustain 0.6 # release 0.8 # lpf 1800 # lpq 0.3
@@ -138,7 +139,7 @@ d7 $ speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
 
--- sharp: after the second pass: the kit and lead stop on the
+-- sharp drop: after the second pass: the kit and lead stop on the
 -- downbeat, the bass holds A, and the pad becomes one last Amaj9
 fadeSilence 0.25 [1, 2, 3, 7]
 xfadeIn 4 2 $ slow 4 $ s "jvbass" # n 0

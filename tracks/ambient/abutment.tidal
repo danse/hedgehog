@@ -126,7 +126,7 @@ let
   air = slow 8 $ s "breath" # n 0 # sustain 0.5 # hpf 500 # lpf 2400
     # room 0.65 # size 0.82 # amp 0.34
   windBed = slow 4 $ s "wind" # n (irand 10) # sustain 8
-    # hpf 400 # lpf 1500 # room 0.7 # size 0.85 # amp 0.22
+    # hpf 400 # lpf 1500 # room 0.7 # size 0.85 # amp 0.8
   gravel = degradeBy 0.6 $ slow 8 $ s "pebbles"
     # speed (range 0.6 1.1 $ slow 8 rand) # hpf 500 # lpf 3000
     # room 0.7 # size 0.85 # amp 0.12
@@ -148,7 +148,7 @@ let
   -- written note lands once every 16 cycles; expect long silences between stabs.
   trumpetOcc = slow 16 $ speedAt "b6" "~ ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 5
     # sustain 0.5 # release 0.35 # lpf 3000 # lpq 0.2 # room 0.7 # size 0.8 # amp 0.22
-  trumpetSteady = slow 16 $ speedAt "e7" "~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ ~ ~" # s "trump" # n 7
+  trumpetSteady = slow 16 $ speedAt "e7" "~ ~ ~ ~ ~ ~ a6 _ _ _ ~ ~ ~ ~ ~ ~" # s "trump" # n 7
     # sustain 0.5 # release 0.4 # hpf 300 # lpf 1600 # lpq 0.25 # room 0.8 # size 0.85 # amp 0.16
 
 -- Act I. Assess
@@ -228,7 +228,7 @@ xfadeIn 3 32 $ stack [air, gravel]
 -- 5. Transfer — props eased out; the load moves into the abutment. It holds.
 -- ~36 cycles (~94 s at 92 BPM).
 
-glideBpm 92 16 -- from 94
+glideBpm 92 30 -- from 94
 d2 $ bassTrans # amp 0.5
 d6 brush
 d7 ride
@@ -256,8 +256,7 @@ d8 kickSoft
 xfadeIn 1 16 compOcc
 xfadeIn 4 24 colourOcc
 
--- warm melody
-d9 reedOcc
+d9 reedOcc -- warm melody, but short
 fadeMulti 24 [
   (10, trumpetOcc),
   (5, degradeBy 0.5 wood),
@@ -277,15 +276,16 @@ fadeSilence 16 [5,6,7,8,9,10]
 
 d2 $ bassSteady # amp 0.4
 
+-- rhythm change
 d1 pianoSteady
-xfadeIn 3 24 $ stack [air, windBed, gravel] -- + windBed
-
--- a last high shadow
-fadeMulti 24 [
+fadeMulti 16 [
+  (3, stack [air, gravel, windBed]), -- + windBed
+   -- a last high shadow
   (4, pianoAfter # amp 0.3),
   (10, trumpetSteady)]
                  
 -- leave this ringing
+
 fadeSilence 32 [1,2,3,4,10]
 
 hush
