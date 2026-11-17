@@ -17,8 +17,8 @@ setbpm 72
 let
   -- bassA and bassB are 4 cycles each; cat makes the 8-cycle form. Anchor and
   -- ghost layers add rhythmic structure without cluttering the low root.
-  bassA = "<[d2 ~ a2 d3 ~ ~ f2 ~] [d2 ~ ~ a2 ~ c3 ~ bb1] [d2 f2 ~ a2 ~ d3 c3 ~] [bb1 ~ d2 ~ a2 ~ f2 ~]>"
-  bassB = "<[d2 ~ a2 ~ f2 d3 ~ c3] [a1 ~ d2 ~ c3 ~ bb1 a1] [d2 a2 ~ f2 ~ d3 ~ c3] [bb1 d2 ~ a2 ~ f2 ~ d2]>"
+  bassA = "<[d2 ~ a2 d3 ~ ~ f2 ~] [d2 ~ ~ a2 ~ c3 ~ bf1] [d2 f2 ~ a2 ~ d3 c3 ~] [bf1 ~ d2 ~ a2 ~ f2 ~]>"
+  bassB = "<[d2 ~ a2 ~ f2 d3 ~ c3] [a1 ~ d2 ~ c3 ~ bf1 a1] [d2 a2 ~ f2 ~ d3 ~ c3] [bf1 d2 ~ a2 ~ f2 ~ d2]>"
   bassPhrase = cat [bassA, bassB]  -- 8 cycles
   bassMain = slow 8 $ note bassPhrase # s "hedge_sine"
     # sustain "<0.55 0.35 0.8 0.45 0.3 0.75 0.4 0.5 0.6 0.35 0.85 0.4 0.3 0.7 0.45 0.55>"
@@ -26,7 +26,7 @@ let
     # lpf (slow 4 $ range 150 620 sine)
     # lpq 0.12
     # room 0.18 # size 0.45
-  bassAnchor = slow 4 $ note "<d2 a1 bb1 [c2 d2]>" # s "hedge_sine"
+  bassAnchor = slow 4 $ note "<d2 a1 bf1 [c2 d2]>" # s "hedge_sine"
     # sustain 0.45 # gain 0.86 # lpf 300 # lpq 0.08 # room 0.12 # size 0.35
   bassGhost = degradeBy 0.45 $ slow 2 $ note "d3 ~ f3 ~ a3 ~ c4 ~" # s "hedge_sine"
     # sustain (range 0.12 0.35 $ slow 3 rand)
@@ -34,7 +34,7 @@ let
   bassDrive = degradeBy 0.1 $ slow 4 $ note bassPhrase # s "hedge_sine"
     # sustain (range 0.22 0.65 $ slow 3 rand)
     # gain 0.88 # lpf (range 180 980 $ slow 2 sine) # lpq 0.16 # room 0.15 # size 0.4
-  bassBreak = slow 8 $ note "<d2 ~ ~ ~ bb1 ~ ~ ~ d2 ~ ~ c2 ~ ~ bb1 ~>" # s "hedge_sine"
+  bassBreak = slow 8 $ note "<[d2 ~ ~ ~ bf1 ~ ~ ~ d2 ~ ~ c2 ~ ~ bf1 ~]>" # s "hedge_sine"
     # sustain 0.9 # gain 0.88 # lpf 220 # lpq 0.1 # room 0.22 # size 0.5
   -- ---------------------------------------------------------------------------
   -- Rhythm / pulse
@@ -51,15 +51,15 @@ let
   -- Harmony / texture / melody (no pads, no drones)
   -- ---------------------------------------------------------------------------
   -- harmony: more continuous pitched motion (arpy/moog/casio), no sustained pad beds
-  chordFlow = slow 2 $ n "<d4 f4 a4 c5 a4 f4 bb3 d4 f4 a4 g4 e4 c4 e4 g4 b4 a4 e4 a3 c4 e4 g4 f4 d4>"
+  chordFlow = slow 2 $ n "<[d4 f4 a4 c5 a4 f4 bf3 d4 f4 a4 g4 e4 c4 e4 g4 b4 a4 e4 a3 c4 e4 g4 f4 d4]>"
     # s "arpy" # gain 0.82 # legato 0.85 # lpf (range 1100 2600 $ slow 8 sine) # room 0.32 # size 0.42
-  chordStab = degradeBy 0.08 $ slow 2 $ n "<[d4,f4,a4] [a3,c4,e4] [bb3,d4,f4] [f3,a3,c4] [c4,e4,g4] [g3,b3,d4] [a3,c4,e4] [e3,a3,c4]>" # s "arpy"
+  chordStab = degradeBy 0.08 $ slow 2 $ n "<[d4,f4,a4] [a3,c4,e4] [bf3,d4,f4] [f3,a3,c4] [c4,e4,g4] [g3,b3,d4] [a3,c4,e4] [e3,a3,c4]>" # s "arpy"
     # legato 0.65 # lpf (range 900 2400 $ slow 8 sine) # room 0.35 # size 0.45
     # amp 0.1
-  chordStabAlt = slow 2 $ n "<[d4,a4,c5] [f4,c5,a4] [bb3,f4,d4] [a3,e4,c4]>" # s "moog"
+  chordStabAlt = slow 2 $ n "<[d4,a4,c5] [f4,c5,a4] [bf3,f4,d4] [a3,e4,c4]>" # s "moog"
     # legato 0.55 # lpf (range 1200 2000 $ slow 6 sine) # room 0.3 # size 0.4
     # amp 0.1
-  chordPulse = s "casio(5,8,<0 1 2>)" # n "<d4 f4 a4 bb3 c4 a3>"
+  chordPulse = s "casio(5,8,<0 1 2>)" # n "<d4 f4 a4 bf3 c4 a3>"
     # legato 0.5 # speed (choose [1,1,2]) # lpf 2200 # room 0.28 # size 0.38
   stabHit = sometimes (fast 2) $ s "stab(3,8,<0 3>)" # n (irand 8) # gain 0.76 # lpf 2200 # room 0.25 # size 0.35
   -- texture: fragmented/granular feel from samples (no continuous drone)
@@ -70,7 +70,7 @@ let
   metalTex = degradeBy 0.6 $ slow 4 $ s "industrial(2,8)" # n (irand 8) # speed 0.9
     # gain 0.72 # pan rand # lpf 2600 # room 0.35 # size 0.45
   -- motif: sparse melodic answers
-  motif = slow 2 $ note "<d5 ~ a5 ~ f5 ~ e5 ~ ~ c5 ~ a4 ~ d5 ~ ~>" # s "pluck"
+  motif = slow 2 $ note "<[d5 ~ a5 ~ f5 ~ e5 ~ ~ c5 ~ a4 ~ d5 ~ ~]>" # s "pluck"
     # delay 0.65 # room 0.8 # size 0.7 # lpf 2600 # amp 0.5
   motifArp = degradeBy 0.25 $ slow 2 $ n "d5 f5 a5 c6 a5 f5" # s "arpy"
     # legato 0.25 # speed (choose [1,1,1,2]) # room 0.4 # size 0.5 # lpf 3200
@@ -81,8 +81,8 @@ let
 
 -- 1. Intro — establish texture fragments and complex bass form
 
-d1 . spaceTex # gain 0.66
-d2 . bassMain # lpf 260 # gain 0.86
+d1 $ spaceTex # gain 0.66
+d2 $ bassMain # lpf 260 # gain 0.86
 
 -- after a few cycles, add sparse glitch detail and a hint of harmony
 d1 $ stack [spaceTex, glitchTex]
