@@ -81,10 +81,10 @@ fadeSilence 16 [
 -- the lead returns from below; the line circles inside a fourth (f4-bf4) and
 -- leans on bf4 over the last chord.
 xfadeIn 2 8 $ speedAt "cs4" (cat [
-    "f4 g4 ab4 g4 ~ bf4 ~ ~",
-    "bf4 ~ ab4 g4 ~ f4 ab4 ~",
-    "g4 ab4 bf4 ~ ab4 ~ f4 ~",
-    "g4 ab4 bf4 ~ ~ ab4 bf4 ~"])
+    "f4 g4 af4 g4 ~ bf4 ~ ~",
+    "bf4 ~ af4 g4 ~ f4 af4 ~",
+    "g4 af4 bf4 ~ af4 ~ f4 ~",
+    "g4 af4 bf4 ~ ~ af4 bf4 ~"])
   # s "notes:0"
   # sustain 0.1 # release 0.35 # delay 0.55 # delaytime 0.5
   # room 0.85 # size 0.9 # amp 1.1
