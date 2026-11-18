@@ -10,6 +10,11 @@ s.statusWatcher.serverRunning = true;
 s.statusWatcher.notified = true;
 s.statusWatcher.instVarPut(\sampleRate, 48000.0);
 s.statusWatcher.instVarPut(\actualSampleRate, 48000.0);
+
+// scsynth is started separately with -b 4096, but sclang cannot discover that
+// from the faked status, so its allocator still uses the default 1024 and dies
+// partway through Dirt-Samples (2040 files). Keep these two numbers in sync.
+s.options.numBuffers = 4096;
 s.newAllocators;
 s.sendDefaultGroups;
     ~dirt = SuperDirt(2, s);

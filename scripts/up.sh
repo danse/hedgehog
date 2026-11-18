@@ -20,7 +20,7 @@ if pgrep -u "$USER" -f 'sclang.*BootSuperDirt.scd' >/dev/null 2>&1; then
 else
   echo "Starting scsynth + SuperDirt (pw-jack)..."
   : > logs/scsynth.log
-  nohup pw-jack scsynth -u 57110 -a 1024 -i 2 -o 2 -b 2048 \
+  nohup pw-jack scsynth -u 57110 -a 1024 -i 2 -o 2 -b 4096 \
     -n 32768 -m 131072 -w 128 -S 48000 -R 0 -C 1 -l 1 \
     >> logs/scsynth.log 2>&1 &
   echo $! > logs/scsynth.pid
