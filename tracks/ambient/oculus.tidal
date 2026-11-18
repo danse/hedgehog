@@ -12,7 +12,11 @@ d1 $ s "~ ~ ~ ~ ~ ~ ~ sundance:3"
 
 -- lead. notes:0, a plucked C♯4, tuned to a sparse E♭-major line. The gaps
 -- are deliberate — it answers the chords instead of filling them.
-d2 $ speedAt "cs4" "<[g4 ~ ~ bf4 ~ ~ c5 ~] [ef5 ~ ~ c5 ~ bf4 ~ ~] [c5 ~ ~ ef5 ~ ~ g5 ~] [f5 ~ ~ d5 ~ bf4 ~ ~]>"
+d2 $ speedAt "cs4" (cat [
+    "g4 ~ ~ bf4 ~ ~ c5 ~",
+    "ef5 ~ ~ c5 ~ bf4 ~ ~",
+    "c5 ~ ~ ef5 ~ ~ g5 ~",
+    "f5 ~ ~ d5 ~ bf4 ~ ~"])
   # s "notes:0"
   # sustain 0.1 # release 0.35 # delay 0.55 # delaytime 0.5
   # room 0.85 # size 0.9 # amp 1.1
@@ -28,28 +32,44 @@ let synth n = s "supersaw"
       # note n
       # voice 0.3 # resonance 0.15 # lfo 0.2 # decay 0.1
       # hpf 100 # room 0.85 # size 0.9
-    bed1 = synth "<[g2,bf2,d3] [c2,ef2,g2,bf2] [af2,c3,ef3,g3] [bf2,d3,f3]>"
+    bed1 = synth (cat [
+        "g2,bf2,d3",
+        "c2,ef2,g2,bf2",
+        "af2,c3,ef3,g3",
+        "bf2,d3,f3"])
       # legato 1.1 # pitch1 1.4 # lpf 1500 # amp 0.2
 -- bed. supersaw pad; legato 1.1 lets each bar's chord ring into the next,
 -- so the changes crossfade instead of leaving a gap. Tune lpf/pitch1 first.
-xfadeIn 4 16 bed1
+xfadeIn 4 24 bed1
 
 
 -- creepy choir. Hmm, a hummed G♯3, transposed to the chord tones. Two
 -- bars per chord, long sustain, most of the reverb.
 d5 $ slow 2 $ s "hmm"
-  # speedAt "gs3" "<[ef4,g4,bf4] [ef4,g4,bf4] [c4,ef4,g4] [bf3,d4,f4]>"
+  # speedAt "gs3" (cat [
+      "ef4,g4,bf4",
+      "ef4,g4,bf4",
+      "c4,ef4,g4",
+      "bf3,d4,f4"])
   # sustain 1.2 # release 1.5 # room 0.85 # size 0.9 # amp 0.6
 xfadeIn 2 16 silence -- lead
 
 -- guitar answer. The lead line mirrored around F4 (n -> 130 - n) and dropped
 -- an octave: E♭3-E♭4, between the bed and the choir.
-xfadeIn 2 8 $ speedAt "c2" "<[ef4 ~ ~ c4 ~ ~ bf3 ~] [g3 ~ ~ bf3 ~ ~ c4 ~] [bf3 ~ ~ g3 ~ ~ ef3 ~] [f3 ~ ~ af3 ~ ~ c4 ~]>"
+xfadeIn 2 16 $ speedAt "c2" (cat [
+    "ef4 ~ ~ c4 ~ ~ bf3 ~",
+    "g3 ~ ~ bf3 ~ ~ c4 ~",
+    "bf3 ~ ~ g3 ~ ~ ef3 ~",
+    "f3 ~ ~ af3 ~ ~ c4 ~"])
   # s "gtr:0"
 
 -- synth answer. The same four bars, rotated one bar late, so each phrase lands
 -- over the next chord; the pad's own voice carries it.
-xfadeIn 4 24 $ synth "<[f3 ~ ~ af3 ~ ~ c4 ~] [ef4 ~ ~ c4 ~ ~ bf3 ~] [g3 ~ ~ bf3 ~ ~ c4 ~] [bf3 ~ ~ g3 ~ ~ ef3 ~]>"
+xfadeIn 4 24 $ synth (cat [
+    "f3 ~ ~ af3 ~ ~ c4 ~",
+    "ef4 ~ ~ c4 ~ ~ bf3 ~",
+    "g3 ~ ~ bf3 ~ ~ c4 ~",
+    "bf3 ~ ~ g3 ~ ~ ef3 ~"])
   # lpf 2600 # amp 0.1 # legato 3
 xfadeIn 5 24 silence -- choir
 
@@ -61,4 +81,27 @@ fadeSilence 16 [
 d4 bed1
 
 
-fadeSilence 24 [3,4]
+-- the lead returns from below; the line circles inside a fourth (f4-bf4) and
+-- leans on bf4 over the last chord.
+xfadeIn 2 8 $ speedAt "cs4" (cat [
+    "f4 g4 ab4 g4 ~ bf4 ~ ~",
+    "bf4 ~ ab4 g4 ~ f4 ab4 ~",
+    "g4 ab4 bf4 ~ ab4 ~ f4 ~",
+    "g4 ab4 bf4 ~ ~ ab4 bf4 ~"])
+  # s "notes:0"
+  # sustain 0.1 # release 0.35 # delay 0.55 # delaytime 0.5
+  # room 0.85 # size 0.9 # amp 1.1
+
+-- d6 · tenor bass. moog:1 is C3; the cell rocks root-fifth-third, dry
+-- enough to sit between the high recall and the drone.
+d6 $ speedAt "c3" (cat [
+    "ef3 ~ bf2 ef3 ~ g3 ef3 ~",
+    "c3 ~ g2 c3 ~ ef3 c3 ~",
+    "af2 ~ ef3 af2 ~ c3 af2 ~",
+    "bf2 ~ f3 bf2 ~ d3 bf2 ~"])
+  # s "moog:1"
+  # sustain 0.2 # release 0.35 # lpf 700 # lpq 0.12 # hpf 70
+  # room 0.2 # size 0.35 # amp 0.8
+
+
+fadeSilence 8 [2,3,4,6]
