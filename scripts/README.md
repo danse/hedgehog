@@ -7,9 +7,14 @@ visuals. Paths are relative to the repo root.
 
 | Script | Purpose |
 |---|---|
-| `up.sh` | Start SuperDirt (via `pw-jack sclang`) and open Emacs on the project. `--no-emacs` starts only SuperCollider. |
+| `up.sh` | Start `scsynth` and SuperDirt under `pw-jack`, route audio to Bluetooth, and open Emacs on the project. `--no-emacs` starts only SuperCollider. |
 | `down.sh` | Stop SuperDirt and project `scsynth`. |
 | `edit.sh` | Open the project-contained Emacs in `tracks/`. |
+
+`up.sh` starts `scsynth` as a separate process before `sclang`. If `sclang`
+spawns it instead, it inherits sclang's UDP socket on port 57120 and steals
+OSC replies and Tidal messages, so SuperDirt starts but stays silent. The boot
+file does not boot a server; run `pw-jack scsynth ...` first if starting by hand.
 
 ## Audio
 
@@ -47,9 +52,11 @@ That produces two confusing symptoms:
   and the virtual mic goes quiet. Re-run `vis-audio-route.sh start` (it is
   idempotent) after switching sinks, then check the HUD.
 
-`audio-bt.sh` predates this: it finds the headset by name (`Vultech octopus`,
-node `-133`), so it gives up on a device that reports as plain `Bluetooth` and
-leaves the ports unlinked. Use the `pw-link` lines above in that case.
+`audio-bt.sh` selects the routable `bluez_output` `Audio/Sink` node, so it no
+longer mistakes the device or the internal driver for a default sink. It also
+unmutes the headset, sets a safe volume and links `SuperCollider:out_1/2` to
+that sink's JACK playback ports. If your headset reports under a different
+name, use the `pw-link` lines above.
 
 ## Visuals
 
@@ -57,6 +64,11 @@ leaves the ports unlinked. Use the `pw-link` lines above in that case.
 |---|---|
 | `vis-audio-route.sh {start\|status\|stop}` | Create/link `Hydra-Virtual-Mic`, set it as default source, restore on stop. |
 | `vis-hydra-up.sh` | Start routing, serve `visuals/hydra` on `localhost:8000`, open the browser. |
+
+`vis-audio-route.sh start` preserves the default sink's volume and mute state.
+Without this, starting `pw-loopback` can make WirePlumber reapply an old saved
+volume and drop the headset to near-silence. It also only saves/restores real
+`Audio/Source` nodes, so a stale sink ID cannot become the default source.
 | `vis-hydra-swap.sh <n>` | Set the fallback cue sketch (1-9) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
 
 See [visuals/README.md](../visuals/README.md) and

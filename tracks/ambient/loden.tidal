@@ -1,0 +1,343 @@
+-- Loden — cinematic ambient
+-- 88 BPM · F minor / A♭ major. Four-bar loop: Fm9 | D♭maj9 | E♭6/9 | Cm7.
+-- No drums. Long-form: xfadeIn/fadeMulti/fadeSilence for amplitude,
+-- fadeIn/fadeOut for density. Evaluate sections in order; hush is separate.
+-- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals are `s`/`f`.
+
+glideBpm 88 24
+
+let
+  -- string bed; replaces hedge_pad with the Hammond's string ensemble drawbar
+  bed = slow 4 $ note (cat [
+      "f3,af3,c4,ef4",
+      "df3,f3,af3,c4",
+      "ef3,g3,bf3,f4",
+      "c3,ef3,g3,bf3"])
+    # s "superhammond" # voice 4 # pF "vibrato" 0.18 # pF "vrate" 5
+    # sustain 4 # lpf 1300 # room 0.9 # size 0.85 # amp 0.32
+  --
+  -- the ritual holds the opening chord; the bass-violin drawbar keeps it low
+  ritualBed = slow 4 $ note "f3,af3,c4,ef4"
+    # s "superhammond" # voice 0 # pF "vibrato" 0.1 # pF "vrate" 3
+    # sustain 10 # lpf 900 # room 0.9 # size 0.85 # amp 0.32
+  --
+  -- Morricone saw: long notes with swung pickups into the next phrase
+  sawLead = swing8 $ note (cat [
+      "c4 ~ ~ ~ ~ ~ g4 ~ af4 ~ ~ ~ g4 ~ ef4 ~",
+      "df4 ~ ~ ~ ~ ~ c4 ~ f4 ~ ~ ~ c4 ~ af4 ~",
+      "bf3 ~ ~ ~ ~ ~ f4 ~ g4 ~ ~ ~ f4 ~ ef4 ~",
+      "ef4 ~ ~ ~ ~ ~ bf3 ~ c4 ~ ~ ~ bf3 ~ g4 ~"])
+    # s "supersaw" # voice 0.35 # resonance 0.18 # lfo 1.6
+    # pitch1 0.6 # sustain 2.6 # decay 0.12
+    # lpf 2800 # room 0.85 # size 0.9 # amp 0.42
+  -- the call/response gatings are reused across several sections
+  sawAsk = when odd (const silence) sawLead
+  sawAnswer = when even (const silence) sawLead
+  --
+  -- filtered air, one root per bar
+  air = note (cat ["f2", "df2", "ef2", "c2"])
+    # s "supernoise" # resonance 0.28 # voice 0.45 # pitch1 0.7 # rate 0.5
+    # sustain 6 # lpf 620 # hpf 110 # room 0.9 # size 0.9 # amp 0.12
+  --
+  -- fine airborne grain; texture rather than a voice
+  dust = slow 2 $ note (cat [
+      "af3 ~ ~ ~ df3 ~ ~ ~",
+      "df3 ~ ~ ~ af3 ~ ~ ~",
+      "ef3 ~ ~ ~ c3 ~ ~ ~",
+      "c3 ~ ~ ~ ef3 ~ ~ ~"])
+    # s "supernoise" # resonance 0.45 # voice 0.3 # pitch1 1.2 # rate 0.8
+    # sustain 2 # hpf 2200 # lpf 5200 # pan rand # room 0.9 # size 0.9 # amp 0.1
+  --
+  -- swung tremolo picking; an eight-stroke pulse, orbit 1 keeps the wobble off
+  tremolo = swing8 $ note (cat [
+      "af4 ~ af4 ~ af4 ~ af4 ~ af4 ~ af4 ~ af4 ~ af4 ~",
+      "f4 ~ f4 ~ f4 ~ f4 ~ f4 ~ f4 ~ f4 ~ f4 ~",
+      "g4 ~ g4 ~ g4 ~ g4 ~ g4 ~ g4 ~ g4 ~ g4 ~",
+      "ef4 ~ ef4 ~ ef4 ~ ef4 ~ ef4 ~ ef4 ~ ef4 ~ ef4 ~"])
+    # s "supermandolin" # detune 0.35 # sustain 0.55
+    # orbit 1 # tremolorate 5.5 # tremolodepth 0.85
+    # pan 0.42 # room 0.8 # size 0.8 # amp 2
+  --
+  -- bass violin, not a synth bass: roots and fifths with a swung offbeat
+  lowStrings = swing8 $ note (cat [
+      "f2 ~ ~ ~ f2 ~ c3 ~",
+      "df2 ~ ~ ~ df2 ~ af2 ~",
+      "ef2 ~ ~ ~ ef2 ~ bf2 ~",
+      "c2 ~ ~ ~ c2 ~ g2 ~"])
+    # s "superhammond" # voice 0 # pF "vibrato" 0.12 # pF "vrate" 4
+    # sustain 2.5 # lpf 520 # room 0.55 # size 0.6 # amp 0.34
+  --
+  -- high glints; three lean strokes a bar, with the vibraphone's slow tremolo
+  glints = swing8 $ note (cat [
+      "c5 ~ ~ ~ ~ ~ c5 ~ ~ ~ c5 ~ ~ ~ ~ ~",
+      "~ ~ f5 ~ ~ ~ ~ ~ f5 ~ f5 ~ ~ ~ ~ ~",
+      "bf4 ~ ~ ~ ~ ~ ~ ~ bf4 ~ ~ ~ d5 ~ ~ ~",
+      "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"])
+    # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
+    # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 3
+  --
+  -- brighter glints in a long-short shuffle for the promised order
+  glintsUtopia = swing8 $ note (cat [
+      "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ ef5 ~ ~ ~ g5 ~",
+      "df5 ~ f5 ~ ~ ~ df5 ~ df5 ~ af5 ~ ~ ~ f5 ~",
+      "bf4 ~ d5 ~ ~ ~ bf4 ~ bf4 ~ g5 ~ ~ ~ d5 ~",
+      "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"])
+    # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
+    # decay 0.6 # sustain 1.8 # room 0.85 # size 0.9 # amp 3
+  --
+  -- clear whistle pitch with a thin veil of air and slight pitch drift
+  whistle = swing8 $ note (cat [
+      "~ ~ ~ ~ ~ ~ ~ ~ ef7 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ df7 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ef7 ~ ~ ~ ~ ~ ~ ~"])
+    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+    # attack 0.12 # release 0.9 # sustain 0.6
+    # room 0.9 # size 0.9 # amp 3
+  -- the answer sits on bars 2 and 4; the ask sits on bars 1 and 3
+  whistleReply = when even (const silence) whistle
+  whistleAsk = when odd (const silence) whistle
+  --
+  -- the question: a phrase, not a single note
+  whistleQuestion = swing8 $ note (cat [
+      "~ ~ ef7 ~ ~ ~ g6 ~ ~ ~ ~ df7 ~ ~ ~ ~",
+      "~ ~ df7 ~ ~ ~ af6 ~ ~ ~ c7 ~ ~ ~ ~ ~",
+      "~ ~ g6 ~ ~ ~ bf5 ~ ~ ~ ef7 ~ ~ ~ ~ ~",
+      "~ ~ ef7 ~ ~ ~ c7 ~ ~ ~ g6 ~ ~ ~ ~ ~"])
+    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+    # attack 0.12 # release 1.4 # sustain 0.5
+    # room 0.9 # size 0.9 # amp 3
+  --
+  -- distant horn: slow brass leaning back on the offbeat
+  horn = swing8 $ note (cat [
+      "~ ~ af4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ df5 ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ef5 ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012 # pF "breath" 0.07
+    # attack 0.3 # release 1.6 # sustain 1.2
+    # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
+  --
+  -- elongated stabs: the utopia announcing itself
+  hornStab = swing8 $ note (cat [
+      "~ ~ af4 ~ ~ ~ ~ ~ ~ ~ df5 ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ df5 ~ ~ ~ ~ ~ ~ ~ ef5 ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ af4 ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012 # pF "breath" 0.07
+    # attack 0.08 # release 1.8 # sustain 0.5
+    # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
+  --
+  -- sustained bowed shimmer: a separate voice from the plucked tremolo
+  strings = slow 4 $ note (cat [
+      "af4,c5,ef5",
+      "f4,af4,df5",
+      "g4,bf4,c5",
+      "ef4,g4,bf4"])
+    # s "hedge_strings" # pF "limitertype" 0
+    # pF "vib" 5 # pF "depth" 0.006
+    # pF "tremrate" 6.5 # pF "tremdepth" 0.18
+    # attack 0.8 # release 1.4 # sustain 3.4
+    # pan 0.55 # room 0.85 # size 0.9 # amp 3
+  --
+  -- four-note bowed chord for the richest melodic sections
+  stringsUtopia = slow 4 $ note (cat [
+      "af4,c5,ef5,af5",
+      "f4,af4,df5,f5",
+      "g4,bf4,c5,g5",
+      "ef4,g4,bf4,ef5"])
+    # s "hedge_strings" # pF "limitertype" 0
+    # pF "vib" 5 # pF "depth" 0.006
+    # pF "tremrate" 6.5 # pF "tremdepth" 0.18
+    # attack 0.8 # release 2.2 # sustain 3.4
+    # pan 0.55 # room 0.9 # size 0.9 # amp 3
+  --
+  -- reedy melodica: a swung mid-high answer between strings and whistle
+  melodica = swing8 $ note (cat [
+      "c5 ~ ef5 ~ ~ ~ g5 ~ c5 ~ g5 ~ ~ ~ ef5 ~",
+      "f5 ~ df5 ~ ~ ~ af5 ~ f5 ~ af5 ~ ~ ~ df5 ~",
+      "g5 ~ bf4 ~ ~ ~ ef5 ~ g5 ~ ef5 ~ ~ ~ bf4 ~",
+      "ef5 ~ c5 ~ ~ ~ g5 ~ ef5 ~ g5 ~ ~ ~ c5 ~"])
+    # s "hedge_melodica" # pF "limitertype" 0
+    # pF "vib" 5 # pF "depth" 0.01 # pF "breath" 0.12
+    # pF "reed" 0.7 # pF "bright" 1700
+    # attack 0.18 # release 0.7 # sustain 1.2
+    # pF "pan" (-0.35) # room 0.8 # size 0.85 # amp 3
+  --
+  -- denser reed figure for the promised order
+  melodicaUtopia = swing8 $ note (cat [
+      "c5 ~ ef5 ~ g5 ~ ef5 ~ c5 ~ ~ ~",
+      "df5 ~ f5 ~ af5 ~ f5 ~ df5 ~ ~ ~",
+      "bf4 ~ d5 ~ g5 ~ d5 ~ bf4 ~ ~ ~",
+      "g4 ~ c5 ~ ef5 ~ c5 ~ g4 ~ ~ ~"])
+    # s "hedge_melodica" # pF "limitertype" 0
+    # pF "vib" 5 # pF "depth" 0.01 # pF "breath" 0.12
+    # pF "reed" 0.7 # pF "bright" 2100
+    # attack 0.18 # release 1.2 # sustain 1.2
+    # pF "pan" (-0.35) # room 0.85 # size 0.9 # amp 3
+  --
+  -- dry clockwork cuckoo: inharmonic metal ticks, two to a bar
+  clock = swing8 $ note (cat [
+      "~ ~ c6 ~ af5 ~ ~ ~ ~ ~ c6 ~ af5 ~ ~ ~",
+      "~ ~ df6 ~ bf5 ~ ~ ~ ~ ~ df6 ~ bf5 ~ ~ ~",
+      "~ ~ g5 ~ ef5 ~ ~ ~ ~ ~ g5 ~ ef5 ~ ~ ~",
+      "~ ~ c6 ~ g5 ~ ~ ~ ~ ~ c6 ~ g5 ~ ~ ~"])
+    # s "hedge_clock" # pF "limitertype" 0
+    # pF "metal" 0.65 # decay 0.06
+    # sustain 0.08 # pan 0.7 # room 0 # size 0 # amp 2
+  --
+  -- the clock turns against the promised order as the delusion fades
+  clockDissonant = swing8 $ note (cat [
+      "~ cs6 ~ fs5 ~ ~ ~ cs6 ~ e5 ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ gs5 ~ as5 ~ ~ ~ ds6 ~ ~ ~ ~ ~",
+      "~ fs5 ~ cs6 ~ ~ ~ e5 ~ ~ ~ gs5 ~ ~ ~ ~",
+      "~ ~ as5 ~ ~ ~ ds6 ~ ~ ~ fs5 ~ cs6 ~ ~ ~"])
+    # s "hedge_clock" # pF "limitertype" 0
+    # pF "metal" 0.85 # decay 0.09
+    # sustain 0.08 # pan 0.7 # room 0 # size 0 # amp 2
+  --
+  -- swung koto: bent plucks marking the pulse, clear of the mandolin
+  koto = swing8 $ note (cat [
+      "c5 ~ af4 ~ ~ ~ af4 ~ c5 ~ g4 ~ ~ ~ g4 ~",
+      "df5 ~ f4 ~ ~ ~ f4 ~ df5 ~ af4 ~ ~ ~ af4 ~",
+      "bf4 ~ g4 ~ ~ ~ g4 ~ bf4 ~ f4 ~ ~ ~ f4 ~",
+      "g4 ~ ef4 ~ ~ ~ ef4 ~ g4 ~ c4 ~ ~ ~ c4 ~"])
+    # s "hedge_koto" # pF "limitertype" 0
+    # pF "damp" 0.3 # pF "bend" 0.6 # pF "bright" 3200
+    # decay 2.0 # sustain 2.5
+    # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
+  --
+  -- bent answering figure in the same shuffle for the promised order
+  kotoUtopia = swing8 $ note (cat [
+      "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ af4 ~ ~ ~ af4 ~",
+      "df5 ~ af5 ~ ~ ~ df5 ~ df5 ~ bf4 ~ ~ ~ bf4 ~",
+      "bf4 ~ f5 ~ ~ ~ bf4 ~ bf4 ~ g4 ~ ~ ~ g4 ~",
+      "g4 ~ df5 ~ ~ ~ g4 ~ g4 ~ ef4 ~ ~ ~ ef4 ~"])
+    # s "hedge_koto" # pF "limitertype" 0
+    # pF "damp" 0.3 # pF "bend" 0.6 # pF "bright" 3200
+    # decay 3.0 # sustain 2.5
+    # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
+
+-- 1 · Stillness — the place waits; bed alone, slowly filling in.
+fadeSilence 4 [1,2,3,4,5,6,7,8,9,10,11,12]
+xfadeIn 1 16 $ fadeIn 16 bed
+
+-- 2 · Weather — wind on the slope; the bed opens a little.
+fadeMulti 16 [
+  (1, bed # lpf 1600),
+  (3, fadeIn 16 air)]
+
+-- 3 · The circle — the ground is marked under the air.
+fadeMulti 16 [
+  (1, bed # lpf 1900),
+  (5, fadeIn 16 lowStrings)]
+
+-- 4 · The officiant — their theme enters with the first pulse.
+xfadeIn 2 16 $ fadeIn 16 sawLead
+fadeMulti 16 [
+  (1, bed # lpf 2200),
+  (4, fadeIn 16 tremolo),
+  (5, lowStrings # lpf 620)]
+
+-- 5 · First answer — an invitation, not a reply: saw asks on odd bars,
+-- whistle answers on even.
+fadeMulti 16 [
+  (2, fadeIn 16 sawAsk),
+  (7, fadeIn 16 whistleReply)]
+
+-- 6 · The horn raised — the formal call; the bed becomes a held chord.
+fadeMulti 16 [
+  (1, ritualBed # lpf 1000),
+  (8, fadeIn 16 horn),
+  (12, fadeIn 16 koto),
+  (2, sawAsk # lpf 2400)]
+
+-- 7 · Frost — objects catch light; glints refuse to settle.
+fadeMulti 16 [
+  (6, fadeIn 16 glints),
+  (1, ritualBed # lpf 1200)]
+
+-- 8 · The interval — the mechanism wakes and starts counting.
+fadeMulti 16 [
+  (1, ritualBed # lpf 1400),
+  (11, fadeIn 16 clock),
+  (5, lowStrings # lpf 700)]
+
+-- 9 · Borrowed breath — the reed breathes without the officiant.
+fadeMulti 16 [
+  (1, ritualBed # lpf 1600),
+  (10, fadeIn 16 melodica),
+  (11, clock # pF "metal" 0.8)]
+
+-- 10 · Handless pluck — the pluck bends sharper under the pulse.
+fadeMulti 16 [
+  (1, ritualBed # lpf 1800),
+  (10, melodica # pF "bright" 2100),
+  (12, koto # pF "bright" 3800)]
+
+-- 11 · The slope joins — the whole terrain shimmers; fine grain arrives.
+fadeMulti 16 [
+  (3, stack [air # lpf 900, dust]),
+  (9, fadeIn 16 (strings # release 2.0)),
+  (5, lowStrings # lpf 820),
+  (1, bed # lpf 2800)]
+
+-- 12 · The utopia — a perfect world in the promised order. The possessed
+-- officiant believes they can build it. Richest melodic section.
+xfadeIn 1 24 $ stack [
+  bed # lpf 2800,
+  bed # lpf 1400 # pan (-0.3)]
+xfadeIn 3 24 $ stack [air # lpf 900 # release 2, dust]
+xfadeIn 2 24 sawLead
+xfadeIn 7 24 $ whistle # release 1.8
+xfadeIn 8 24 $ fadeIn 24 hornStab
+fadeMulti 24 [
+  (4, tremolo # room 0.85 # size 0.85),
+  (6, fadeIn 24 glintsUtopia),
+  (9, fadeIn 24 stringsUtopia),
+  (10, fadeIn 24 melodicaUtopia),
+  (11, fadeIn 24 clock),
+  (12, fadeIn 24 kotoUtopia)]
+
+-- 13 · The call turns — whistle asks, officiant replies: the whistle was
+-- asking all along. The clock starts pulling the promise out of tune.
+fadeMulti 16 [
+  (2, fadeIn 16 sawAnswer),
+  (7, fadeIn 16 whistleQuestion),
+  (8, fadeOut 16 hornStab),
+  (10, fadeOut 16 melodicaUtopia),
+  (11, fadeIn 16 clockDissonant),
+  (12, fadeOut 16 kotoUtopia)]
+
+-- 14 · The plan outlives the builder — human signals stop; the dissonant
+-- clock keeps measuring an empty utopia.
+fadeSilence 16 [2,4,5,8,10,12]
+fadeMulti 16 [
+  (11, clockDissonant # pF "metal" 0.9)]
+
+-- 15 · The builder withdraws — the clock stops; the promise runs on
+-- without its author.
+fadeSilence 16 [11]
+fadeMulti 16 [
+  (6, fadeOut 16 glintsUtopia),
+  (9, fadeOut 16 stringsUtopia)]
+
+-- 16 · What remains — one suspended breath, unresolved; the promise
+-- keeps running without the builder.
+xfadeIn 7 32 $ fadeIn 32 $ slow 4 $ note "af6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+  # attack 0.25 # release 2.2 # sustain 0.6
+  # room 0.9 # size 0.9 # amp 3
+fadeMulti 32 [
+  (1, bed # lpf 1800 # room 0.9 # size 0.9),
+  (3, stack [air # lpf 900 # release 2, fadeOut 32 dust])]
+-- scheduled after the coda has fully entered
+waitT 1 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 3 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 6 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 7 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 9 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 10 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+
+-- hush only after the scheduled fade has decayed
+hush

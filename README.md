@@ -65,12 +65,13 @@ Each area documents itself:
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`
 - `samples/` — see `samples/README.md`
 
-`boot/` holds the Tidal/SuperDirt boot files, `emacs/` the project editor config
-(which loads `~/.emacs` last, so personal preferences win; batch checks skip
-it), and `recordings/` the gitignored takes. `boot/BootTidal.hs` also defines the
-shared track helpers (`speedAt`, `swing8`, `swing16`, `chordAt`, `fadeSilence`,
-`fadeMulti`, `glideBpm`), so each track's setup block only defines its own
-voices and arrangements.
+`boot/` holds the Tidal/SuperDirt boot files, with the project SynthDefs in
+`boot/HedgeSynths.scd` (loaded by `boot/BootSuperDirt.scd`). `emacs/` holds the
+project editor config (which loads `~/.emacs` last, so personal preferences win;
+batch checks skip it), and `recordings/` the gitignored takes.
+`boot/BootTidal.hs` also defines the shared track helpers (`speedAt`, `swing8`,
+`swing16`, `chordAt`, `fadeSilence`, `fadeMulti`, `glideBpm`), so each track's
+setup block only defines its own voices and arrangements.
 
 ## Sound check
 
@@ -111,10 +112,9 @@ after a restart.
 project notes. Reduce `s.options.numBuffers` or raise `s.latency` in
 `boot/BootSuperDirt.scd`.
 
-**A synth is missing** — the `super*` synths shipped with SuperDirt need
-`sc3-plugins`, which is not installed. This set uses samples plus three custom
-synths (`hedge_sine`, `hedge_pad`, `hedge_noise`) defined in `BootSuperDirt.scd`,
-so it does not depend on them.
+**A synth is missing** — `sc3-plugins` supplies SuperDirt's `super*` synths;
+project-defined ones live in `boot/HedgeSynths.scd`. Restart SuperCollider
+after changing that file.
 
 ## Credits
 

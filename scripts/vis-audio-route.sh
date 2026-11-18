@@ -36,6 +36,10 @@ node_id() {
   '
 }
 
+is_audio_source() {
+  wpctl inspect "$1" 2>/dev/null | grep -q 'media.class = "Audio/Source"'
+}
+
 start_loopback() {
   if is_running; then
     echo "[vis-audio-route] Loopback already running"
@@ -98,7 +102,7 @@ set_default_source() {
   if [ ! -f "$PREV_SOURCE_FILE" ]; then
     prev_name="$(default_source_name)"
     prev_id="$(node_id "$prev_name" || true)"
-    if [ -n "$prev_id" ] && [ "$prev_id" != "$id" ]; then
+    if [ -n "$prev_id" ] && [ "$prev_id" != "$id" ] && is_audio_source "$prev_id"; then
       echo "$prev_id" > "$PREV_SOURCE_FILE"
     fi
   fi
@@ -110,7 +114,7 @@ restore_default_source() {
   local prev
   [ -f "$PREV_SOURCE_FILE" ] || return 0
   prev="$(cat "$PREV_SOURCE_FILE")"
-  if [ -n "$prev" ] && wpctl inspect "$prev" >/dev/null 2>&1; then
+  if [ -n "$prev" ] && is_audio_source "$prev"; then
     wpctl set-default "$prev" >/dev/null 2>&1 || true
     echo "[vis-audio-route] Restored default source ($prev)"
   fi
@@ -135,9 +139,23 @@ show_status() {
 
 case "$action" in
   start)
+    # Starting pw-loopback makes WirePlumber reapply a saved sink volume,
+    # which can drop the headset to near-silence. Preserve it explicitly.
+    sink_id=$(wpctl inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null \
+      | sed -n 's/^id \([0-9]*\),.*/\1/p' | head -1)
+    sink_vol=""
+    sink_mute=0
+    if [ -n "$sink_id" ]; then
+      sink_vol=$(wpctl get-volume "$sink_id" 2>/dev/null | awk '{print $2}')
+      wpctl get-volume "$sink_id" 2>/dev/null | grep -q '\[MUTED\]' && sink_mute=1 || true
+    fi
     start_loopback
     link_monitor
     set_default_source
+    if [ -n "$sink_id" ] && [ -n "$sink_vol" ]; then
+      wpctl set-mute "$sink_id" "$sink_mute" >/dev/null
+      wpctl set-volume "$sink_id" "$sink_vol" >/dev/null
+    fi
     ;;
   stop)
     echo "[vis-audio-route] Stopping..."

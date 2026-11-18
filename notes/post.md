@@ -1,8 +1,9 @@
 # Post notes
 
-Raw material, not a draft. Two threads — one bug, one claim — from
-`tracks/ambient/daywork.tidal` and `tracks/techno/grin.tidal`. They can be one
-piece (the bug as the opening, the claim as the turn) or two.
+Raw material, not a draft. Three threads — two bugs, one claim — from
+`tracks/ambient/daywork.tidal`, `tracks/techno/grin.tidal` and
+`tracks/ambient/loden.tidal`. They can be one piece (the bugs as the opening,
+the claim as the turn) or several.
 
 ## 1. The bass that wouldn't change pitch
 
@@ -126,4 +127,62 @@ thread 2 lost the sharper wording — "legible", "nothing is ever deployed":
 > That makes the cost of a wrong idea legible in seconds, and it makes
 > "correct" a property of a performance rather than a state you reach and then
 > protect.
+
+## 3. The horn that clipped the whistle
+
+### Symptom
+
+- In `loden.tidal` section 6, a high-frequency "resonance" got loud when the
+  whistle overlapped the horn. The whistle had already been chased once — its
+  vibrato swept 86 Hz on a ~0.24 s cycle, dragging the bandpassed air with it —
+  and was fixed at pattern level (`depth 0.03 → 0.012`, `breath 0.3 → 0.12`).
+  The residual felt like it might be the amplifiers.
+
+### Wrong turns worth keeping
+
+1. **"It's the whistle's vibrato again."** The earlier fix had cut the sweep to
+   under one FFT bin. The residual followed the horn, not the whistle.
+2. **"It's the playback chain."** Plausible, but an offline render of the two
+   synths alone reproduced the loudness, so the signal itself was at fault.
+
+### The actual mechanism
+
+- On the overlapping bars the whistle pitch is exactly two octaves above the
+  horn: `df7` = 4 × `df5`, `ef7` = 4 × `ef5`. The whistle fundamental lands on
+  the horn's strong 4th saw harmonic, so they stack.
+- Both synths set `limitertype 0`. That selects the first branch of
+  `Select.ar(limitertype, [signal, Limiter.ar(signal), softclip(...)])` in
+  SuperDirt's `dirt_monitor` — i.e. **no limiter at all**. Nothing catches the
+  overs.
+- The horn's `opening` envelope (`Env.perc(attack * 0.4, 0.3)`,
+  `levelScale: 1200`) swept its bandpass from ~1900 Hz down to ~700 Hz in
+  0.3 s, straight through the whistle's register. That decay matched the
+  reported "short resonance" duration.
+
+### The measurement
+
+Offline render at the section-6 pitches, amps unchanged (`horn 10`,
+`whistle 3`):
+
+| case | peak | samples over full scale |
+|---|---:|---:|
+| horn alone | 3.87 | 13% |
+| whistle alone | 1.13 | 8% |
+| both | 4.91 | 20% |
+
+After taming the two internal gains (`horn × 0.13`, `whistle × 0.45`) and the
+opening (`levelScale 1200 → 500`): horn 0.50, whistle 0.51, both 0.99, **zero**
+clipped samples across all four section-6 bars.
+
+### Loose ends / what to refine
+
+- The gain factors were chosen analytically, to land the combined peak just
+  under full scale. They have not been checked by ear in the room yet — if the
+  horn now sits too quietly against the other voices, raise its `amp` rather
+  than the internal gain so the headroom stays explicit.
+- Only the whistle and horn were touched. Other synths with vibrato/resonance
+  were left alone deliberately.
+- The `limitertype 0` setting is still there. A softclip (`limitertype 2`) on
+  the horn and whistle orbits would be a different way to catch future overs
+  without reducing level; worth trying if more voices start stacking.
 

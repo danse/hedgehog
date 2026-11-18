@@ -13,7 +13,7 @@
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
 -- Harmony: G mixolydian, voiced with Sound.Tidal.Chords.
 -- Palette: acoustic ensemble plus circus, tink, bottle, stomp, tok, bin, coins,
--- crow, flick, bubble and simplesine; perc, tabla, outdoor, insect, toys:12 and
+-- crow, flick, bubble and hedge_hum; perc, tabla, outdoor, insect, toys:12 and
 -- hit:1 sparingly. No PA, printers, spoken numbers or control-room palette.
 -- ---------------------------------------------------------------------------
 let
@@ -127,7 +127,7 @@ let
   liftChain = degradeBy 0.2 $ swing8 $ s "metal ~ metal metal ~ metal ~ metal"
     # n (irand 10) # speed (range 0.45 0.85 $ slow 8 rand)
     # hpf 250 # lpf 4200 # pan rand # room 0.5 # size 0.68 # amp 0.26
-  motor = slow 4 $ s "simplesine" # n 2
+  motor = slow 4 $ s "hedge_hum" # freq 45
     # sustain 3.6 # release 0.4 # lpf 220 # hpf 20
     # room 0.5 # size 0.6 # amp 0.16
   --
@@ -177,7 +177,7 @@ let
     # hpf 500 # lpf 9000 # room 0.4 # size 0.55
   switchOff = slow 8 $ s "flick" # n "<13 14 12 15>"
     # hpf 500 # lpf 9000 # room 0.4 # size 0.55
-  mainsDown = slow 4 $ s "simplesine" # n 2
+  mainsDown = slow 4 $ s "hedge_hum" # freq 45
     # sustain 8 # release 1 # lpf 180 # hpf 20
     # room 0.55 # size 0.7 # amp 0.14
   insectChat = degradeBy 0.65 $ slow 4 $ s "insect" # n (irand 3)
