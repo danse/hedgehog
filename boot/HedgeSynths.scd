@@ -74,6 +74,21 @@
         Out.ar(out, DirtPan.ar(body * 0.3 * shimmer, ~dirt.numChannels, pan, env));
     }).add;
 
+    // Single bowed folk string: one narrow saw through a soft body resonance,
+    // with bow noise and slow pitch drift instead of a synth-ensemble shimmer.
+    SynthDef(\hedge_fiddle, { |out, freq = 220, sustain = 1, pan,
+        vib = 5.0, depth = 0.006, bow = 0.12, body = 1800,
+        attack = 0.18, release = 0.8|
+        var env = EnvGen.ar(Env.linen(attack, sustain, release), doneAction: 2);
+        var drift = LFNoise2.kr(0.6, 0.004);
+        var pitch = Lag.kr(freq, 0.12) * (1 + drift + SinOsc.kr(vib, 0, depth));
+        var string = RLPF.ar(VarSaw.ar(pitch, 0, 0.35), body, 0.7);
+        var scrape = BPF.ar(WhiteNoise.ar, pitch * 2.2, 1.2) * bow;
+        var breath = LFNoise1.kr(1.3, 0.3, 0.7);
+        var sig = (string * 0.75) + (scrape * breath);
+        Out.ar(out, DirtPan.ar(sig, ~dirt.numChannels, pan, env));
+    }).add;
+
     // Reedy free-reed voice: narrow saw with tracked breath, below the whistle.
     SynthDef(\hedge_melodica, { |out, freq = 440, sustain = 1, pan,
         vib = 5.0, depth = 0.01, breath = 0.12, attack = 0.18, release = 0.7,

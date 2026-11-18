@@ -1,0 +1,230 @@
+-- Campina — Balkan ambient in seven
+-- 72 cycles/min · A harmonic minor. One cycle = one 7/8 bar, accented 3+2+2
+-- (eighths 1, 4, 6). Four-bar loop: Am | F | Dm | E, one chord per bar.
+-- Section 5 turns the whole loop up a fourth (D harmonic minor) and section
+-- 10 brings it home. Evaluate the setup block, then the sections in order;
+-- `hush` is separate.
+--
+-- dN is a seat, numbered by first entrance: 1 air, 2 tapan, 3 tarabuka,
+-- 4 bass, 5 shaker, 6 wood, 7 reed, 8 string bed, 9 cimbalom, 10 violin.
+-- Each section sets its seats outright on the bar line, so the numbers keep
+-- their meaning all night.
+--
+-- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals are `s`/`f`.
+-- No swing: the 3+2+2 accent is the groove. Custom synth controls are set
+-- inline with `pF`; the limiter is left at its default for the dense mix.
+-- jvbass base is fs2; speedAt tunes it to the roots.
+
+glideBpm 72 8
+
+-- ---------------------------------------------------------------------------
+-- Voices. The harmonic seats are functions of a note pattern, so the turn is
+-- just `|+ 5`; the drums are fixed. Keep this whole block one paragraph.
+-- ---------------------------------------------------------------------------
+let
+  bedNotes :: Pattern Note
+  bedNotes = cat [
+    "a3,c4,e4",
+    "f3,a3,c4",
+    "d3,f3,a3",
+    "e3,gs3,b3"]
+  --
+  bassNotes :: Pattern Note
+  bassNotes = cat [
+    "a2 ~ ~ e2 ~ a2 ~",
+    "f2 ~ ~ c3 ~ f2 ~",
+    "d2 ~ ~ a2 ~ d2 ~",
+    "e2 ~ ~ b2 ~ e2 ~"]
+  --
+  reedNotes :: Pattern Note
+  reedNotes = cat [
+    "a4 ~ c5 e5 ~ c5 ~",
+    "f4 ~ a4 c5 ~ a4 ~",
+    "d5 ~ f5 e5 ~ c5 ~",
+    "e5 gs5 e5 ~ b4 ~"]
+  --
+  cimbalomNotes :: Pattern Note
+  cimbalomNotes = cat [
+    "a4 ~ e4 a4 ~ c5 ~",
+    "f4 ~ c4 f4 ~ a4 ~",
+    "d4 ~ a3 d4 ~ f4 ~",
+    "e4 ~ b3 e4 ~ gs4 ~"]
+  --
+  violinNotes :: Pattern Note
+  violinNotes = cat [
+    "~ ~ ~ ~ e5 d5 c5",
+    "~ ~ ~ ~ c5 a4 f4",
+    "~ ~ ~ ~ d5 c5 a4",
+    "~ ~ ~ ~ b4 gs5 e5"]
+  --
+  -- Tapan: dum on 1, 4 and 6; the fourth bar stutters into the loop.
+  tapan :: ControlPattern
+  tapan = s (cat [
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ house:0 house:0 ~ house:0 house:0"])
+    # amp 1 # lpf 380 # room 0.06 # size 0.18
+  --
+  -- Tarabuka: the light eighths between the dum.
+  tarabuka :: ControlPattern
+  tarabuka = s (cat [
+    "~ tabla:9 tabla:12 ~ tabla:9 ~ tabla:12",
+    "~ tabla:9 tabla:12 ~ tabla:9 tabla:12 tabla:9",
+    "~ tabla:9 tabla:12 ~ tabla:9 ~ tabla:12",
+    "~ tabla:9 tabla:12 tabla:9 ~ tabla:12 tabla:9"])
+    # amp 1 # hpf 240 # room 0.12 # size 0.26 # pan 0.3
+  --
+  -- Oom-pah: root on 1, fifth on 4, root on 6.
+  bass :: Pattern Note -> ControlPattern
+  bass p = speedAt "fs2" p
+    # s "jvbass" # n 0
+    # sustain 0.24 # release 0.12 # lpf 640 # lpq 0.2
+    # shape 0.2 # room 0.08 # size 0.2 # amp 0.95
+  --
+  -- Bowed folk string bed, one chord per bar; the augmented second sits in
+  -- bar 4. One narrow bowed string, not a synth ensemble.
+  stringBed :: Pattern Note -> ControlPattern
+  stringBed p = note p
+    # s "hedge_fiddle" # pF "vib" 5 # pF "depth" 0.006
+    # pF "bow" 0.12 # pF "body" 1800
+    # attack 0.18 # release 0.8 # sustain 0.7
+    # pan 0.5 # room 0.45 # size 0.62 # amp 2.4
+  --
+  -- Free reed: short, bright, leaning forward on the accented eighths.
+  reed :: Pattern Note -> ControlPattern
+  reed p = note p
+    # s "hedge_melodica" # pF "vib" 5.5 # pF "depth" 0.008
+    # pF "breath" 0.12 # pF "reed" 0.8 # pF "bright" 2400
+    # attack 0.06 # release 0.3 # sustain 0.35
+    # pan (-0.3) # room 0.35 # size 0.55 # amp 2.4
+  --
+  -- Cimbalom: bent plucks on the three accents, filling under the reed.
+  cimbalom :: Pattern Note -> ControlPattern
+  cimbalom p = note p
+    # s "hedge_koto" # pF "damp" 0.35 # pF "bend" 0.2
+    # pF "bright" 3000 # decay 0.9 # sustain 1
+    # pan (-0.5) # room 0.32 # size 0.52 # amp 2
+  --
+  -- Shaker: seven eighths, accented on the same three beats as the tapan.
+  shaker :: ControlPattern
+  shaker = s "house:3*7"
+    # amp "0.34 0.15 0.22 0.34 0.15 0.3 0.15"
+    # hpf 700 # room 0.08 # size 0.2 # pan 0.2
+  --
+  -- Wood tick: answers on the short groups.
+  wood :: ControlPattern
+  wood = s (cat [
+    "~ ~ tok:0 ~ ~ tok:0 ~",
+    "~ tok:0 ~ ~ ~ tok:0 ~",
+    "~ ~ tok:0 ~ ~ tok:0 ~",
+    "~ tok:0 ~ tok:0 ~ tok:0 ~"])
+    # amp 8 # hpf 200 # room 0.1 # size 0.22 # pan 0.42
+  --
+  -- Violin answer: the last three eighths of each bar, after the reed.
+  violin :: Pattern Note -> ControlPattern
+  violin p = note p
+    # s "hedge_strings" # pF "vib" 5.5 # pF "depth" 0.008
+    # pF "tremrate" 7 # pF "tremdepth" 0.12
+    # attack 0.12 # release 0.45 # sustain 0.45
+    # pan 0.6 # room 0.4 # size 0.6 # amp 1.6
+  --
+  -- Air: a slow wind bed under the field, one swell every four bars.
+  air :: ControlPattern
+  air = slow 4 $ s "hedge_noise"
+    # sustain 3.2 # lpf 800 # hpf 180
+    # room 0.6 # size 0.8 # amp 0.16
+
+-- 1 · Field — 64 bars. Air and the two drums; the limp arrives as a pulse
+--     before there is anything to dance to.
+d1 air
+d2 tapan
+d3 tarabuka
+
+-- 2 · Circle — 64 bars. Bass and shaker find the three accents; the wood
+--     answers on the short groups. The air keeps running underneath.
+d4 $ bass bassNotes
+d5 shaker
+d6 wood
+
+-- 3 · Reed — 64 bars. The theme enters over the pulse and the bowed bed
+--     opens under it. Nothing else changes.
+d7 $ reed reedNotes
+d8 $ stringBed bedNotes
+
+-- 4 · Step — 64 bars. Cimbalom fills the gaps between reed and wood. This is
+--     the complete band; the hand drum comes forward to match it.
+d9 $ cimbalom cimbalomNotes
+d3 $ tarabuka # amp 1.2
+
+-- 5 · Turn — 64 bars. Bed, bass, reed and cimbalom are the same patterns
+--     with `|+ 5`, into D harmonic minor. The drums stay exactly where they
+--     were, so the key change is the only new information.
+d8 $ stringBed (bedNotes |+ 5)
+d4 $ bass (bassNotes |+ 5)
+d7 $ reed (reedNotes |+ 5)
+d9 $ cimbalom (cimbalomNotes |+ 5)
+
+-- 6 · Break — 48 bars. Drums, bass, pluck and wood go; the bed holds the
+--     turned loop with a longer tail and the reed is alone above the air.
+fadeSilence 1 [2,3,4,5,6,9]
+d8 $ stringBed (bedNotes |+ 5)
+  # sustain 1.4 # release 1.2 # room 0.6 # size 0.8
+d1 $ air # lpf 1200
+
+-- 7 · Drop — 64 bars. The band comes back in D minor: drums, bass, pluck and
+--     wood all at once. The bed and reed never left, so nothing is rebuilt.
+d2 tapan
+d3 $ tarabuka # amp 1.2
+d4 $ bass (bassNotes |+ 5)
+d5 shaker
+d6 wood
+d9 $ cimbalom (cimbalomNotes |+ 5)
+
+-- 8 · Climb — 64 bars. The shaker doubles to sixteenths and the violin
+--     answers over the last third of each bar. Tempo eases up over the
+--     section; the drums do not otherwise change.
+glideBpm 76 24
+d5 $ s "house:3*14"
+  # amp "0.3 0.12 0.18 0.3 0.12 0.26 0.12 0.3 0.12 0.18 0.3 0.12 0.26 0.12"
+  # hpf 700 # room 0.08 # size 0.2 # pan 0.2
+d10 $ violin (violinNotes |+ 5)
+
+-- 9 · Peak — 64 bars. The reed brightens and the bed opens, the cimbalom
+--     comes forward and the wood gets louder; the air leaves. Everything
+--     else is already playing, so the peak is four new settings, not a new
+--     band.
+glideBpm 78 24
+d1 silence
+d6 $ wood # amp 10
+d7 $ reed (reedNotes |+ 5)
+  # pF "bright" 3000 # amp 2.8
+d8 $ stringBed (bedNotes |+ 5) # amp 2.8
+d9 $ cimbalom (cimbalomNotes |+ 5) # amp 2.4
+
+-- 10 · Home — 64 bars. The loop comes back down to A minor. Bed, bass, reed
+--      and pluck switch back; the violin leaves and the tempo settles while
+--      the drums keep the room open.
+glideBpm 72 16
+d1 air
+d4 $ bass bassNotes
+d7 $ reed reedNotes
+d8 $ stringBed bedNotes
+d9 $ cimbalom cimbalomNotes
+d10 silence
+
+-- 11 · End — 48 bars. The band leaves; the bed becomes one Am chord,
+--      re-blooming every four bars, and the air stays under it. `hush` after
+--      the chord has rung out.
+d2 silence
+d3 silence
+d4 silence
+d5 silence
+d6 silence
+d7 silence
+d9 silence
+d8 $ stringBed (slow 4 "a3,c4,e4")
+  # sustain 3 # release 1.6 # room 0.6 # size 0.8
+
+-- `hush` after the last chord
+hush
