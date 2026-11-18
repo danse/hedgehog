@@ -1,9 +1,4 @@
--- Hedgehog — ambient live set
--- 72 BPM · D minor · ~16 min · five movements.
---
--- Eval the setup block below, then work through the layer blocks in order:
--- bed → texture → pulse → harmony → melody → transitions.
--- See notes/set-plan.md for the movement plan and cue notes.
+-- d minor
 
 glideBpm 72 16
 
