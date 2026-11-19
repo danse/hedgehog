@@ -8,7 +8,8 @@
 --
 -- Eval the setup block, then the sections in order. Sections 5 and 6 are
 -- replacements: evaluate them to turn the bed and open the lead. After the
--- breakdown, re-evaluate 5, then 6 and 4 to come back.
+-- breakdown, re-evaluate 5, then 6 and 4 to come back. The return is a final
+-- lift, then the talkbox hook, then the sharp drop.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
 -- chordAt roots take `s`/`f` (fs4, bf3), not `#`/`b`. hedge_pad has a fixed
@@ -113,9 +114,9 @@ xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
   # sustain 5 # release 2 # lpf 360 # lpq 0.15
   # room 0.45 # size 0.65 # amp 0.85
 
--- coda — the last chorus. Re-evaluate section 5, then these two lines:
---    a new bass and lead over a turnaround, Bm9 – E9 – Amaj9 – Dmaj9, on
---    the same four-bar form. Play it twice, then stop short.
+-- coda — the last chorus. A new bass and lead over a turnaround, Bm9
+-- – E9 – Amaj9 – Dmaj9, on the same four-bar form. Play it twice,
+-- then stop short.
 d4 $ speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
   # s "jvbass" # n 0
   # sustain 0.2 # release 0.08 # lpf 700 # lpq 0.25
@@ -126,10 +127,49 @@ d7 $ speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
 
--- TODO: at this point there is quite a present melody on the
--- moog. We'd like the track to be longer. For instance we could
--- replace the jvbass' line with something more melodic and add parts
--- of the bed so that the rhythm can return
+-- return — a longer last chorus. The moog keeps singing the turnaround; the
+--    jvbass stops pumping roots and walks the chord tones instead. The disco
+--    kit eases back in under it — hats, then the kick, then the clap — so the
+--    rhythm is there again before the drop. Hold for a few passes.
+xfadeIn 3 4 $ s "hh:0*8" # amp "2 1.5 1.75 1.5" # hpf 350
+  # room 0.06 # size 0.18
+
+xfadeIn 1 8 $ s (cat [
+  "kicklinn*4",
+  "kicklinn*4",
+  "kicklinn*4",
+  "kicklinn kicklinn kicklinn ~"])
+  # n 0 # amp 1 # room 0.05 # size 0.15
+
+xfadeIn 2 12 $ s "~ cp ~ cp" # n 0
+  # amp 0.6 # room 0.2 # size 0.32
+
+d4 $ speedAt "fs2" (cat [
+  "b2 ~ d3 fs3 a3 ~ b3 a3",
+  "e2 ~ gs2 b2 d3 ~ e3 d3",
+  "a2 ~ cs3 e3 gs3 ~ a3 gs3",
+  "d2 ~ fs2 a2 cs3 ~ d3 cs3"])
+  # s "jvbass" # n 0
+  # sustain 0.18 # release 0.1 # lpf 820 # lpq 0.3
+  # room 0.14 # size 0.3 # amp 1.15
+
+-- talkbox — the moog steps aside. Pitched speech syllables make a short hook
+--    answering the walking bass. The samples start with ~0.3 s of silence, so
+--    `begin` skips to the syllable and `note "c5"` holds the tuning steady.
+--    Hold a pass or two, then drop.
+d7 $ speedAt "c4" (cat [
+  "b3 ~ d4 ~ fs4 ~ a4 ~",
+  "e4 ~ gs4 ~ b4 ~ d4 ~",
+  "a3 ~ cs4 ~ e4 ~ gs4 ~",
+  "d4 ~ fs4 ~ a4 ~ cs4 ~"])
+  # s (cat [
+    "speechless:8 ~ speechless:9 ~ speechless:6 ~ speechless:8 ~",
+    "speechless:9 ~ speechless:8 ~ speechless:4 ~ speechless:9 ~",
+    "speechless:8 ~ speechless:6 ~ speechless:9 ~ speechless:8 ~",
+    "speechless:7 ~ speechless:8 ~ speechless:4 ~ speechless:9 ~"])
+  # note "c5" # begin 0.42 # hpf 300 # lpf 2400
+  # sustain 0.32
+  # pan 0.25 # room 0.3 # size 0.45 # amp 3
 
 -- sharp drop: after the second pass: the kit and lead stop on the
 -- downbeat, the bass holds A, and the pad becomes one last Amaj9
