@@ -2,6 +2,7 @@
 
 Source scores and the scripts that decoded them into the two score-based
 tracks. Paths are relative to this folder, so none of this depends on `/tmp`.
+General-purpose helper scripts live in the sibling [`../toolbox/`](../toolbox/).
 
 ## Scores
 
@@ -26,5 +27,5 @@ The track headers carry the same credits. Keep them when reusing the scores.
 would lose later hand edits. Use them as a record of how the transcriptions were
 derived, or copy their output and reapply the edits.
 
-The reusable audio analyser lives in [`scripts/analyse-audio.py`](../scripts/analyse-audio.py),
+The reusable audio analyser lives in [`scripts/analyse-audio.py`](../../scripts/analyse-audio.py),
 not here.

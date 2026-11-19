@@ -4,7 +4,7 @@ import struct
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = HERE.parent.parent
 d = open(HERE / 'scores' / 'giselle.mid', 'rb').read()
 div = struct.unpack('>H', d[12:14])[0]
 pos = 14

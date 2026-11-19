@@ -61,6 +61,8 @@ Each area documents itself:
 - `tracks/` — one folder per genre (`ambient/`, `techno/`, `dance/`), one
   `.tidal` file per track; `scripts/edit.sh` opens Emacs here
 - `scripts/` — see `scripts/README.md`
+- `agents/` — agent-facing material: `agents/making_of/` (score sources and
+  generators) and `agents/toolbox/` (helper scripts), each with its own README
 - `visuals/` — see `visuals/README.md`
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`
 - `samples/` — see `samples/README.md`
