@@ -9,7 +9,7 @@
 -- Eval the setup block below, then play the sections in order:
 -- Emergence → Ascent → Expansion → Suspension → Drift → Dissolve.
 --
--- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 125 30
 
@@ -95,6 +95,7 @@ let
 
 d1 subDrone
 xfadeIn 2 16 $ lowPad # lpf 520 -- the low pad appears under the drone
+
 
 -- let the room breathe before adding anything else
 d3 noiseBed

@@ -26,3 +26,12 @@ library checkout.
 - Keep a pattern inline at its section if it is used only once; name it in the
   setup `let` block only when another section reuses it. A bare audition track
   may have no `let` block at all.
+- Shared gotchas (`size <= 0.9`, `amp` vs `gain`, `s`/`f`, `#` order) live in
+  `notes/learning/gotchas.md`. Track headers carry only track-specific notes
+  and a pointer to that file; don't repeat the shared rules in each header.
+- A double blank line between paragraphs marks a **landing**: the texture is
+  complete there and can hold on its own. The live coder can dwell on it and
+  listen, or detach from the track there — e.g. to mix another intro in. A
+  single blank line stays an ordinary paragraph separator and carries no such
+  hint. `tenfold.tidal` has one after the drone and low pad enter; the trailing
+  one in `grin.tidal` is a detach point as the pad holds Em9.

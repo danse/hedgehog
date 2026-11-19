@@ -2,7 +2,7 @@
 -- 88 BPM · F minor / A♭ major. Four-bar loop: Fm9 | D♭maj9 | E♭6/9 | Cm7.
 -- No drums. Long-form: xfadeIn/fadeMulti/fadeSilence for amplitude,
 -- fadeIn/fadeOut for density. Evaluate sections in order; hush is separate.
--- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals are `s`/`f`.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 88 24
 
@@ -219,7 +219,7 @@ let
     # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
 
 -- 1 · Stillness — the place waits; bed alone, slowly filling in.
-fadeSilence 4 [1,2,3,4,5,6,7,8,9,10,11,12]
+fadeSilence 64 [1,2,3,4,5,6,7,8,9,10,11,12]
 xfadeIn 1 16 $ fadeIn 16 bed
 
 -- 2 · Weather — wind on the slope; the bed opens a little.

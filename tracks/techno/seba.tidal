@@ -11,9 +11,9 @@
 -- breakdown, re-evaluate 5, then 6 and 4 to come back. The return is a final
 -- lift, then the talkbox hook, then the sharp drop.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
--- chordAt roots take `s`/`f` (fs4, bf3), not `#`/`b`. hedge_pad has a fixed
--- 900 Hz LPF and a slow attack — it swells, it does not stab.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- hedge_pad has a fixed 900 Hz LPF and a slow attack — it swells, it does not
+-- stab.
 
 glideBpm 116 24
 

@@ -10,7 +10,7 @@
 -- Each section sets its seats outright on the bar line, so the numbers keep
 -- their meaning all night.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals are `s`/`f`.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 -- No swing: the 3+2+2 accent is the groove. Custom synth controls are set
 -- inline with `pF`; the limiter is left at its default for the dense mix.
 -- jvbass base is fs2; speedAt tunes it to the roots.
@@ -172,7 +172,7 @@ d8 $ stringBed (bedNotes |+ 5)
   # sustain 1.4 # release 1.2 # room 0.6 # size 0.8
 d1 $ air # lpf 1200
 
--- 7 · Drop — 64 bars. The band comes back in D minor: drums, bass, pluck and
+-- 7 · 64 bars. The band comes back in D minor: drums, bass, pluck and
 --     wood all at once. The bed and reed never left, so nothing is rebuilt.
 d2 tapan
 d3 $ tarabuka # amp 1.2
@@ -211,7 +211,7 @@ d4 $ bass bassNotes
 d7 $ reed reedNotes
 d8 $ stringBed bedNotes
 d9 $ cimbalom cimbalomNotes
-d10 silence
+d10 silence -- violin
 
 -- 11 · End — 48 bars. The band leaves; the bed becomes one Am chord,
 --      re-blooming every four bars, and the air stays under it. `hush` after

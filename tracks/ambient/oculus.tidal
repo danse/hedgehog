@@ -1,5 +1,5 @@
 -- 66 BPM · E♭ major / C minor. Four-bar loop: E♭maj7 | Cm9 | A♭maj7 | B♭.
--- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals are `s`/`f`.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 66 30
 
@@ -70,7 +70,8 @@ xfadeIn 4 16 $ synth (cat [
     "ef4 ~ ~ c4 ~ ~ bf3 ~",
     "g3 ~ ~ bf3 ~ ~ c4 ~",
     "bf3 ~ ~ g3 ~ ~ ef3 ~"])
-  # lpf 2600 # amp 0.1
+  # lpf 2600 # amp 0.25
+
 xfadeIn 5 16 silence -- choir
 
 

@@ -19,9 +19,9 @@
 -- night. The `drive` alternative from the opening becomes the Return kick;
 -- `melody` is the opening's second reading.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals in mini-notation
--- are `s`/`f` (cs4, bf3). Sample bases: moog:3 is G1, juno:7 is C3, juno:5 is
--- C5, diphone:26 is A♭4 — speedAt tunes each of them to the loop.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: moog:3 is G1, juno:7 is C3, juno:5 is C5, diphone:26 is A♭4 —
+-- speedAt tunes each of them to the loop.
 --
 -- `ho` is NOT a voice: it is the HHOD bank, open hi-hats. For vocals use
 -- diphone (sung vowels, ~A♭2-A♭4), alphabet (spoken letters) or hmm (a hum).

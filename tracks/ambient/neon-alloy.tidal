@@ -5,7 +5,7 @@
 -- Eval the setup block below, then play the sections in order:
 -- Intro → Verse → Chorus → Break → Final.
 --
--- Gotchas: reverb size <= 0.9; `gain` is amp = amp * gain^4.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 118 16
 

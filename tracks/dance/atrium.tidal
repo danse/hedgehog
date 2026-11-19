@@ -25,9 +25,9 @@
 -- 9:00 at 124 BPM — ~288 bars and 9:15 if you play 8b — longer if you let a
 -- section run.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
--- Accidentals in mini-notation are `s`/`f` (cs4, bf3), never `#`; every chord
--- in an alternation needs its own brackets — `<[a4,c5,e5] [f4,a4,c5]>`.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Every chord in an alternation needs its own brackets —
+-- `<[a4,c5,e5] [f4,a4,c5]>`.
 -- The pad is juno:8, a 1.5 s Juno release tone at C5 with only an octave
 -- partial, so it can take any chord tone. Slowed to a3-b4 each note blooms
 -- for most of a bar and hands over to the next chord — `speedAt "c5"` keeps

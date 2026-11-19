@@ -14,7 +14,7 @@
 -- machine samples. Section 8 is its coda: the band leaves by stream group, a
 -- stage every two bars, so evaluate it one stage at a time.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 -- One cycle is one bar (2 s at 120 BPM).
 -- gretsch is the acoustic kit: 4/5 closed hat, 6 cowbell, 13 kick,
 -- 16 open-ish hat, 17 open hat (7 s — too long here), 20 snare, 21 ghost.

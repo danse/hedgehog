@@ -10,7 +10,7 @@
 -- Eval the setup block below, then play the sections in order:
 -- All Clear → Survey → Shore → Abutment → Transfer → Occupancy → Steady.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).

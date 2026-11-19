@@ -8,7 +8,7 @@
 -- Eval the section lines in order, then leave it running. Patterns stay
 -- inline unless another section reuses them; `piano` is the only binding.
 --
--- Gotchas: reverb size <= 0.9; `amp` is linear (prefer it to `gain`).
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 104 60
 

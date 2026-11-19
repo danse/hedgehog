@@ -10,7 +10,7 @@
 -- Eval the setup block below, then play the sections in order:
 -- Footing → Span → Load → Overhang → Creak → Snap → Settle → Afterimage.
 --
--- Gotchas: reverb size <= 0.9; `gain` is amp * gain^4 (trim with gain).
+-- Gotchas: shared rules in notes/learning/gotchas.md.
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns. One `let` block: eval all at once (C-RET).
