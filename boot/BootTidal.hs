@@ -1,5 +1,5 @@
 -- Expose tidal-core so the chord helpers are importable.
-:set -package tidal-core
+:set -package tidal-core -package containers
 :set -fno-warn-orphans -Wno-type-defaults -XMultiParamTypeClasses -XOverloadedStrings
 :set prompt ""
 
@@ -9,11 +9,16 @@ import Sound.Tidal.Boot
 -- Tidal Chords (e.g. chord "d4" "min7" []).
 import Sound.Tidal.Chords
 
--- Stream IDs, for the shared fade helpers.
-import Sound.Tidal.ID (ID)
+-- Stream IDs, for the shared fade helpers and cycleD.
+import Sound.Tidal.ID (ID(..))
 
--- Concurrency, for gentle tempo changes (glideBpm).
-import Control.Concurrent (forkIO, threadDelay)
+-- Concurrency, for gentle tempo changes (glideBpm) and the cycleD sweep.
+import Control.Concurrent (forkIO, readMVar, threadDelay)
+import Control.Monad (forM_)
+import Data.List (sortOn)
+import qualified Data.Map.Strict as Map
+import Text.Read (readMaybe)
+import System.IO (hFlush, stdout)
 
 default (Rational, Integer, Double, Pattern String)
 
@@ -49,6 +54,29 @@ let glideBpm :: Double -> Double -> IO ()
             setbpm (realToFrac (s + step * fromIntegral i))
             threadDelay pause)
           [1 .. n]
+      pure ()
+:}
+
+-- --- one-pass solo sweep ---------------------------------------------------
+-- `cycleD secs` solos each active stream for `secs` seconds, then unsolos it
+-- and moves to the next, so one pass splits the texture into its voices.
+-- Active streams are the ones `list` shows; we read Tidal's stream map
+-- directly to get their IDs, because `list` only prints them. The helper
+-- prints the voice ID just before soloing it. The sweep runs in the
+-- background, so the interpreter stays free, and calling cycleD again runs
+-- another pass.
+:{
+let cycleD :: Double -> IO ()
+    cycleD secs = do
+      pmap <- readMVar (sPMapMV tidalInst)
+      let ids = map ID $ sortOn (\k -> readMaybe k :: Maybe Int) (Map.keys pmap)
+      _ <- forkIO $
+        forM_ ids $ \i -> do
+          putStrLn (fromID i)
+          hFlush stdout
+          solo i
+          threadDelay (round (secs * 1000000))
+          unsolo i
       pure ()
 :}
 

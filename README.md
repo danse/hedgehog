@@ -70,8 +70,8 @@ Each area documents itself:
 project editor config (which loads `~/.emacs` last, so personal preferences win;
 batch checks skip it), and `recordings/` the gitignored takes.
 `boot/BootTidal.hs` also defines the shared track helpers (`speedAt`, `swing8`,
-`swing16`, `chordAt`, `fadeSilence`, `fadeMulti`, `glideBpm`), so each track's
-setup block only defines its own voices and arrangements.
+`swing16`, `chordAt`, `fadeSilence`, `fadeMulti`, `glideBpm`, `cycleD`), so each
+track's setup block only defines its own voices and arrangements.
 
 ## Sound check
 
