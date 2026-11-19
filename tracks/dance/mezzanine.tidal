@@ -1,16 +1,23 @@
--- Mezzanine — UK garage / first draft
--- 130 BPM · G minor. Four-bar loop: Gm9 | Gm9 | Ebmaj9 | F6/9, one chord per
--- bar. This is an audition, not an arrangement: each of the ten streams appears
--- once, with the sample it uses and the barest pattern that shows what it does.
--- Evaluate the block whole, then change one seat at a time.
+-- Mezzanine — UK garage / one loop
+-- 130 BPM · G minor. One four-bar loop — Gm9 | Gm9 | Ebmaj9 | F6/9, one chord
+-- per bar — and one band all the way through. The opening states all ten
+-- seats; the break halves the time and empties the kit; the return brings the
+-- 2-step back in layers; the turn keeps the key and changes the phrases; the
+-- peak doubles the hats; the outro thins back to pad, sub and air. Hold each
+-- section until it says it is done — the bar counts below are only a shape.
 --
 -- The 2-step is the point: kick on 1 and the "&" of 2, snare on 3, the rim
 -- answering on the "&" of 3, open hat on the "&" of 4, hats swung with
 -- swing16. Keep the swing on the hats and rim; never on the kick or the sub.
 --
+-- Eval the setup block first, then the opening, then sections 2-6 in order;
+-- the final `fadeSilence` is the ending, so leave it until the outro has run.
+--
 -- dN is a seat: 1 kick, 2 hats, 3 sub, 4 keys, 5 snare, 6 organ, 7 open hat,
--- 8 rim, 9 vocal chop, 10 air. Nothing is arranged yet — the sections come
--- after the voices sound right.
+-- 8 rim, 9 vocal chop, 10 air. Sections replace seats with xfadeIn or a bare
+-- `dN`, and clear them with fadeSilence, so the numbers keep their meaning all
+-- night. The `drive` alternative from the opening becomes the Return kick;
+-- `melody` is the opening's second reading.
 --
 -- Gotchas: reverb size <= 0.9; `amp` is linear; accidentals in mini-notation
 -- are `s`/`f` (cs4, bf3). Sample bases: moog:3 is G1, juno:7 is C3, juno:5 is
@@ -21,64 +28,215 @@
 
 glideBpm 130 30
 
--- d1 · kick. feel:0 ("BD 04 d"). 2-step: 1 and the "&" of 2.
-d1 $ s "feel:0 ~ ~ feel:0 ~ ~ ~ ~"
-  # amp 0.95 # room 0.04 # size 0.1
+-- ---------------------------------------------------------------------------
+-- Reused voices. Note patterns are named separately from the controls that
+-- play them, so a section can restate a voice with its own rhythm; the `At`
+-- helpers wrap a note pattern with its controls. Anything used once stays
+-- inline at its section. Keep this whole block one paragraph: C-RET evaluates
+-- the paragraph at point.
+-- ---------------------------------------------------------------------------
+let
+  hats :: ControlPattern
+  hats = swing16 $ s "feel:1*16" -- feel:1 is HH 003b; sixteenths, swung
+      # amp "0.5 0.22 0.34 0.22" # hpf 700 # room 0.06 # size 0.16
+  hatsPeak :: ControlPattern
+  hatsPeak = swing16 $ every 8 (fast 2) $ s "feel:1*16"
+      # amp "0.5 0.22 0.34 0.22" # hpf 700 # room 0.06 # size 0.16
+  kickOn :: Pattern String -> ControlPattern
+  kickOn p = s p # amp 0.95 # room 0.04 # size 0.1
+  kick :: ControlPattern
+  kick = kickOn "feel:0 ~ ~ feel:0 ~ ~ ~ ~" -- BD 04 d; 1 and the "&" of 2
+  kickDrive :: ControlPattern
+  kickDrive = kickOn (cat [
+      "feel:0 ~ ~ feel:0 ~ ~ ~ feel:0",
+      "feel:0 ~ ~ feel:0 ~ ~ ~ feel:0",
+      "feel:0 ~ ~ feel:0 ~ ~ ~ feel:0",
+      "feel:0 ~ ~ ~ ~ ~ feel:0 ~ ~ ~ ~ ~ feel:0 ~ ~ feel:0"])
+  bassRoots :: Pattern Note
+  bassRoots = cat ["g1", "g1", "ef1", "f1"] -- moog:3 is G1
+  subAt :: Pattern Note -> ControlPattern
+  subAt p = s "moog:3" # speedAt "g1" p
+      # sustain 0.5 # release 0.25 # lpf 240 # lpq 0.2 # amp 2
+  sub :: ControlPattern
+  sub = subAt bassRoots
+  keysChords :: Pattern Note
+  keysChords = cat [ -- juno:7 is release mid at C3; one chord per bar
+      "[g3,bf3,d4,f4]",
+      "[g3,bf3,d4,f4]",
+      "[ef3,g3,bf3,d4]",
+      "[f3,a3,c4,d4]"]
+  keysPad :: ControlPattern
+  keysPad = s "juno:7" # speedAt "c3" keysChords
+      # sustain 0.5 # release 0.6 # lpf 2400 # room 0.55 # size 0.7 # amp 0.3
+  keysLine :: Pattern Note
+  keysLine = cat [ -- juno:8 is release high at C5, an octave up
+      "g4 ~ ~ ~ ~ ~ ~ bf4 ~ d5 ~ ~ ~ ~ ~ ~",
+      "c5 ~ ~ ~ ~ ~ bf4 ~ ~ ~ ~ a4 ~ ~ ~ ~",
+      "g4 ~ ~ ~ ~ ~ ~ ef5 ~ ~ d5 ~ ~ ~ ~ ~",
+      "c5 ~ ~ ~ ~ ~ a4 ~ ~ ~ ~ ~ g4 ~ ~ ~"]
+  keysMelodyAt :: Pattern Note -> ControlPattern
+  keysMelodyAt p = swing16 $ speedAt "c5" p # s "juno:8"
+      # sustain 0.12 # release 0.18 # lpf 2800 # room 0.5 # size 0.65 # amp 0.3
+  keysMelody :: ControlPattern
+  keysMelody = keysMelodyAt keysLine
+  snareOn :: Pattern String -> ControlPattern
+  snareOn p = s p # amp 0.62 # room 0.22 # size 0.4
+  snare :: ControlPattern
+  snare = snareOn "~ ~ ~ ~ feel:2 ~ ~ ~" -- Sd 139; beat 3, the anchor
+  organChords :: Pattern Note
+  organChords = cat [ -- juno:5 is chorus high at C5
+      "[g4,bf4,d5]",
+      "[g4,bf4,d5]",
+      "[ef4,g4,bf4]",
+      "[f4,a4,c5]"]
+  organOn :: Pattern Bool -> Pattern Note -> ControlPattern
+  organOn rhythm p = struct rhythm $ s "juno:5"
+      # speedAt "c5" p
+      # sustain 0.12 # release 0.12 # lpf 2200 # room 0.3 # size 0.45 # amp 0.34
+  organ :: ControlPattern
+  organ = organOn "~ t ~ t ~ t ~ t" organChords
+  openHat :: ControlPattern
+  openHat = s "~ ~ ~ ~ ~ ~ ~ jungle:7" -- jungle4openhh, the "&" of 4
+      # amp 2 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
+  rim :: ControlPattern
+  rim = s "~ ~ ~ ~ ~ ~ rs ~" -- answers the snare on the "&" of 3
+      # amp 0.8 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+  vocalNotes :: Pattern Note
+  vocalNotes = cat ["a4", "a4", "c5", "ef5"]
+  vocalAt :: Pattern Note -> ControlPattern
+  vocalAt p = degrade $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
+      # begin 0.2 # end 0.62 -- trims the phrase down to the vowel
+      # speedAt "gs4" p
+      # sustain 0.06 # release 0.12 # hpf 300 # lpf 6000
+      # room 0.3 # size 0.5 # amp 5
+  vocal :: ControlPattern
+  vocal = vocalAt vocalNotes
+  turnVocalNotes :: Pattern Note
+  turnVocalNotes = cat [ -- the rising answer to the turn's keys cell
+      "~ ~ ~ ~ ~ g4 ~ ~ bf4 ~ ~ d5 ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ g4 ~ ~ bf4 ~ ~ d5 ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ g4 ~ ~ bf4 ~ ~ ef5 ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ a4 ~ ~ c5 ~ ~ d5 ~ ~ ~ ~"]
+  air :: ControlPattern
+  air = slow 4 $ s "wind:1" -- a slow swell every four bars
+      # speed 0.35 # hpf 300 # lpf 1200 # room 0.4 # size 0.6 # amp 0.4
 
--- d1 · alt "drive" — the same 2-step with a kick on 4 as well; the fourth bar
+-- 1. Opening — all ten seats, with the drive kick and melody line as the two
+--    alternatives. Hold this before moving on.
+d1 kick
+
+d2 hats
+
+d3 sub
+
+d4 keysPad
+
+d5 snare
+
+d6 organ
+
+d7 openHat
+
+d8 rim
+
+d9 vocal
+
+d10 air
+
+-- alt "drive" — the same 2-step with a kick on 4 as well; the fourth bar
 -- stutters on the "a" of 4 into whatever comes next. Same sample, same amp.
-d1 $ s "<[feel:0 ~ ~ feel:0 ~ ~ ~ feel:0] [feel:0 ~ ~ feel:0 ~ ~ ~ feel:0] [feel:0 ~ ~ feel:0 ~ ~ ~ feel:0] [feel:0 ~ ~ ~ ~ ~ feel:0 ~ ~ ~ ~ ~ feel:0 ~ ~ feel:0]>"
-  # amp 0.95 # room 0.04 # size 0.1
+d1 $ kickDrive
 
--- d2 · closed hats. feel:1 ("HH 003b"). Sixteenths, swung; accents every four.
-d2 $ swing16 $ s "feel:1*16"
-  # amp "0.5 0.22 0.34 0.22" # hpf 700 # room 0.06 # size 0.16
+-- alt "melody" — the same seat, an octave up, playing a four-bar line instead
+-- of the chord: G Bb D / C Bb A / G Eb D / C A G. The harmony is implied by
+-- the sub and the line, so drop d6 while this plays. The gaps are deliberate —
+-- the line answers the 2-step instead of filling it.
+d4 $ keysMelody
 
--- d3 · sub. Chord roots, one per bar; moog:3 is G1.
-d3 $ s "moog:3" # speedAt "g1" "<g1 g1 ef1 f1>"
-  # sustain 0.5 # release 0.25 # lpf 240 # lpq 0.2 # amp 2
+-- ---------------------------------------------------------------------------
+-- Development. One cycle is one bar (~1.85 s at 130 BPM). Bar counts are a
+-- guide, not a timer. The final fadeSilence is the ending — evaluate it last.
+-- ---------------------------------------------------------------------------
 
--- d4 · keys. A chord per bar, juno:7 (release mid at C3) left to ring.
-d4 $ s "juno:7"
-  # speedAt "c3" "<[g3,bf3,d4,f4] [g3,bf3,d4,f4] [ef3,g3,bf3,d4] [f3,a3,c4,d4]>"
-  # sustain 0.5 # release 0.6 # lpf 2400 # room 0.55 # size 0.7 # amp 0.3
+-- 2. Break — 8 bars, half-time. The kit, the tops and the organ stop dead on
+--    the bar; the pad, the sub and the vocal switch to two bars per chord at
+--    the same instant, so what is left is the loop in slow motion. Nothing
+--    fades — the reverb tail of the last hits is the join. Evaluate this
+--    paragraph on a downbeat.
+d1 silence
+d2 silence
+d5 silence
+d6 silence
+d7 silence
+d8 silence
+d10 silence
+d4 $ slow 2 $ keysPad
+d3 $ slow 2 $ subAt bassRoots # amp 1.2 # lpf 200
+d9 $ slow 2 $ vocal
 
--- d4 · alt "melody" — the same seat, an octave up (juno:8, release high at
--- C5), playing a four-bar line instead of the chord: G Bb D / C Bb A /
--- G Eb D / C A G over Gm9 Gm9 Ebmaj9 F6/9. The harmony is implied by the
--- sub and the line, so drop d6 while this plays. Straight or swung, both work;
--- the gaps are deliberate — the line answers the 2-step instead of filling it.
-d4 $ swing16 $ speedAt "c5" "<[g4 ~ ~ ~ ~ ~ ~ bf4 ~ d5 ~ ~ ~ ~ ~ ~] [c5 ~ ~ ~ ~ ~ bf4 ~ ~ ~ ~ a4 ~ ~ ~ ~] [g4 ~ ~ ~ ~ ~ ~ ef5 ~ ~ d5 ~ ~ ~ ~ ~] [c5 ~ ~ ~ ~ ~ a4 ~ ~ ~ ~ ~ g4 ~ ~ ~]>" # s "juno:8"
-  # sustain 0.12 # release 0.18 # lpf 2800 # room 0.5 # size 0.65 # amp 0.3
+-- 3. Return — 16 bars. The 2-step comes back on the bar, not by fading:
+--    evaluate one paragraph per bar and each layer lands whole. Hats, sub and
+--    the drive kick first, then the pad, snare and rim, then open hat, organ
+--    and vocal.
+d1 kickDrive
+d2 hats
+d3 sub
 
--- d5 · snare. feel:2 ("Sd 139"). Beat 3, the anchor of the 2-step.
-d5 $ s "~ ~ ~ ~ feel:2 ~ ~ ~"
-  # amp 0.62 # room 0.22 # size 0.4
+d4 keysPad
+d5 snare
+d8 rim
 
--- d6 · organ stab. juno:5 (chorus high at C5): offbeat eighths, short.
-d6 $ struct "~ t ~ t ~ t ~ t"
-  $ s "juno:5"
-  # speedAt "c5" "<[g4,bf4,d5] [g4,bf4,d5] [ef4,g4,bf4] [f4,a4,c5]>"
-  # sustain 0.12 # release 0.12 # lpf 2200 # room 0.3 # size 0.45 # amp 0.34
+d6 organ
+d7 openHat
+d9 vocal
 
--- d7 · open hat. jungle:7 ("jungle4openhh"). The "&" of 4.
-d7 $ s "~ ~ ~ ~ ~ ~ ~ jungle:7"
-  # amp 2 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
+-- 4. Turn — 16 bars. Same key, same 2-step: only the phrases change. They
+--    arrive on the bar rather than by fading, so evaluate one paragraph every
+--    bar or two and the texture grows a layer at a time — organ stabs, then
+--    the vocal answer, then the keys cell. The pad steps out for the cell.
 
--- d8 · rim. Answers the snare on the "&" of 3.
-d8 $ s "~ ~ ~ ~ ~ ~ rs ~"
-  # amp 0.8 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+-- change this offbeat
+d6 $ organOn "t ~ ~ t ~ ~ t ~" (cat [
+  "bf4 d5 g4",
+  "bf4 d5 g4",
+  "bf4 ef5 g4",
+  "a4 c5 d5"])
 
--- d9 · vocal chop. diphone:26 ("kd1_028") is a sung A♭4; begin/end trims the
--- phrase down to the vowel, speedAt moves it onto the chord.
-d9 . degrade $ s "~ diphone:26 ~ ~ ~ diphone:26 ~ ~"
-  # begin 0.2 # end 0.62
-  # speedAt "gs4" "<a4 a4 c5 ef5>"
-  # sustain 0.06 # release 0.12 # hpf 300 # lpf 6000
-  # room 0.3 # size 0.5 # amp 5
+d9 $ vocalAt turnVocalNotes
 
--- d10 · air. A slow wind swell every four bars; risers land here later.
-d10 $ slow 4 $ s "wind:1"
-  # speed 0.35 # hpf 300 # lpf 1200 # room 0.4 # size 0.6 # amp 0.4
+d4 $ keysMelodyAt (cat [
+  "~ ~ d5 ~ bf4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ d5 ~ bf4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ef5 ~ bf4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ c5 ~ a4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~"])
 
+-- 5. Peak — 32 bars. Nothing leaves: the phrases are all in, the hats double
+--    once every eight bars and the open hat and the vocal come forward. The
+--    low end accelerates underneath — the sub doubles from one root per bar
+--    to eighths to sixteenths, the kick goes four-to-the-floor and then to
+--    eighths, and the snare moves to 2 and 4 so they stop colliding. Each
+--    stage is a hard swap, so evaluate one every eight bars.
+xfadeIn 2 2 $ hatsPeak
+xfadeIn 7 2 $ openHat # amp 2.4
+xfadeIn 9 2 $ vocalAt turnVocalNotes # sustain 0.08 # lpf 7000 # amp 6
+
+-- stage 2, after 8 bars — eighths on the sub, four-to-the-floor kick, and the
+-- backbeat moves off the kick to 2 and 4.
+d1 $ kickOn "feel:0*4"
+d5 $ snareOn "~ ~ feel:2 ~ ~ ~ feel:2 ~"
+d3 $ fast 2 $ subAt bassRoots # sustain 0.2 # release 0.1 # amp 2
+
+-- stage 3 — sixteenths on the sub, eighths on the kick under the same
+-- backbeat; the Outro's `sub` puts the bass back to one root per bar.
+d1 $ kickOn "feel:0*8" # amp 0.7
+d3 $ fast 4 $ subAt bassRoots # sustain 0.1 # release 0.1 # amp 2
+
+-- 6. Outro — 16 bars. Back to the pad; the band thins to sub, keys and air
+--    before the long fade takes the last three seats.
+xfadeIn 4 4 $ keysPad
+xfadeIn 3 4 $ sub
+xfadeIn 10 8 air
+fadeSilence 8 [1, 2, 5, 6, 7, 8, 9]
+
+-- End
 fadeSilence 24 [1,2,3,4,5,6,7,8,9,10]
