@@ -278,7 +278,7 @@ xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
 -- 11. Outro — 16 bars. The loop comes back down to A minor: pad, sub, comp and
 --     kick. Everything melodic goes over eight bars, the tempo settles, and
 --     the kick keeps the room open under the pad.
-glideBpm 124 8
+glideBpm 124 30
 fadeSilence 8 [2, 5, 7, 8, 9, 10]
 xfadeIn 4 2 $ pad hA
   # release 1.2 # room 0.55 # size 0.7

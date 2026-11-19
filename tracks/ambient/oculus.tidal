@@ -23,9 +23,10 @@ d2 $ speedAt "cs4" (cat [
 -- drone. pad:2 (bellpad-harmonics) at C2, one chord root per bar. The
 -- sample is a C bell chord, so transposing it gives major triads: E♭, C, A♭,
 -- B♭. Let it ring past the bar.
-d3 $ s "pad:2"
-  # speedAt "c2" "<ef2 ef2 c2 bf1>"
-  # sustain 3 # release 2 # lpf 550 # room 0.55 # size 0.8 # amp 0.7
+let drone = s "pad:2"
+      # speedAt "c2" "<ef2 ef2 c2 bf1>"
+      # sustain 3 # release 2 # lpf 550 # room 0.55 # size 0.8 # amp 0.5
+d3 drone
 
 let synth n = s "supersaw"
       # note n
@@ -55,7 +56,7 @@ xfadeIn 2 16 silence -- lead
 
 -- guitar answer. The lead line mirrored around F4 (n -> 130 - n) and dropped
 -- an octave: E♭3-E♭4, between the bed and the choir.
-xfadeIn 2 16 $ speedAt "c2" (cat [
+d2 $ speedAt "c2" (cat [
     "ef4 ~ ~ c4 ~ ~ bf3 ~",
     "g3 ~ ~ bf3 ~ ~ c4 ~",
     "bf3 ~ ~ g3 ~ ~ ef3 ~",
@@ -64,18 +65,19 @@ xfadeIn 2 16 $ speedAt "c2" (cat [
 
 -- synth answer. The same four bars, rotated one bar late, so each phrase lands
 -- over the next chord; the pad's own voice carries it.
-xfadeIn 4 24 $ synth (cat [
+xfadeIn 4 16 $ synth (cat [
     "f3 ~ ~ af3 ~ ~ c4 ~",
     "ef4 ~ ~ c4 ~ ~ bf3 ~",
     "g3 ~ ~ bf3 ~ ~ c4 ~",
     "bf3 ~ ~ g3 ~ ~ ef3 ~"])
-  # lpf 2600 # amp 0.1 # legato 3
-xfadeIn 5 24 silence -- choir
+  # lpf 2600 # amp 0.1
+xfadeIn 5 16 silence -- choir
 
 
 fadeSilence 16 [
   1, -- "bells"
-  2] -- guitar
+  2, -- guitar
+  3] -- drone
 
 
 -- the lead returns from below; the line circles inside a fourth (f4-bf4) and
@@ -92,7 +94,7 @@ xfadeIn 2 8 $ speedAt "cs4" (cat [
 
 -- tenor bass. moog:1 is C3; the cell rocks root-fifth-third, dry
 -- enough to sit between the high recall and the drone.
-xfadeIn 2 16 $ speedAt "c3" (cat [
+xfadeIn 2 8 $ speedAt "c3" (cat [
     "ef3 ~ ef3 _ ~ g3 ef3 ~",
     "c3 ~ c3 _ ~ ef3 c3 ~",
     "af2 ~ af2 _ ~ c3 af2 ~",
