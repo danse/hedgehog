@@ -25,3 +25,7 @@ emacs/projects
 *.flac
 *.mp3
 eln-cache/
+
+# Python bytecode
+__pycache__/
+*.pyc

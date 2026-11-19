@@ -24,6 +24,12 @@ file does not boot a server; run `pw-jack scsynth ...` first if starting by hand
 | `audio-bt.sh` | Route SuperCollider output to Bluetooth headphones. |
 | `record.sh [name]` | Record the default monitor to 24-bit WAV in `recordings/`. |
 
+## Analysis
+
+| Script | Purpose |
+|---|---|
+| `analyse-audio.py [--window S] [--bands Hz,...] [--f0] [--raw-f32 SR CH] FILE…` | Per-window RMS, peak, spectral centroid and band balance, with optional pitch. Needs only numpy. This is where the one-off audio analyses live so they survive a `/tmp` wipe — e.g. the pluck sample's hissy tail (centroid 333 → 4057 Hz over 1.5 s). |
+
 ## JACK clients and the default sink
 
 `up.sh` starts scsynth under `pw-jack`, so it is a **JACK client**, not an
