@@ -57,11 +57,7 @@ d6 $ slow 2 piano
 
 -- d7 · dub stab — `stab` is a chord sample; `n` picks the chord
 d7 $ struct "~ ~ ~ t" $ s "stab" # n 5
-  # amp 0.32 # lpf 1400 # lpq 0.2 # room 0.55 # size 0.7
-
--- d8 · air — one breath every four cycles
-d8 $ slow 4 $ s "breath" # sustain 0.5
-  # hpf 500 # lpf 2400 # room 0.65 # size 0.82 # amp 0.55
+  # amp 0.3 # lpf 1400 # lpq 0.2 # room 0.55 # size 0.7
 
 -- d8 · creak — sparse metal, tuned by `speed`
 d8 . degrade . slow 2 $ s "metal" # n (irand 10)
@@ -95,7 +91,7 @@ d2 $ speedAt "c2" "<[d3 d3 ~ f3 a2 ~ c3 ~] [d3 ~ f3 a2 c3 ~ g2 a2] [d3 d3 ~ f3 a
 -- d3 · open offbeats: `gretsch:17` is the open hat; it answers the kick
 d3 $ degradeBy 0.1 $ s "~ gretsch:17 ~ gretsch:17 ~ gretsch:17 ~ gretsch:17"
   # sustain 0.3 # release 0.2 # lpf 9000
-  # room 0.15 # size 0.28 # amp 0.5
+  # room 0.15 # size 0.28 # amp 0.9
 
 -- 5. Emphasis — after the turn, d5 stops ticking and starts singing: a slow
 --    sax line in D dorian. d6 takes the piano motif and runs it at 16x — a
@@ -103,11 +99,12 @@ d3 $ degradeBy 0.1 $ s "~ gretsch:17 ~ gretsch:17 ~ gretsch:17 ~ gretsch:17"
 
 d5 $ slow 2 $ speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~ f4 ~ e4 ~] [d4 ~ ~ ~ ~ ~ ~ ~]>"
   # s "sax" # n 5
-  # sustain 1.2 # release 1.0 # amp 0.4 # hpf 150 # lpf 1800 # lpq 0.25
-  # room 0.65 # size 0.82
+  # sustain 1.2 # release 1.0 # hpf 150 # lpf 1800 # lpq 0.25
+  # room 0.65 # size 0.82 # amp 0.8
 
 -- d6 · fast answer: the trio's motif, sped up into a shimmer
 d6 piano
+
 
 -- 6. Coda — leave section 5 running and evaluate these in order, a few bars
 --    apart. The melody goes first and each layer below it takes longer to
@@ -118,11 +115,14 @@ d6 piano
 fadeSilence 16 [
   5, -- sax
   6, -- piano
-  8] -- other wind-brown sample
+  8] -- other wind-blown sample
 
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]
 fadeSilence 16 [1]
+
+-- we have a present bass walking on the 2
+
 
 -- we are closing. The bass drops to a low D pedal and the bed's piano
 -- plays one last Dm9
