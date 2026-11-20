@@ -36,7 +36,7 @@
 -- cp:0 is the clap, rs the rimshot. jvbass:0 is the sub, pluck:8 the comp,
 -- moog:2 the lead; speedAt keeps them in their own samples.
 
-glideBpm 124 8
+glideBpm 124 30
 
 -- ---------------------------------------------------------------------------
 -- Reused voices. Everything else is inline at its section.
@@ -104,6 +104,7 @@ xfadeIn 6 16 $ struct "~ t ~ t t ~ ~ t"
 xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
   # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56
 
+
 -- 3. Hook — 32 bars. The rim tick and the lead enter, the lead still behind a
 --    filter: a shape, not yet a tune. The hats stay 16ths; the open hat is
 --    already there.
@@ -113,6 +114,7 @@ d9 . degrade $ speedAt "c4" hook
   # s "moog" # n 2
   # sustain 0.26 # release 0.2 # lpf 900 # lpq 0.35
   # room 0.35 # size 0.55 # amp 0.42 # pan 0.6
+
 
 -- 4. Peak one — 24 bars. The filter opens on the lead and the comp, the kick
 --    is unfiltered, and a shout lands on the one every eight bars. Nothing new
@@ -132,6 +134,7 @@ xfadeIn 9 4 $ speedAt "c4" hook
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 
+
 -- 5. Break — 8 bars. Everything but the bass and the pad goes; the bass drops
 --    to an A pedal and the pad holds the loop. A noise riser takes the place
 --    of the shout and sweeps the eight bars. Evaluate 6 on the last bar.
@@ -144,7 +147,8 @@ xfadeIn 10 8 $ s "hedge_noise"
   # room 0.4 # size 0.6 # amp 0.28
 fadeSilence 16 [1, 2, 5, 6, 7, 8, 9]
 
--- 6. Drop — 32 bars. This is the first peak again, a fourth down from
+
+-- 6. Back — 32 bars. This is the first peak again, a fourth down from
 --    where the track ends. The band comes back in two passes: drums
 --    over two bars, everything else over four, so the kick lands
 --    before the harmony does.
@@ -179,6 +183,7 @@ fadeMulti 4
       # room 0.32 # size 0.5 # amp 0.46 # pan 0.6)
   ]
 
+
 -- 7. Turn — 16 bars. The whole loop moves up a fourth: pad, bass, comp and
 --    hook are the same patterns with `|+ 5`. The drums stay exactly where they
 --    were, so the key change is the only new information. Two-bar fades, so the
@@ -198,6 +203,7 @@ xfadeIn 9 2 $ speedAt "c4" (hook |+ 5)
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
 
+
 -- 8. Deep — 32 bars. The dub room: hats, open hat and lead go, the comp drops
 --    to one stab every two bars and the clap goes soft. Kick, sub, rim and pad
 --    keep the pulse. Let it run; this is where the second half breathes.
@@ -209,6 +215,7 @@ xfadeIn 6 8 $ slow 2 $ struct "~ t ~ ~ ~ t ~ ~"
   # speedAt "d5" (stabs |+ 5)
   # sustain 0.3 # release 0.3 # lpf 1200 # lpq 0.28
   # room 0.55 # size 0.72 # amp 0.4 # pan 0.42
+
 
 -- 8b. Deeper, half-time — 8 bars (optional). Evaluate this when 8 has said
 --     enough, or skip it and let 8 keep running. The kick drops to beats 1 and
@@ -222,6 +229,7 @@ xfadeIn 1 4
 xfadeIn 5 4 $ s "~ ~ ~ ~ cp:0 ~ ~ ~"
   # amp 0.42 # room 0.34 # size 0.5
 xfadeIn 8 4 silence
+
 
 -- 9. Lift — 16 bars. The second approach is not a break: nobody leaves, and
 --    the build happens on top of the band. Hats return and double to 32nds,
@@ -275,6 +283,7 @@ xfadeIn 10 2 $ slow 8 $ s "ho" # n 0
   # speedAt "ds5" "a4"
   # sustain 0.4 # release 0.3 # room 0.3 # size 0.5 # amp 0.5
 
+
 -- 11. Outro — 16 bars. The loop comes back down to A minor: pad, sub, comp and
 --     kick. Everything melodic goes over eight bars, the tempo settles, and
 --     the kick keeps the room open under the pad.
@@ -291,6 +300,7 @@ xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"
   # speedAt "d5" stabs
   # sustain 0.2 # release 0.2 # lpf 1400 # lpq 0.28
   # room 0.42 # size 0.62 # amp 0.36 # pan 0.42
+
 
 -- 12. End — 8 bars. The band leaves; the pad becomes one Am9, re-blooming
 --     every two bars, and the kick goes with it. `hush` after the chord has

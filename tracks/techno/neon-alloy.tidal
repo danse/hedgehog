@@ -7,7 +7,7 @@
 --
 -- Gotchas: shared rules in notes/learning/gotchas.md.
 
-glideBpm 118 16
+glideBpm 118 30
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns (eval this whole block together)
@@ -69,7 +69,7 @@ let
 -- 1. Intro — beat + bass + filtered synths
 
 d1 kick
-xfadeIn 2 24 hats
+xfadeIn 2 16 hats
 
 d3 $ bassMain # lpf 320
 
@@ -78,6 +78,7 @@ d3 $ stack [bassMain, bassOct]
 
 xfadeIn 5 8 $ chords # lpf 400
 
+
 -- 2. Verse — groove settles, hook teases
 
 d2 $ stack [hats, hatsOpen]
@@ -85,9 +86,8 @@ d6 $ degradeBy 0.2 $ shimmer
 -- tease the hook
 d7 $ hook # lpf 2800
 
--- breathe
-
 d6 $ stack [shimmer, stab]
+
 
 xfadeIn 5 8 chordsStab -- noticeable
 
@@ -99,12 +99,14 @@ d7 hook
 d6 $ stack [stab, shimmer # gain 0.64]
 xfadeIn 5 8 silence
 
-xfadeIn 5 32 $ stack [chords, arp] -- juggler melody
 
+xfadeIn 5 32 $ stack [chords, arp] -- juggler melody
 -- drive variation
 d1 kickDrive
 d3 bassDrive
+
 xfadeIn 5 16 $ stack [chords, arp, chordsStab] -- future melody
+
 
 -- pull back
 d7 lead
@@ -122,6 +124,7 @@ fadeMulti 16 [
 
 d6 hoover
 d3 $ stack [bassMain, bassOct]
+
 
 -- meditative at this point, and complex enough, but there is some
 -- noise on the bass

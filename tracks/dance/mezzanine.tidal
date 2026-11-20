@@ -131,6 +131,7 @@ d3 sub
 
 d4 keysPad
 
+
 d5 snare
 
 d6 organ
@@ -143,15 +144,6 @@ d9 vocal
 
 d10 air
 
--- alt "drive" — the same 2-step with a kick on 4 as well; the fourth bar
--- stutters on the "a" of 4 into whatever comes next. Same sample, same amp.
-d1 $ kickDrive
-
--- alt "melody" — the same seat, an octave up, playing a four-bar line instead
--- of the chord: G Bb D / C Bb A / G Eb D / C A G. The harmony is implied by
--- the sub and the line, so drop d6 while this plays. The gaps are deliberate —
--- the line answers the 2-step instead of filling it.
-d4 $ keysMelody
 
 -- ---------------------------------------------------------------------------
 -- Development. One cycle is one bar (~1.85 s at 130 BPM). Bar counts are a
@@ -190,12 +182,13 @@ d6 organ
 d7 openHat
 d9 vocal
 
+
 -- 4. Turn — 16 bars. Same key, same 2-step: only the phrases change. They
 --    arrive on the bar rather than by fading, so evaluate one paragraph every
 --    bar or two and the texture grows a layer at a time — organ stabs, then
 --    the vocal answer, then the keys cell. The pad steps out for the cell.
 
--- change this offbeat
+-- eval this offbeat
 d6 $ organOn "t ~ ~ t ~ ~ t ~" (cat [
   "bf4 d5 g4",
   "bf4 d5 g4",
@@ -209,6 +202,7 @@ d4 $ keysMelodyAt (cat [
   "~ ~ d5 ~ bf4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~",
   "~ ~ ef5 ~ bf4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~",
   "~ ~ c5 ~ a4 ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~"])
+
 
 -- 5. Peak — 32 bars. Nothing leaves: the phrases are all in, the hats double
 --    once every eight bars and the open hat and the vocal come forward. The
@@ -230,6 +224,18 @@ d3 $ fast 2 $ subAt bassRoots # sustain 0.2 # release 0.1 # amp 2
 -- backbeat; the Outro's `sub` puts the bass back to one root per bar.
 d1 $ kickOn "feel:0*8" # amp 0.7
 d3 $ fast 4 $ subAt bassRoots # sustain 0.1 # release 0.1 # amp 2
+
+
+-- alt "drive" — the same 2-step with a kick on 4 as well; the fourth bar
+-- stutters on the "a" of 4 into whatever comes next. Same sample, same amp.
+d1 $ kickDrive
+
+-- alt "melody" — the same seat, an octave up, playing a four-bar line instead
+-- of the chord: G Bb D / C Bb A / G Eb D / C A G. The harmony is implied by
+-- the sub and the line, so drop d6 while this plays. The gaps are deliberate —
+-- the line answers the 2-step instead of filling it.
+d4 $ keysMelody
+
 
 -- 6. Outro — 16 bars. Back to the pad; the band thins to sub, keys and air
 --    before the long fade takes the last three seats.
