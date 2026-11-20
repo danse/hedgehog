@@ -3,6 +3,15 @@
 Usage, layout and the live-coding workflow are in `README.md`; this file only
 records things that are not obvious from the repository itself.
 
+## Public repository
+
+The repo is public and development happens in the open. Commit messages, track
+headers and everything else committed are readable by strangers, so only commit
+material that has been listened to and can stand on its own. Untracked track
+drafts are deliberate: the user vets them by ear before they become part of the
+public record, and an unvetted whistle or stray effect would misrepresent the
+work. Keep score credits in the track headers and in `agents/making_of/README.md`.
+
 ## Local upstream checkouts
 
 When checking how Tidal or Hydra behaves, read the local checkouts before
