@@ -19,7 +19,7 @@ The track headers carry the same credits. Keep them when reusing the scores.
 |---|---|
 | `decode_chopin.py` | Current. Turns the Chopin MIDI into Tidal mini-notation; imported by both Chopin generators. |
 | `make_pas_de_deux.py` | Current single-section transcription. Its header predates the later gotchas-pointer edit. |
-| `make_ambient_nocturne.py` | Stale. It regenerates the original ambient track; the live file has since gained `glideBpm 70`, a parked note and header edits. |
+| `make_ambient_nocturne.py` | Stale. It regenerates the original ambient track; the live file has since gained `glideBpm 40 30`, `resetCycles`, a merged coda/cadenza ending in `hush`, and header edits. |
 | `make_nocturne.py` | Historical. Generated the techno nocturne, which has since been deleted. |
 | `make_giselle_sections.py` | Superseded four-section version; writes the old `tracks/techno/giselle.tidal` name. |
 

@@ -1,0 +1,249 @@
+-- Nocturne — ambient after Chopin's Nocturne Op. 9 No. 2
+-- 40 BPM · beatless. The same 37-bar transcription as the techno version.
+-- Score: Frédéric Chopin, Nocturne Op. 9 No. 2 (1833); edition and LilyPond
+-- typesetting © 2014 Renato Biolcati Rinaldi, Mutopia-2014/12/18-1590
+-- (www.mutopiaproject.org), licensed CC BY-SA 3.0
+-- (https://creativecommons.org/licenses/by-sa/3.0/). Made from G. Schirmer,
+-- New York, 1881 scans at the Library of Congress. Every note comes from that
+-- edition's MIDI. The right hand is the tune, the left hand's broken chords
+-- are the plucked voice, and the low note of each dotted-quarter group is the
+-- bass. The tune sits an octave below written pitch; everything else is as
+-- written.
+--
+-- Mapping: one score 32nd = one Tidal 16th, so a score eighth becomes a
+-- quarter and one 12/8 score bar becomes 48 slots = three Tidal cycles.
+-- One mini-notation line below is one score bar (~18 s here). At 40 BPM the
+-- whole piece runs about 11 minutes.
+--
+-- TODO: the decode drops note-offs, so every note is one slot even though 83%
+-- of the tune's notes are 2-slot holds in the score. The envelope sustains them
+-- for now; a real fix means updating decode_chopin.py to keep durations and
+-- make_ambient_nocturne.py to emit `_` elongations.
+--
+-- No kit. The score's own rhythm carries the movement. Sections follow its
+-- form: A (1-8), A' (9-16), A'' (17-24), Coda (25-31), cadenza/final (32-37).
+-- Each section's four streams are one editor paragraph: C-RET starts all of
+-- them together on the downbeat. No transitions between sections — the earlier
+-- xfadeIn ramps read as noise risers (the fiddle's bow scrape arrived before
+-- the tone), so sections now change hard. Envelopes are sized to the score's
+-- note spacing at this tempo: a 16th slot is 0.375 s, lead notes are typically
+-- 0.75 s apart and the left hand 1.5 s apart, so long fixed sustains would
+-- stack half a dozen copies of the same line. Reverb supplies the tail. The
+-- merged coda and cadenza are one paragraph, ended with hush.
+--
+-- Section 1 opens with resetCycles so a fresh start lands on the downbeat.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: `pluck:5` is C3, so speedAt runs from c4; moog:3 is G1.
+
+glideBpm 40 30
+
+-- ---------------------------------------------------------------------------
+-- Voices. Eval this whole block as one paragraph: C-RET at point.
+-- ---------------------------------------------------------------------------
+let
+  -- Bowed tune: a short attack and a modest overlap (about 0.65 s total
+  -- against a 0.38 s median gap) keep the line legato without stacking it.
+  -- One octave down from the score.
+  leadAt :: Pattern Note -> ControlPattern
+  leadAt p = note (p - 12) # s "hedge_fiddle"
+      # pF "bow" 0.08
+      # attack 0.06 # sustain 0.28 # release 0.32
+      # room 0.62 # size 0.8 # amp 1.1
+  -- Broken chords: just enough tail to join one pluck to the next. The pluck
+  -- sample decays into a bright hiss (its centroid climbs from ~330 Hz to
+  -- ~4 kHz by 1.5 s), and speedAt makes the high notes reach that tail inside
+  -- one short event. `end 0.35` plays only the tonal first third of the file.
+  keysAt :: Pattern Note -> ControlPattern
+  keysAt p = speedAt "c4" p # s "pluck" # n 5
+      # begin 0 # end 0.35
+      # sustain 0.32 # release 0.28 # lpf 2200 # lpq 0.25
+      # room 0.6 # size 0.76 # amp 0.6
+  -- Root notes only, felt more than heard: one per 2.3 s, with a little tail.
+  bassAt :: Pattern Note -> ControlPattern
+  bassAt p = speedAt "g1" p # s "moog:3"
+      # sustain 1.1 # release 0.7 # lpf 220 # lpq 0.2
+      # room 0.55 # size 0.7 # amp 1.1
+  -- Slow bowed bed under the whole piece; chord colour changes at the Coda.
+  padAt :: Pattern Note -> ControlPattern
+  padAt p = note p # s "hedge_strings"
+      # attack 1.5 # sustain 3 # release 2.5
+      # room 0.7 # size 0.85 # amp 1.2
+
+-- 1. A — score bars 1-8 — the tune in E-flat over its broken chords.
+resetCycles
+d2 $ leadAt (cat [
+  "g6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ g6 ~ ~ ~ f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ as5 ~ ~ ~",
+  "g6 ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ c7 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~",
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as5 ~ ~ ~ d7 ~ ~ ~ c7 ~ ~ ~ as6 ~ gs6 ~ g6 ~ gs6 ~ c6 ~ d6 ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as5 ~ ~ ~",
+  "g6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ g6 ~ f6 ~ e6 ~ f6 ~ g6 ~ f6 ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ds6 ~ d6 ~ ds6 ~ f6 ~",
+  "g6 ~ b5 ~ c6 ~ cs6 ~ c6 ~ f6 ~ e6 ~ gs6 ~ g6 ~ cs7 ~ c7 ~ g6 ~ as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~",
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [e6,f6] g6 ~ ~ ~ g6 ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as5 ~ ~ ~ d7 ~ ~ ~ c7 ~ ~ ~ as6 ~ gs6 ~ g6 ~ gs6 gs6 c6 ~ d6 ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~"])
+d3 $ keysAt (cat [
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [d5,gs4] ~ ~ ~ [b4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [e5,g4] ~ ~ ~ [as4,e5,g5] ~ ~ ~ ~ ~ ~ ~ [e5,g4] ~ ~ ~ [as5,c5,e5] ~ ~ ~ ~ ~ ~ ~ [cs5,f4] ~ ~ ~ [as4,cs5,e5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5,gs4] ~ ~ ~",
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [f5,g4] ~ ~ ~ [d5,f5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,fs4] ~ ~ ~ [c5,ds5,fs5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [d5,gs4] ~ ~ ~ [b4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [e5,g4] ~ ~ ~ [as4,e5,g5] ~ ~ ~ ~ ~ ~ ~ [e5,g4] ~ ~ ~ [as5,c5,e5] ~ ~ ~ ~ ~ ~ ~ [cs5,f4] ~ ~ ~ [as4,cs5,e5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5,gs4] ~ ~ ~",
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [f5,g4] ~ ~ ~ [d5,f5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,fs4] ~ ~ ~ [c5,ds5,fs5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~"])
+d4 $ bassAt (cat [
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ b3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ b3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d5 $ padAt (cat [
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]"])
+
+-- 2. A prime — score bars 9-16 — the same theme with a busier middle.
+d2 $ leadAt (cat [
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds6 ~ ~ ~ ds6 ~ ~ ~ ds6 ~ ~ ~ ds6 ~ ~ ~ d6 ~ ds6 ~ f6 ~ ~ ds6 ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ [a5,f6] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as5,d6] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "[ds6,g5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [a5,d6] ~ ~ ~ [a5,c6] ~ ~ ~ [a5,d6] ~ ~ ~ [as5,f5] ~ ~ ~ [b5,fs5] ~ ~ ~ [b5,e5] ~ ~ ~ [as5,c6,e5] ~ ~ ~ [a5,c6,f5] ~ ~ ~ [d6,gs5] ~ g5 [as5,ds6]",
+  "g6 ~ ~ ~ ~ ~ ~ ~ a5 ~ as5 ~ b5 ~ as5 ~ cs6 ~ d6 ~ g6 ~ ~ f6 f6 ~ ~ ~ ~ ~ ~ ~ ds6 ~ ~ ~ ~ ~ f6 ~ ds6 ~ d6 ~ ds6 ~ f6 ~",
+  "g6 ~ b5 ~ c6 ~ cs6 ~ c6 ~ f6 ~ e6 ~ gs6 ~ g6 ~ cs7 ~ c7 ~ g6 ~ as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~",
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [e6,f6] g6 ~ ~ ~ g6 ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as5 ~ ~ ~ d7 ~ ~ ~ cs7 ~ ~ ~ c7 b6 as6 a6 gs6 f6 d6 b5 as5 d6 [f6,g6] ds6 ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~"])
+d3 $ keysAt (cat [
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,f5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,f5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5] ~ ~ ~",
+  "~ ~ ~ ~ [c5,ds4] ~ ~ ~ [c5,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [b4,ds4] ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [cs5,e4] ~ ~ ~ [as4,cs5,g5] ~ ~ ~ ~ ~ ~ ~ [c5,e4] ~ ~ ~ [as4,c5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [c5,ds5,f5] ~ ~ ~ ~ ~ ~ ~ [d5,g4] ~ ~ ~ [as4,d5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [c5,ds5,f5] ~ ~ ~ ~ ~ ~ ~ [a4,ds5] ~ ~ ~ gs4 ~ ~ ~ ~ ~ ~ ~ [c5,ds5,f4] ~ ~ ~ [as4,f5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [d5,gs4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [e5,g4] ~ ~ ~ [as4,e5,g5] ~ ~ ~ ~ ~ ~ ~ [e5,g4] ~ ~ ~ [as5,c5,e5] ~ ~ ~ ~ ~ ~ ~ [cs5,f4] ~ ~ ~ [as4,cs5,e5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5,gs4] ~ ~ ~",
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [f5,g4] ~ ~ ~ [d5,f5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,fs4] ~ ~ ~ [c5,ds5,fs5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,g5] ~ ~ ~"])
+d4 $ bassAt (cat [
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "gs3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "e3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ e3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as4,d5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ b3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d5 $ padAt (cat [
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]",
+  "[ef2,bf2,c3]"])
+
+-- 3. A double prime — score bars 17-24 — the most ornamented pass.
+d2 $ leadAt (cat [
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds6 ~ ~ ds6 ~ ~ ds6 ~ ~ ds6 ~ ~ ds6 ~ ~ ~ d6 ~ ds6 ~ f6 ~ ~ ds6 ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ [a5,f6] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as5,d6] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "[ds6,g5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [a5,d6] ~ ~ ~ [a5,c6] ~ ~ ~ [a5,d6] ~ ~ ~ [as5,f5] ~ ~ ~ [b5,fs5] ~ ~ ~ [b5,e5] ~ ~ ~ [as5,c6,e5] ~ ~ ~ [a5,c6,f5] ~ ~ ~ [d6,gs5] ~ g5 [as5,ds6]",
+  "g6 ~ ~ ~ ~ ~ ~ ~ a5 ~ as5 ~ b5 ~ as5 ~ cs6 ~ d6 ~ g6 ~ ~ f6 f6 ~ ~ ~ ~ ~ ~ ~ ds6 ~ ~ ~ ~ ~ f6 ~ ds6 ~ d6 ~ ds6 ~ f6 ~",
+  "g6 ~ b5 ~ c6 ~ cs6 ~ c6 ~ f6 ~ e6 ~ gs6 ~ g6 ~ cs7 ~ c7 ~ g6 g6 as6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs6 ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~",
+  "f6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [e6,f6] g6 ~ ~ ~ g6 ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as5 ~ d7 ~ ~ ~ cs7 ~ c7 ~ b6 as6 ~ a6 ~ gs6 a5 as5 b5 c6 cs6 d6 [f6,g6] ds6 ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d3 $ keysAt (cat [
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,f5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,f5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5] ~ ~ ~",
+  "~ ~ ~ ~ [c5,ds4] ~ ~ ~ [c5,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [b4,ds4] ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [cs5,e4] ~ ~ ~ [as4,cs5,g5] ~ ~ ~ ~ ~ ~ ~ [c5,e4] ~ ~ ~ [as4,c5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [a5,c5,ds5] ~ ~ ~ ~ ~ ~ ~ [d5,g4] ~ ~ ~ [as4,as5,d5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [c5,ds5,f5] ~ ~ ~ ~ ~ ~ ~ [a4,ds5] ~ ~ ~ gs4 ~ ~ ~ ~ ~ ~ ~ [c5,ds5,f4] ~ ~ ~ [as4,f5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [d5,gs4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [e5,g4] ~ ~ ~ [as4,e5,g5] ~ ~ ~ ~ ~ ~ ~ [e5,g4] ~ ~ ~ [as5,c5,e5] ~ ~ ~ ~ ~ ~ ~ [as4,cs5,f4] ~ ~ ~ [as4,cs5,e5] ~ ~ ~ ~ ~ ~ ~ [c5,f4] ~ ~ ~ [c5,f5,gs4] ~ ~ ~",
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [f5,g4] ~ ~ ~ [d5,f5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,fs4] ~ ~ ~ [c5,ds5,fs5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~"])
+d4 $ bassAt (cat [
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "gs3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "e3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ e3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as4,d5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ b3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d5 $ padAt (cat [
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]",
+  "[ef2,bf2,g3]"])
+
+-- TODO: it's very difficult to get the timing to start the next block
+-- right
+
+-- 4. Coda and cadenza — score bars 25-37 — one paragraph, then hush.
+d2 $ leadAt (cat [
+  "ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ~ ~ ds6 ~ ~ ~ f6 ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ds6 ~ f6 ~ ds6 ~ f6 ~ g6 ~ ~ ~ ~ ~ ~ ~ ds6 ~ ~ ~ ds7 ~ ~ ~ d7 ~ ~ ~ c7 ~ ~ ~",
+  "as6 ~ ~ ~ ~ ~ ~ ~ a6 ~ ~ ~ gs6 ~ ~ ~ c6 ~ ~ ~ d6 ~ ~ ~ ds6 ~ ~ ~ f6 ~ ds6 ~ d6 ~ ds6 ds6 g7 ~ ~ ~ f7 ~ ds7 ~ d7 ~ c7 ~",
+  "b6 ~ ~ ~ as6 ~ ~ ~ a6 ~ ~ ~ a6 ~ gs6 ~ gs6 ~ g6 ~ g6 ~ ~ f6 ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f6 ~ ds6 f6 ~ ds6 f6 ~ ds6 f6 ~ g6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds6 ~ ~ ~ gs5 ~ as5 ~ gs5 ~ g5 ~ gs5 ~ b5 ~ ds6 ~ gs6 ~ ds7 ~ ~ f7 g7 ~ ~ ~ ds7 ~ ~ ~ [ds7,ds8] ~ ~ ~ ~ ~ ~ ~ [d7,d8] ~ ~ ~ [c7,c8] ~ ~ ~",
+  "[b6,b7] ~ ~ ~ [as6,as7] ~ ~ ~ [a6,a7] ~ ~ ~ [gs6,gs7] ~ ~ ~ [g6,g7] ~ ~ ~ [d6,d7] ~ ~ ~ [ds6,ds7] ~ ~ ~ [ds7,ds8] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [f6,f7] ~ ~ ~ [c7,c8] ~ ~ ~",
+  "[b6,b7] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as6,as7] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~",
+  "b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ c8 ~ a7 ~",
+  "b7 ~ as7 ~ c8 ~ a7 ~ b7 ~ as7 ~ d8 ~ c8 ~ as7 ~ a7 ~ gs7 ~ g7 ~ f7 ~ d7 ~ ds7 ~ b6 ~ as6 ~ ~ ~ gs6 ~ ~ ~ c6 ~ ~ ~ d6 ~ ~ ~",
+  "[ds6,g5] ~ ~ ~ as5 ~ ~ ~ g6 ~ ~ ~ [ds6,g5] ~ ~ ~ as5 ~ ~ ~ g6 ~ ~ ~ [ds6,g5] ~ ~ ~ as5 ~ ~ ~ g6 ~ ~ ~ [ds6,g5] ~ ~ ~ as5 ~ ~ ~ g6 ~ ~ ~",
+  "[ds6,g5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [ds7,g6] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d3 $ keysAt (cat [
+  "~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [as4,ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [c5,ds5,f5] ~ ~ ~",
+  "~ ~ ~ ~ [ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [d5,f4] ~ ~ ~ [as4,d5,gs5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [b4,ds4,gs4] ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds4,gs4] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~",
+  "~ ~ ~ ~ [b4,ds4,gs4] ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ ~ ~ ~ ~ [b4,ds5,gs4] ~ ~ ~ [b4,ds4,gs4] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [as4,ds5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,f4] ~ ~ ~ [b4,ds5,f5] ~ ~ ~",
+  "~ ~ ~ ~ [as4,ds5,f4] ~ ~ ~ [as4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ [f5,g4] ~ ~ ~ [d5,f5,g5] ~ ~ ~ ~ ~ ~ ~ [ds5,g4] ~ ~ ~ [c5,g5] ~ ~ ~ ~ ~ ~ ~ [c5,ds5,f4] ~ ~ ~ [c5,ds5,f5] ~ ~ ~",
+  "~ ~ ~ ~ as3 ~ ~ ~ f4 ~ ~ ~ ~ ~ ~ ~ d5 ~ ~ ~ as4 ~ ~ ~ ~ ~ ~ ~ gs5 ~ ~ ~ d6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ as4 ~ ~ ~ as3 ~ ~ ~ ~ ~ ~ ~ as4 ~ ~ ~ as3 ~ ~ ~ ~ ~ ~ ~ as4 ~ ~ ~ as3 ~ ~ ~ ~ ~ ~ ~ as4 ~ ~ ~ as3 ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d4 $ bassAt (cat [
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "gs2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [b4,ds5,gs5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "gs2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [b4,ds4,gs4] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ b3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "as2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ gs4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds3 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+  "ds4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as5,ds5] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ [as3,ds3] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+d5 $ padAt (cat [
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[af2,ef3,c4]",
+  "[ef2,bf2,ef3]",
+  "[ef2,bf2,ef3]",
+  "[ef2,bf2,ef3]",
+  "[ef2,bf2,ef3]",
+  "[ef2,bf2,ef3]",
+  "[ef2,bf2,ef3]"])
+
+hush
