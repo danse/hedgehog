@@ -186,3 +186,48 @@ clipped samples across all four section-6 bars.
   the horn and whistle orbits would be a different way to catch future overs
   without reducing level; worth trying if more voices start stacking.
 
+## 4. Week of 16–20 Nov 2026
+
+34 commits, 125 files, +4115/−562.
+
+### The speedAt fix
+
+- c9dd2d5: score-first in the `#` chain (boot comment + 7 tracks,
+  95+/92−). `#` takes whole/steps from the left, so with the sample
+  first swing8 couldn't move notes and pace/segment saw steps=1 —
+  thread 1's bug at set scale. tidal.md notes a similar "single note"
+  hunt that was really an unbracketed `<...>` (slowcat).
+
+### Classical experiments from scores
+
+- nocturne (Chopin, 37 bars, 40 BPM, ~11 min) and pas de deux (Adam,
+  48 bars → 24 cycles, five voices, lead d1, fadeMulti 4).
+- Scores were already public; what's new is provenance in the repo:
+  agents/making_of/ sources and generators, with a stale/superseded
+  table.
+- Missing `_` explained: decoder drops note-offs. 391 of 471 tune
+  notes are 2-slot holds; the left hand is ~all 1-slot. Envelope is
+  a fair stand-in for the left hand, an approximation for the tune —
+  TODO in the header.
+
+### New tracks and the agent interface
+
+- Added: oculus, campina, loden, nocturne, pas-de-deux; mezzanine and
+  seba extended. Session tally: cantilever 27, daywork 26, tenfold 21.
+- agents/ now has making_of/ and toolbox/ READMEs; AGENTS.md is a
+  live-set style guide (dN = entry order, shared gotchas, untracked
+  drafts vetted by ear).
+
+### The running thing has state the file doesn't
+
+- hush leaves IDs registered as silence; resetCycles only resets the
+  clock; no API deletes an ID. A leftover stream surfaced via cycleD.
+- Install incident: GHC upgrade broke Tidal via an uninitialised
+  tidal-link/link submodule, not ableton-link-dev; no code changes
+  for 1.10.3.
+
+### Back to thread 2
+
+- "Correct is a property of a performance" becomes a publication
+  rule: commit only what has been listened to. Checks pass; ears decide.
+
