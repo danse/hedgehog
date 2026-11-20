@@ -322,6 +322,8 @@ fadeMulti 16 [
   (6, fadeOut 16 glintsUtopia),
   (9, fadeOut 16 stringsUtopia)]
 
+-- TODO sharp ending
+
 -- 16 · What remains — one suspended breath, unresolved; the promise
 -- keeps running without the builder.
 xfadeIn 7 32 $ fadeIn 32 $ slow 4 $ note "af6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"

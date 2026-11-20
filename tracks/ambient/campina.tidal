@@ -152,10 +152,12 @@ d6 wood
 d7 $ reed reedNotes
 d8 $ stringBed bedNotes
 
+
 -- 4 · Step — 64 bars. Cimbalom fills the gaps between reed and wood. This is
 --     the complete band; the hand drum comes forward to match it.
 d9 $ cimbalom cimbalomNotes
 d3 $ tarabuka # amp 1.2
+
 
 -- 5 · Turn — 64 bars. Bed, bass, reed and cimbalom are the same patterns
 --     with `|+ 5`, into D harmonic minor. The drums stay exactly where they
@@ -202,9 +204,10 @@ d7 $ reed (reedNotes |+ 5)
 d8 $ stringBed (bedNotes |+ 5) # amp 2.8
 d9 $ cimbalom (cimbalomNotes |+ 5) # amp 2.4
 
--- 10 · Home — 64 bars. The loop comes back down to A minor. Bed, bass, reed
---      and pluck switch back; the violin leaves and the tempo settles while
---      the drums keep the room open.
+-- 10 · Home — 64 bars. Eval this offbeat. The loop comes back down to
+--      A minor. Bed, bass, reed and pluck switch back; the violin
+--      leaves and the tempo settles while the drums keep the room
+--      open.
 glideBpm 72 16
 d1 air
 d4 $ bass bassNotes
