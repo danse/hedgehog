@@ -196,7 +196,7 @@ d10 $ violin (violinNotes |+ 5)
 --     comes forward and the wood gets louder; the air leaves. Everything
 --     else is already playing, so the peak is four new settings, not a new
 --     band.
-glideBpm 78 24
+glideBpm 78 30
 d1 silence
 d6 $ wood # amp 10
 d7 $ reed (reedNotes |+ 5)

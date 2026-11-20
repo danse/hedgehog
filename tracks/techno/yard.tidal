@@ -41,12 +41,6 @@ d4 $ struct "~ ~ t ~" $ slow 2 $ s "pluck" # n 5
 d5 $ degradeBy 0.3 $ fast 3 (s "east" # n 0)
   # amp 0.38 # pan 0.4 # room 0.3 # size 0.4
 
--- d5 · tick on the offbeat — alternative to the woodblock
-d5 $ s "~ click:2 ~ click:2" # amp 0.4 # pan 0.55
-  # room 0.2 # size 0.3
-
--- d5 · clap backbeat — if it should read as a groove; `808sd` is fatter
-d5 $ s "~ cp ~ cp" # amp 0.5 # room 0.25 # size 0.35
 
 -- d6 · high piano answer — the Cantilever motif on `pluck:8` (D5)
 piano = speedAt "d5" "a5 ~ c6 ~ d6 ~ a5 ~ f5 ~ e5 ~ d5 ~ ~ ~"
@@ -69,6 +63,7 @@ d8 $ slow 2 $ speedAt "c4" "d5 ~ f5 ~ a5 ~ g5 ~"
   # s "sax" # n 5
   # release 0.6 # amp 0.32 # hpf 150 # lpf 1600 # lpq 0.25
   # room 0.6 # size 0.8
+
 
 -- Pitch reminder: `n` picks the file, `note`/`speedAt` is the pitch.
 -- pluck:8 → d5, sax:5 → c4, bass1:2 → c2, moog:2 (C4) → c5.

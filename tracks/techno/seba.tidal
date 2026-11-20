@@ -56,6 +56,7 @@ xfadeIn 4 32 $ speedAt "fs2" "<[fs2 fs2 fs3 fs2 ~ fs2 fs3 fs2] [b2 b2 b3 b2 ~ b2
 xfadeIn 5 40 $ slow 2 $ s "hedge_pad" # n hA
   # sustain 1.6 # amp 0.5 # room 0.4 # size 0.55
 
+
 -- Colour — the guitar answers on the E and A bars only. It is a C-major
 --    sample transposed, so keep it off the two minor bars.
 d6 . degrade $ speedAt "c4" "~ ~ e4 a4"
@@ -73,6 +74,7 @@ d7 . degradeBy 0.3 $ speedAt "c5" hook
 -- d8 · sixteenth tick
 d8 $ s "click:2*16" # amp 0.6 # pan 0.55 # hpf 900
   # room 0.12 # size 0.2
+
 
 -- bed b — sparser
 --
@@ -114,6 +116,7 @@ xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
   # sustain 5 # release 2 # lpf 360 # lpq 0.15
   # room 0.45 # size 0.65 # amp 0.85
 
+
 -- coda — the last chorus. A new bass and lead over a turnaround, Bm9
 -- – E9 – Amaj9 – Dmaj9, on the same four-bar form. Play it twice,
 -- then stop short.
@@ -126,6 +129,7 @@ d7 $ speedAt "c5" "<[b5 ~ d6 ~ fs6 ~ d6 ~] [e5 ~ gs5 ~ b5 ~ gs5 ~] [a5 ~ cs6 ~ e
   # s "moog" # n 2
   # sustain 0.26 # release 0.14 # lpf 2600 # lpq 0.35
   # room 0.28 # size 0.42 # amp 0.55
+
 
 -- return — a longer last chorus. The moog keeps singing the turnaround; the
 --    jvbass stops pumping roots and walks the chord tones instead. The disco
@@ -153,6 +157,7 @@ d4 $ speedAt "fs2" (cat [
   # sustain 0.18 # release 0.1 # lpf 820 # lpq 0.3
   # room 0.14 # size 0.3 # amp 1.15
 
+
 -- talkbox — the moog steps aside. Pitched speech syllables make a short hook
 --    answering the walking bass. The samples start with ~0.3 s of silence, so
 --    `begin` skips to the syllable and `note "c5"` holds the tuning steady.
@@ -170,6 +175,7 @@ d7 $ speedAt "c4" (cat [
   # note "c5" # begin 0.42 # hpf 300 # lpf 2400
   # sustain 0.32
   # pan 0.25 # room 0.3 # size 0.45 # amp 3
+
 
 -- sharp drop: after the second pass: the kit and lead stop on the
 -- downbeat, the bass holds A, and the pad becomes one last Amaj9

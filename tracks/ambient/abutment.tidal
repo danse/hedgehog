@@ -161,7 +161,7 @@ let
 -- long enough to finish.
 glideBpm 90 16
 -- clear the previous piece's working streams
-fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]
+fadeSilence 64 [1,2,3,4,5,6,7,8,9,10]
 
 -- one high shadow, far away
 xfadeIn 4 8 $ pianoColour (slow 4 hClear |+ 12) # amp 0.4 # lpf 2600
@@ -172,12 +172,13 @@ fadeMulti 24 [
   -- the room breathes
   (3, air)]
 
+
 -- 2. Survey — the wreck is measured from the abutment; it becomes the datum.
 -- ~36 cycles (~96 s at 90 BPM).
 
 -- the datum holds: bass and low piano
-d2 $ bassSurvey # amp 0.3
 xfadeIn 1 16 compSurvey
+d2 . fadeIn 16 $ bassSurvey # amp 0.3
 
 -- plumb-line ticks and a cautious swing
 fadeMulti 32 [
@@ -186,6 +187,7 @@ fadeMulti 32 [
   (7, rideSoft),
   -- first colour above
   (4, pianoColour (slow 3 hSurvey |+ 12) # amp 0.45 # lpf 3200)]
+
 
 -- Act II. Repair
 
@@ -261,7 +263,7 @@ fadeMulti 24 [
   (10, trumpetOcc),
   (5, degradeBy 0.5 wood),
   (3, stack [air, gravel]),
-  (9, silence)]
+  (9, silence)] -- melody out already
 
 -- Act IV. Rest
 

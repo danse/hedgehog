@@ -82,10 +82,10 @@ let
     # room 0.24 # size 0.4 # amp 0.9
   bassCant = swing8 $ speedAt "c2" "c3 ~ e3 g3 ~ e3 c3 ~" # s "bass1" # n "<2 12 2 12>"
     # sustain 0.7 # release 0.28 # lpf 820 # lpq 0.24
-    # room 0.28 # size 0.44 # amp 0.88
+    # room 0.28 # size 0.44 # amp 0.5
   bassHand = slow 2 $ speedAt "c2" "g2 ~ ~ ~ d3 ~ c3 ~" # s "bass1" # n 2
     # sustain 1.5 # release 0.6 # lpf 620 # lpq 0.2
-    # room 0.38 # size 0.56 # amp 0.84
+    # room 0.38 # size 0.56 # amp 0.5
   bassStand = slow 2 $ speedAt "c2" "g2 ~ ~ ~ d3 ~ ~ ~" # s "bass1" # n 2
     # sustain 2.2 # release 1 # lpf 480 # lpq 0.16
     # room 0.55 # size 0.72 # amp 0.76
@@ -233,6 +233,7 @@ d2 $ bootDawn # amp 0.2 -- a boot on concrete
 -- the bass finds the floor
 d3 . slow 2 $ s "bass1" # n "d3" # up "<0 0 1 0 2 1 2 ~>"
 
+
 -- the work song, first time: piano high, unaccompanied
 d4 $ motifPiano # amp 0.2
 
@@ -246,6 +247,7 @@ fadeMulti 16 [
   (6, stack [air, windBed]),
   (7, gravel # amp 0.3)]
 
+
 -- 2. Gate — The barrier, the turnstile, the dropped ticket, a pigeon.
 -- The first shift arrives; four gate hits carry the work song's rhythm.
 -- ~40 cycles (~100 s at 96 BPM).
@@ -255,6 +257,7 @@ d8 $ stack [gateTick, degradeBy 0.25 gateClang]
 fadeMulti 16 [
   (2, bootWork),
   (5, compGate)] -- expressive
+
 
 d3 $ swing8 $ speedAt "c2" "g2 ~ a2 ~ c3 ~ d3 ~" # s "bass1" # n "<2 2 12 10>"
   # sustain 0.7 # release 0.26 # lpf 780 # lpq 0.24
@@ -269,6 +272,7 @@ fadeMulti 24 [
 -- brushes and ride arrive with the first shift
 fadeMulti 24 [(1, rideSoft), (2, stack [bootWork, brushSoft])]
 
+
 -- 3. Lift — The hoist tries to lift the crate and stalls. Chain, motor, a
 -- bounce. The bass takes the work song low and slow.
 -- ~40 cycles (~109 s at 88 BPM).
@@ -279,9 +283,8 @@ d2 $ stack [bootWork, liftStall]
 fadeSilence 32 [1,5,8]
 xfadeIn 3 32 bassLift
 
--- there is enough variety here for many cycles before adding next
--- block where we get clumsy on the high pings
 
+-- here we get clumsy on the high pings
 p9 = stack [liftChain, crateScrape]
 -- chain and crate
 xfadeIn 7 16 $ p9 # amp 0.5
@@ -299,6 +302,7 @@ xfadeIn 10 32 trumpetSpark
 
 -- the hoist gives up; the bass states the work song
 xfadeIn 3 16 motifBass
+
 
 -- 4. Sweeper — The little machine goes round and round, missing the same
 -- corner. Brushes, grit, a pigeon following the broom; the sax hums the round.
@@ -321,6 +325,7 @@ xfadeIn  9 24 reedRound
 -- one high spark over the fence
 xfadeIn 10 32 trumpetSpark
 
+
 -- 5. Canteen — Break. Cups, trays, cutlery, a bottle hoot; the crate stays
 -- under the table. The sax gets the tune.
 -- ~36 cycles (~86 s at 100 BPM).
@@ -340,7 +345,7 @@ xfadeIn 5 32 compCant
 xfadeIn 7 16 $ stack [tray, cutlery, pour]
 xfadeIn 6 24 $ stack [air, yardAir]
 
--- this reed is looking for a seat
+-- TODO: this reed is looking for a seat
 once reedCant
 
 -- 6. Handoff — The crate changes hands. A scrape, a latch, one toy tune and
@@ -349,6 +354,7 @@ once reedCant
 -- The `hit:1` line is a true one-shot (`once`): evaluate it when the crate
 -- changes hands. `handoffPop` and the room keep running until the fade.
 
+-- change of rhythm
 d2 handStep
 d3 bassHand
 -- the canteen clears; only the crate and two sets of hands
@@ -366,6 +372,7 @@ xfadeIn 9 24 reedHand
 
 -- the handover itself: one pling
 once $ s "hit" # n 1 # hpf 400 # lpf 8000 # room 0.5 # size 0.65 # amp 0.3
+
 
 -- let the ceremony ring, then take the room down
 fadeSilence 16 [2,3,4,5,7,8,9,10]

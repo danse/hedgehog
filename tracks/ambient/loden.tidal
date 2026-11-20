@@ -309,6 +309,11 @@ fadeMulti 16 [
   (11, fadeIn 16 clockDissonant),
   (12, fadeOut 16 kotoUtopia)]
 
+-- TODO: d6 at this point may resonate a bit too much. If silencing
+-- that is not enough, d7 (whistle) and d9 (strings) are next
+--
+-- d6 $ fadeOut 8 glintsUtopia
+
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.
 fadeSilence 16 [2,4,5,8,10,12]

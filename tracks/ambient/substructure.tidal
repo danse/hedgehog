@@ -9,7 +9,7 @@
 --
 -- Gotchas: shared rules in notes/learning/gotchas.md.
 
-setbpm 72
+glideBpm 72 30
 
 -- ---------------------------------------------------------------------------
 -- Bass (complex structure): 8-cycle evolving form + anchor + ghost + drive
@@ -134,7 +134,7 @@ d2 bassBreak
 d4 $ bassAnchor # lpf 240
 
 
--- switch harmony continuity, thinner (no pads/drones)
+-- new melody
 d3 $ chordFlow # lpf 1300
 d1 spaceTex
 d10 burst
@@ -174,8 +174,8 @@ xfadeIn 3 16 silence
 
 fadeSilence 8 [5,6,7,8,9]
 -- bass fragments over sparse texture
-d2 $ degradeBy 0.45 $ bassMain # lpf 240
-d1 $ degradeBy 0.3 spaceTex
+d2 . fadeOut 24 $ bassMain # lpf 240
+d1 $ fadeOut 24 spaceTex
 
 -- silence the bass
 fadeSilence 8 [1,2]

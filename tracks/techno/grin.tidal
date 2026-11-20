@@ -86,6 +86,7 @@ xfadeIn 6 24 $ swing16 $ struct "~ ~ t ~ ~ ~ t ~ ~ ~ t ~ ~ ~ t ~"
 xfadeIn 7 28 $ s "hedge_pad" # n (hA |+ 12)
   # sustain 1.6 # amp 0.36 # room 0.45 # size 0.58
 
+
 -- 2. The one — the horns enter on the phrase and a shout lands on the one.
 --    Three tight stabs (E, G, B) answer the clav; the sampled chord marks the
 --    top of the phrase. After the shout, the cowbell takes its place.
@@ -104,6 +105,7 @@ d10 . degrade . slow 4 $ s "alphabet:14" -- the shout
 -- d10 · then the cowbell (not-metal) takes over from the shout
 d10 $ s "~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~ ~ ~ gretsch:6 ~"
   # amp 0.36 # pan 0.36 # room 0.14 # size 0.26
+
 
 -- 3. Hook — the clav opens: filter off, a busier syncopated line. The hats
 --    answer with the open-ish hat on the offbeats, left straight — a hair
@@ -186,6 +188,7 @@ d10 . degradeBy 0.8 $ slow 4 $ s "alphabet:14" -- the same shout, darker
 -- the beat you have been waiting for. Kick doubling into sixteenths
 -- at the end of the fourth bar
 d2 $ s "<909*4 909*4 909*4 [909*4 909*8]>" # amp 1 # room 0.04 # size 0.1
+
 
 -- 6. Coda — the pocket returns for one turnaround: Em9 | A13 | Bb13 | B7#9.
 --    The bass climbs A -> Bb -> B, the clav, the horns and the cowbell change
