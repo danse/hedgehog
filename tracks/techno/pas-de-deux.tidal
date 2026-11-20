@@ -1,0 +1,183 @@
+-- Pas de deux — single-section techno after Adam (Act I of Giselle)
+-- One continuous transcription of all 48 printed bars.
+-- Score: Adolphe Charles Adam, "Pas de deux (1er acte)", in the "New
+-- arrangement" by Laurence Sardain, who typeset it for Mutopia
+-- (Mutopia-2006/12/22-897, www.mutopiaproject.org) and placed it in the public
+-- domain (https://creativecommons.org/publicdomain/mark/1.0/). Every note
+-- below comes from that edition's MIDI; nothing is invented.
+-- Two 2/4 score bars make one 4/4 Tidal cycle, so each mini-notation line
+-- below is one cycle and the whole track is 24 cycles (~41 s). The piece stays
+-- in G major.
+--
+-- One section only: no changes inside the piece. The start block below brings
+-- all five score voices up together over four cycles; the other fade is
+-- fadeSilence at the end. Evaluate the whole start block as one paragraph so
+-- every voice fades in on the same downbeat.
+--
+-- Voice map: Prima upper = tune (d1), Prima lower = answer (d4), Seconda lower
+-- = G/C bass (d2). The Seconda upper staff's two-note chords are split: the
+-- low note stays as the pedal (d3), the upper note becomes a sparse inner line
+-- (d5). That is the only derived voice — it adds movement to the otherwise
+-- static G/D pedal without inventing notes.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: juno:7 is C3 and moog:3 is G1, so speedAt runs from them.
+
+glideBpm 95 10
+
+-- ---------------------------------------------------------------------------
+-- Voices. Eval this whole block as one paragraph: C-RET at point.
+-- ---------------------------------------------------------------------------
+let
+  subAt :: Pattern Note -> ControlPattern
+  subAt p = speedAt "g1" p # s "moog:3"
+      # sustain 0.22 # release 0.1 # lpf 260 # lpq 0.2 # amp 1.7
+  keysAt :: Pattern Note -> ControlPattern
+  keysAt p = speedAt "c3" p # s "juno:7"
+      # sustain 0.4 # release 0.5 # lpf 2400 # room 0.45 # size 0.6 # amp 0.32
+  innerAt :: Pattern Note -> ControlPattern
+  innerAt p = note p # s "hedge_melodica"
+      # attack 0.04 # sustain 0.18 # release 0.2
+      # room 0.35 # size 0.5 # amp 0.75
+  -- TODO hedge_whistle features an hiss
+  leadAt :: Pattern Note -> ControlPattern
+  leadAt p = note p # s "hedge_whistle"
+      # attack 0.04 # sustain 0.5 # release 0.3
+      # room 0.35 # size 0.55 # amp 1.5
+  reedAt :: Pattern Note -> ControlPattern
+  reedAt p = note p # s "hedge_melodica"
+      # attack 0.05 # sustain 0.1 # release 0.12
+      # room 0.25 # size 0.45 # amp 1.1
+
+-- One start block: evaluate this whole paragraph with C-RET. All five voices
+-- fade in from silence over four cycles.
+fadeMulti 4
+  [
+    (1, leadAt (cat [
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ b5 ~ ~ ~ g5 ~ b5 ~",
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ [d5,g5] ~ ~ ~ ~ ~ b5 ~",
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ b5 ~ ~ ~ g5 ~ b5 ~",
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ [d5,g5] ~ ~ ~ ~ ~ g5 ~",
+      "g5 ~ [c6,e6] ~ g5 ~ [c6,e6] ~ g5 ~ ~ ~ ~ ~ c6 ~",
+      "g5 ~ c6 ~ b5 ~ c6 ~ cs6 ~ ~ ~ d6 ~ g5 ~",
+      "g5 ~ d6 ~ g5 ~ d6 ~ g5 ~ ~ ~ ~ ~ d6 ~",
+      "e6 ~ d6 ~ c6 ~ b5 ~ b5 ~ ~ ~ c6 ~ g5 ~",
+      "g5 ~ [c6,e6] ~ g5 ~ [c6,e6] ~ g5 ~ ~ ~ ~ ~ c6 ~",
+      "g5 ~ c6 ~ b5 ~ c6 ~ cs6 ~ ~ ~ d6 ~ g5 ~",
+      "g5 ~ d6 ~ g5 ~ d6 ~ g5 ~ ~ ~ ~ ~ d6 ~",
+      "e6 ~ d6 ~ c6 ~ b5 ~ b5 ~ ~ ~ c6 ~ b5 ~",
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ b5 ~ ~ ~ g5 ~ b5 ~",
+      "[c6,fs5] ~ a5 ~ e5 ~ fs5 ~ g5 ~ b5 ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ d5 ~ a5 ~ [d5,g5] ~ ~ ~ ~ ~ b5 ~",
+      "c6 ~ a5 ~ ~ ~ fs5 ~ g5 ~ b5 ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ fs5 ~ g5 ~ ~ ~ ~ ~ fs6 ~",
+      "g6 ~ fs6 ~ g6 ~ fs6 ~ g6 ~ ~ ~ ~ ~ ~ ~",
+      "g5 ~ ~ ~ [b5,g5] ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~"]))
+  , (2, subAt (cat [
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "c4 ~ ~ ~ c4 ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~",
+      "c4 ~ ~ ~ c4 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~",
+      "c4 ~ ~ ~ c4 ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~",
+      "c4 ~ ~ ~ c4 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ ~ ~ c4 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ g3 ~ g3 ~",
+      "g3 ~ ~ ~ g3 ~ g3 ~ g3 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ds4 ~ e4 ~ ~ ~ fs4 ~ ~ ~",
+      "gs4 ~ ~ ~ ~ ~ d4 ~ g4 ~ ~ ~ ~ ~ d4 ~",
+      "g4 ~ d4 ~ g4 ~ d4 ~ g4 ~ ~ ~ ~ ~ ~ ~",
+      "g3 ~ ~ ~ g3 ~ ~ ~ g3 ~ ~ ~ ~ ~ ~ ~"]))
+  , (3, keysAt (cat [
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ e4 ~ e4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ e4 ~ e4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "~ ~ g4 ~ ~ ~ g4 ~ ~ ~ g4 ~ g4 ~ ~ ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ d4 ~ d4 ~",
+      "d4 ~ ~ ~ d4 ~ d4 ~ d4 ~ ~ ~ ~ ~ gs4 ~",
+      "a4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ c5 ~ ~ ~",
+      "b4 ~ ~ ~ a4 ~ c5 ~ b4 ~ ~ ~ ~ ~ a4 ~",
+      "b4 ~ a4 ~ b4 ~ a4 ~ b4 ~ ~ ~ ~ ~ ~ ~",
+      "d4 ~ ~ ~ d4 ~ ~ ~ d4 ~ ~ ~ ~ ~ ~ ~"]))
+  , (4, reedAt (cat [
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ d5 ~ ~ ~ b4 ~ ~ ~",
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ d5 ~ ~ ~ b4 ~ ~ ~",
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "e5 ~ e5 ~ e5 ~ e5 ~ f5 ~ ~ ~ f5 ~ ~ ~",
+      "f5 ~ ~ ~ f5 ~ ~ ~ f5 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ f5 ~ ~ ~ f5 ~ e5 ~ ~ ~ e5 ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "e5 ~ e5 ~ e5 ~ e5 ~ f5 ~ ~ ~ f5 ~ ~ ~",
+      "f5 ~ ~ ~ f5 ~ ~ ~ f5 ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ f5 ~ ~ ~ f5 ~ e5 ~ ~ ~ e5 ~ ~ ~",
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ d5 ~ ~ ~ b4 ~ ~ ~",
+      "~ ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ b4 ~ b4 ~",
+      "c5 ~ ~ ~ c5 ~ c5 ~ b4 ~ ~ ~ ~ ~ f5 ~",
+      "e5 ~ ~ ~ e5 ~ c5 ~ b4 ~ ~ ~ d5 ~ e5 ~",
+      "d5 ~ e5 ~ [c5,d5] ~ d5 ~ d5 ~ ~ ~ ~ ~ d6 ~",
+      "d6 ~ d6 ~ d6 ~ d6 ~ d6 ~ ~ ~ ~ ~ ~ ~",
+      "[b4,d5] ~ ~ ~ d5 ~ ~ ~ [b4,d5] ~ ~ ~ ~ ~ ~ ~"]))
+  , (5, innerAt (cat [
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "fs4 ~ ~ ~ fs4 ~ fs4 ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "fs4 ~ ~ ~ fs4 ~ fs4 ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ c5 ~ ~ ~ c5 ~ ~ ~ c5 ~ c5 ~ ~ ~",
+      "~ ~ c5 ~ ~ ~ c5 ~ ~ ~ b4 ~ b4 ~ ~ ~",
+      "~ ~ b4 ~ ~ ~ b4 ~ ~ ~ b4 ~ b4 ~ ~ ~",
+      "~ ~ b4 ~ ~ ~ b4 ~ ~ ~ c5 ~ c5 ~ ~ ~",
+      "~ ~ c5 ~ ~ ~ c5 ~ ~ ~ c5 ~ c5 ~ ~ ~",
+      "~ ~ c5 ~ ~ ~ c5 ~ ~ ~ b4 ~ b4 ~ ~ ~",
+      "~ ~ b4 ~ ~ ~ b4 ~ ~ ~ b4 ~ b4 ~ ~ ~",
+      "~ ~ b4 ~ ~ ~ b4 ~ ~ ~ c5 ~ c5 ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "fs4 ~ ~ ~ fs4 ~ fs4 ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+      "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]))
+  ]
+
+fadeSilence 8 [1,2,3,4,5]
