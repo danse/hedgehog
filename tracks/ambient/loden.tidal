@@ -1,7 +1,7 @@
 -- Loden — cinematic ambient
 -- 88 BPM · F minor / A♭ major. Four-bar loop: Fm9 | D♭maj9 | E♭6/9 | Cm7.
--- No drums. Long-form: xfadeIn/fadeMulti/fadeSilence for amplitude,
--- fadeIn/fadeOut for density. Evaluate sections in order; hush is separate.
+-- No drums. Long-form: clutchIn fades every seat, old out as new comes in.
+-- Evaluate sections in order; hush is separate.
 -- Gotchas: shared rules in notes/learning/gotchas.md.
 
 glideBpm 88 24
@@ -217,134 +217,128 @@ let
     # pF "damp" 0.3 # pF "bend" 0.6 # pF "bright" 3200
     # decay 3.0 # sustain 2.5
     # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
+  -- clear every seat with a clutch fade
+  clearAll :: Time -> IO ()
+  clearAll t = mapM_ (\d -> clutchIn d t silence)
+    ([1,2,3,4,5,6,7,8,9,10,11,12] :: [ID])
 
 -- 1 · Stillness — the place waits; bed alone, slowly filling in.
-fadeSilence 64 [1,2,3,4,5,6,7,8,9,10,11,12]
-xfadeIn 1 16 $ fadeIn 16 bed
+clearAll 64
+clutchIn 1 16 bed
 
 -- 2 · Weather — wind on the slope; the bed opens a little.
-fadeMulti 16 [
-  (1, bed # lpf 1600),
-  (3, fadeIn 16 air)]
+clutchIn 1 16 $ bed # lpf 1600
+clutchIn 3 16 air
 
 -- 3 · The circle — the ground is marked under the air.
-fadeMulti 16 [
-  (1, bed # lpf 1900),
-  (5, fadeIn 16 lowStrings)]
+clutchIn 1 16 $ bed # lpf 1900
+clutchIn 5 16 lowStrings
 
 -- 4 · The officiant — their theme enters with the first pulse.
-xfadeIn 2 16 $ fadeIn 16 sawLead
-fadeMulti 16 [
-  (1, bed # lpf 2200),
-  (4, fadeIn 16 tremolo),
-  (5, lowStrings # lpf 620)]
+clutchIn 2 16 sawLead
+clutchIn 1 16 $ bed # lpf 2200
+clutchIn 4 16 tremolo
+clutchIn 5 16 $ lowStrings # lpf 620
 
 -- 5 · First answer — an invitation, not a reply: saw asks on odd bars,
 -- whistle answers on even.
-fadeMulti 16 [
-  (2, fadeIn 16 sawAsk),
-  (7, fadeIn 16 whistleReply)]
+clutchIn 2 16 sawAsk
+clutchIn 7 16 whistleReply
 
 -- 6 · The horn raised — the formal call; the bed becomes a held chord.
-fadeMulti 16 [
-  (1, ritualBed # lpf 1000),
-  (8, fadeIn 16 horn),
-  (12, fadeIn 16 koto),
-  (2, sawAsk # lpf 2400)]
+clutchIn 1 16 $ ritualBed # lpf 1000
+clutchIn 8 16 horn
+clutchIn 12 16 koto
+clutchIn 2 16 $ sawAsk # lpf 2400
 
 -- 7 · Frost — objects catch light; glints refuse to settle.
-fadeMulti 16 [
-  (6, fadeIn 16 glints),
-  (1, ritualBed # lpf 1200)]
+clutchIn 6 16 glints
+clutchIn 1 16 $ ritualBed # lpf 1200
 
 -- 8 · The interval — the mechanism wakes and starts counting.
-fadeMulti 16 [
-  (1, ritualBed # lpf 1400),
-  (11, fadeIn 16 clock),
-  (5, lowStrings # lpf 700)]
+clutchIn 1 16 $ ritualBed # lpf 1400
+clutchIn 11 16 clock
+clutchIn 5 16 $ lowStrings # lpf 700
 
 -- 9 · Borrowed breath — the reed breathes without the officiant.
-fadeMulti 16 [
-  (1, ritualBed # lpf 1600),
-  (10, fadeIn 16 melodica),
-  (11, clock # pF "metal" 0.8)]
+clutchIn 1 16 $ ritualBed # lpf 1600
+clutchIn 10 16 melodica
+clutchIn 11 16 $ clock # pF "metal" 0.8
 
 -- 10 · Handless pluck — the pluck bends sharper under the pulse.
-fadeMulti 16 [
-  (1, ritualBed # lpf 1800),
-  (10, melodica # pF "bright" 2100),
-  (12, koto # pF "bright" 3800)]
+clutchIn 1 16 $ ritualBed # lpf 1800
+clutchIn 10 16 $ melodica # pF "bright" 2100
+clutchIn 12 16 $ koto # pF "bright" 3800
 
 -- 11 · The slope joins — the whole terrain shimmers; fine grain arrives.
-fadeMulti 16 [
-  (3, stack [air # lpf 900, dust]),
-  (9, fadeIn 16 (strings # release 2.0)),
-  (5, lowStrings # lpf 820),
-  (1, bed # lpf 2800)]
+clutchIn 3 16 $ stack [air # lpf 900, dust]
+clutchIn 9 16 $ strings # release 2.0
+clutchIn 5 16 $ lowStrings # lpf 820
+clutchIn 1 16 $ bed # lpf 2800
 
 -- 12 · The utopia — a perfect world in the promised order. The possessed
 -- officiant believes they can build it. Richest melodic section.
-xfadeIn 1 24 $ stack [
+clutchIn 1 24 $ stack [
   bed # lpf 2800,
   bed # lpf 1400 # pan (-0.3)]
-xfadeIn 3 24 $ stack [air # lpf 900 # release 2, dust]
-xfadeIn 2 24 sawLead
-xfadeIn 7 24 $ whistle # release 1.8
-xfadeIn 8 24 $ fadeIn 24 hornStab
-fadeMulti 24 [
-  (4, tremolo # room 0.85 # size 0.85),
-  (6, fadeIn 24 glintsUtopia),
-  (9, fadeIn 24 stringsUtopia),
-  (10, fadeIn 24 melodicaUtopia),
-  (11, fadeIn 24 clock),
-  (12, fadeIn 24 kotoUtopia)]
+clutchIn 3 24 $ stack [air # lpf 900 # release 2, dust]
+clutchIn 2 24 sawLead
+clutchIn 7 24 $ whistle # release 1.8
+clutchIn 8 24 hornStab
+clutchIn 4 24 $ tremolo # room 0.85 # size 0.85
+clutchIn 6 24 glintsUtopia
+clutchIn 9 24 stringsUtopia
+clutchIn 10 24 melodicaUtopia
+clutchIn 11 24 clock
+clutchIn 12 24 kotoUtopia
 
 -- 13 · The call turns — whistle asks, officiant replies: the whistle was
 -- asking all along. The clock starts pulling the promise out of tune.
-fadeMulti 16 [
-  (2, fadeIn 16 sawAnswer),
-  (7, fadeIn 16 whistleQuestion),
-  (8, fadeOut 16 hornStab),
-  (10, fadeOut 16 melodicaUtopia),
-  (11, fadeIn 16 clockDissonant),
-  (12, fadeOut 16 kotoUtopia)]
+clutchIn 2 16 sawAnswer
+clutchIn 7 16 whistleQuestion
+clutchIn 8 16 silence
+clutchIn 10 16 silence
+clutchIn 11 16 clockDissonant
+clutchIn 12 16 silence
 
 -- TODO: d6 at this point may resonate a bit too much. If silencing
 -- that is not enough, d7 (whistle) and d9 (strings) are next
 --
--- d6 $ fadeOut 8 glintsUtopia
+-- clutchIn 6 8 silence
 
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.
-fadeSilence 16 [2,4,5,8,10,12]
-fadeMulti 16 [
-  (11, clockDissonant # pF "metal" 0.9)]
+clutchIn 2 16 silence
+clutchIn 4 16 silence
+clutchIn 5 16 silence
+clutchIn 8 16 silence
+clutchIn 10 16 silence
+clutchIn 12 16 silence
+clutchIn 11 16 $ clockDissonant # pF "metal" 0.9
 
 -- 15 · The builder withdraws — the clock stops; the promise runs on
 -- without its author.
-fadeSilence 16 [11]
-fadeMulti 16 [
-  (6, fadeOut 16 glintsUtopia),
-  (9, fadeOut 16 stringsUtopia)]
+clutchIn 11 16 silence
+clutchIn 6 16 silence
+clutchIn 9 16 silence
 
 -- TODO sharp ending
 
 -- 16 · What remains — one suspended breath, unresolved; the promise
 -- keeps running without the builder.
-xfadeIn 7 32 $ fadeIn 32 $ slow 4 $ note "af6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+clutchIn 7 32 $ slow 4 $ note "af6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
   # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
   # attack 0.25 # release 2.2 # sustain 0.6
   # room 0.9 # size 0.9 # amp 3
-fadeMulti 32 [
-  (1, bed # lpf 1800 # room 0.9 # size 0.9),
-  (3, stack [air # lpf 900 # release 2, fadeOut 32 dust])]
+clutchIn 1 32 $ bed # lpf 1800 # room 0.9 # size 0.9
+clutchIn 3 32 $ air # lpf 900 # release 2
 -- scheduled after the coda has fully entered
-waitT 1 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
-waitT 3 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
-waitT 6 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
-waitT 7 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
-waitT 9 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
-waitT 10 (Sound.Tidal.Transition.xfadeIn 32) 32 silence
+waitT 1 (Sound.Tidal.Transition._clutchIn 32) 32 silence
+waitT 3 (Sound.Tidal.Transition._clutchIn 32) 32 silence
+waitT 6 (Sound.Tidal.Transition._clutchIn 32) 32 silence
+waitT 7 (Sound.Tidal.Transition._clutchIn 32) 32 silence
+waitT 9 (Sound.Tidal.Transition._clutchIn 32) 32 silence
+waitT 10 (Sound.Tidal.Transition._clutchIn 32) 32 silence
 
 -- hush only after the scheduled fade has decayed
 hush
