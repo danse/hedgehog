@@ -1,0 +1,216 @@
+-- 72 → 110 → 72 BPM · D, through Saba / Bayati / Hijaz and back.
+-- Each shift is prepared: the new degree enters in one phrase, then takes both.
+-- Eight-bar lines, own tail per maqam; bars 2–3 stay identical as the pivot.
+-- Seats follow entry order (1–12); each maqam has its own lead, clutchIn-faded.
+-- Blends are 16 cycles, 24 at a maqam pivot; a double blank marks a landing.
+-- Land before each maqam change so the new degree is heard; `hush` at the end.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+
+setbpm 72
+
+-- ---------------------------------------------------------------------------
+-- Voices. Keep this block one paragraph: C-RET evaluates the paragraph.
+let
+  -- Bars 2 and 3 carry the changing degrees af/a and f/fs. Everything else
+  -- differs per maqam — register, rhythm and tail — so the prepared step stays
+  -- audible without the five leads sounding like one repeated fiddle.
+  saba :: Pattern Note
+  saba = cat [
+    "d4 _ ef4 _ _ _ _ _",
+    "f4 _ g4 _ af4 _ _ _",
+    "af4 _ _ _ g4 _ f4 _",
+    "ef4 _ d4 _ _ _ _ _",
+    "g4 _ _ _ af4 _ _ _",
+    "~ d4 _ ef4 _ g4 _ _",
+    "bf3 _ _ _ d4 _ _ _",
+    "ef4 _ d4 _ ~ ~ ~ ~"]
+  sabaA :: Pattern Note
+  sabaA = cat [
+    "~ d4 _ ef4 _ _ _ _",
+    "f4 _ g4 _ a4 _ _ _",
+    "af4 _ _ _ g4 _ f4 _",
+    "~ ef4 _ d4 _ _ _ _",
+    "g4 _ a4 _ g4 _ ef4 _",
+    "d4 ef4 ~ g4 ~ bf4 ~ _",
+    "~ c5 bf4 ~ g4 _ _ _",
+    "ef4 ~ d4 _ ~ ~ ~ ~"]
+  bayati :: Pattern Note
+  bayati = cat [
+    "d4 ef4 ~ g4 _ _ _ _",
+    "f4 _ g4 _ a4 _ _ _",
+    "a4 _ _ _ g4 _ f4 _",
+    "ef4 d4 ~ _ _ _ _ _",
+    "g4 bf4 c5 ~ bf4 g4 _ _",
+    "~ c5 ~ g4 ef4 ~ d4 _",
+    "d4 ef4 g4 ~ bf4 ~ c5 _",
+    "g4 ~ ef4 d4 ~ ~ ~ ~"]
+  bayatiFs :: Pattern Note
+  bayatiFs = cat [
+    "d4 ~ ef4 ~ g4 ~ _ _",
+    "fs4 _ g4 _ a4 _ _ _",
+    "a4 _ _ _ g4 _ f4 _",
+    "c5 ~ bf4 ~ g4 _ _ _",
+    "c5 ~ d5 ~ c5 bf4 g4 _",
+    "~ a4 g4 ~ ef4 d4 ~ _",
+    "fs4 g4 ~ a4 ~ c5 ~ _",
+    "d4 ~ ~ ~ ~ ~ ~ ~"]
+  hijaz :: Pattern Note
+  hijaz = cat [
+    "g4 ~ ef4 d4 ~ _ _ _",
+    "fs4 _ g4 _ a4 _ _ _",
+    "a4 _ _ _ g4 _ fs4 _",
+    "g4 ef4 ~ d4 ~ _ _ _",
+    "c5 d5 ~ c5 bf4 g4 ~ _",
+    "a4 ~ c5 ~ d5 c5 ~ _",
+    "fs4 g4 a4 ~ c5 ~ bf4 _",
+    "g4 ef4 d4 ~ ~ ~ ~ ~"]
+  -- A four-bar answer against the eight-bar lead: the two only line up every
+  -- other phrase, which gives the horn a different place in each pass.
+  hornLine :: Pattern Note
+  hornLine = cat [
+    "~ ~ c5 _ _ bf4 ~ ~",
+    "g4 ~ ~ c5 ~ ~ g4 _",
+    "~ bf4 ~ g4 _ ef4 ~ ~",
+    "d4 ~ ~ ~ ~ ~ ~ ~"]
+  bassNotes :: Pattern Note
+  bassNotes = cat [
+    "d2 ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ ~ ~ g2 ~ ~ ~",
+    "a1 ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ g2 ~ ~ ~ ~ ~",
+    "g2 ~ ~ ~ d2 ~ ~ ~",
+    "a1 ~ ~ ~ g2 ~ ~ ~",
+    "d2 ~ ~ ~ ~ ~ ~ ~"]
+  drone = slow 8 $ s "hedge_sine" # note "d2" # sustain 28
+    # lpf 240 # room 0.8 # amp 0.3
+  fiddle :: Pattern Note -> ControlPattern
+  fiddle p = note p # s "hedge_fiddle"
+    # legato 0.9 # attack 0.12 # release 0.5
+    # pan 0.3 # room 0.6 # size 0.8 # amp 2
+  horn = note (hornLine |+ 12) # s "hedge_horn" # legato 0.9
+    # attack 0.08 # release 0.4 # room 0.8 # size 0.85 # amp 0.7
+  air = slow 4 $ s "hedge_noise" # sustain 3.2
+    # lpf 800 # hpf 180 # room 0.9 # size 0.85 # amp 0.3
+  maqsum = s (cat [
+    "tabla:19 ~ tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 ~ tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 ~ tabla:9 ~ tabla:19 tabla:9 tabla:9 ~",
+    "tabla:19 ~ tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 ~ tabla:9 tabla:19 ~ tabla:9 tabla:9 ~",
+    "tabla:19 ~ ~ tabla:9 tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:9 ~ tabla:19 ~ tabla:9 ~ ~",
+    "tabla:19 ~ tabla:9 ~ tabla:19 ~ tabla:9 tabla:9"])
+    # amp "1 0 0.7 0 1 0 0.7 0" # hpf 180
+    # room 0.12 # size 0.3 # pan 0.2
+  baladi = s (cat [
+    "tabla:19 tabla:19 tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:19 tabla:9 ~ tabla:19 tabla:9 tabla:9 ~",
+    "tabla:19 tabla:19 tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:19 tabla:9 tabla:9 tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:19 tabla:9 ~ tabla:19 tabla:9 ~ tabla:9",
+    "tabla:19 ~ tabla:9 tabla:19 tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:19 tabla:9 ~ tabla:19 ~ tabla:9 ~",
+    "tabla:19 tabla:9 tabla:19 ~ tabla:19 tabla:9 tabla:9"])
+    # amp "1 0.8 0.7 0 1 0 0.7 0" # hpf 180
+    # room 0.12 # size 0.3 # pan 0.2
+  shaker = s (cat [
+    "house:3*8",
+    "house:3*4 ~ house:3*2 ~",
+    "house:3*8",
+    "~ house:3*2 ~ house:3*4 ~"])
+    # amp "0.3 0.15 0.2 0.15 0.3 0.15 0.2 0.15"
+    # hpf 700 # room 0.1 # size 0.25 # pan (-0.2)
+  bass = speedAt "g1" bassNotes # s "moog:3" # lpf 300
+    # room 0.3 # size 0.5 # amp 0.7
+
+-- 1. Saba — drone, air, sparse fiddle. 72 BPM. 16-cycle entries.
+clutchIn 1 16 drone
+clutchIn 2 16 air
+clutchIn 3 16 $ fiddle saba
+
+
+-- Saba landing — hold before the fifth changes.
+
+-- 2. Prepare the fifth: bar 2 takes a4, bar 3 keeps af4. 24-cycle blend.
+glideBpm 78 40
+clutchIn 4 16 maqsum
+clutchIn 3 24 silence
+clutchIn 5 24 $ fiddle sabaA
+
+-- 3. Promote it: both bars take a4. Bayati. 24-cycle blend.
+glideBpm 84 40
+clutchIn 5 24 silence
+clutchIn 6 24 $ fiddle bayati
+
+
+-- Bayati holds; the prepared fifth is settled.
+
+-- 4. Bass enters. 96 BPM.
+glideBpm 96 40
+clutchIn 7 16 bass
+
+-- 5. Horn answers off the fiddle's grid.
+clutchIn 9 16 horn
+
+
+-- Bayati landing — hold before the third changes.
+
+-- 6. Prepare the third: bar 2 takes fs4, bar 3 keeps f4. 24-cycle blend.
+glideBpm 102 40
+clutchIn 6 24 silence
+clutchIn 8 24 $ fiddle bayatiFs
+
+-- 7. Promote it: both bars take fs4. Hijaz. 110 BPM. 24-cycle blend.
+glideBpm 110 40
+clutchIn 8 24 silence
+clutchIn 10 24 $ fiddle hijaz
+
+
+-- Hijaz landing — hold here.
+
+-- 8. Maqsum gives way to baladi; shaker enters.
+clutchIn 4 16 silence
+clutchIn 11 16 baladi
+clutchIn 12 16 shaker
+
+
+-- Hijaz over baladi — hold before the return.
+
+-- 9. Return, step by step in reverse. Hijaz out, bayatiFs in.
+glideBpm 102 40
+clutchIn 12 16 silence
+clutchIn 11 16 silence
+clutchIn 10 24 silence
+clutchIn 8 24 $ fiddle bayatiFs
+
+
+-- bayatiFs landing — hold before the third changes back.
+
+-- 10. BayatiFs out, Bayati in.
+glideBpm 96 40
+clutchIn 8 24 silence
+clutchIn 6 24 $ fiddle bayati
+clutchIn 9 16 silence
+
+
+-- Bayati landing — hold before the fifth changes back.
+
+-- 11. Bayati out, sabaA in. 24-cycle blend.
+glideBpm 84 40
+clutchIn 6 24 silence
+clutchIn 5 24 $ fiddle sabaA
+clutchIn 7 16 silence
+
+
+-- SabaA landing — hold here.
+
+-- 12. SabaA out, Saba back. Glide home to 72.
+glideBpm 72 40
+clutchIn 5 24 silence
+clutchIn 3 24 $ fiddle saba
+
+-- 13. Let the return settle, then the last chord fades. hush after.
+clutchIn 1 16 silence
+clutchIn 2 16 silence
+clutchIn 3 16 silence
