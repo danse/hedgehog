@@ -32,14 +32,21 @@ def load_wav(path):
         ch = w.getnchannels()
         width = w.getsampwidth()
         raw = w.readframes(w.getnframes())
-    dtype = {1: np.uint8, 2: np.int16, 4: np.int32}.get(width)
-    if dtype is None:
-        raise ValueError('unsupported sample width %d bytes' % width)
-    x = np.frombuffer(raw, dtype=dtype).astype(np.float64)
-    if width == 1:
-        x = (x - 128) / 128
+    if width == 3:
+        # 24-bit PCM: three little-endian bytes per sample, signed.
+        b = np.frombuffer(raw, dtype=np.uint8).reshape(-1, 3).astype(np.int32)
+        packed = b[:, 0] | (b[:, 1] << 8) | (b[:, 2] << 16)
+        signed = np.where(packed >= (1 << 23), packed - (1 << 24), packed)
+        x = signed.astype(np.float64) / float(1 << 23)
     else:
-        x /= float(2 ** (8 * width - 1))
+        dtype = {1: np.uint8, 2: np.int16, 4: np.int32}.get(width)
+        if dtype is None:
+            raise ValueError('unsupported sample width %d bytes' % width)
+        x = np.frombuffer(raw, dtype=dtype).astype(np.float64)
+        if width == 1:
+            x = (x - 128) / 128
+        else:
+            x /= float(2 ** (8 * width - 1))
     return x.reshape(-1, ch).mean(axis=1), sr
 
 
