@@ -91,7 +91,7 @@ let
       "~ ~ ~ ~ ~ ~ ~ ~ df7 ~ ~ ~ ~ ~ ~ ~",
       "~ ~ ~ ~ ~ ~ ~ ~ g6 ~ ~ ~ ~ ~ ~ ~",
       "~ ~ ~ ~ ~ ~ ~ ~ ef7 ~ ~ ~ ~ ~ ~ ~"])
-    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012
     # attack 0.12 # release 0.9 # sustain 0.6
     # room 0.9 # size 0.9 # amp 3
   -- the answer sits on bars 2 and 4; the ask sits on bars 1 and 3
@@ -104,7 +104,7 @@ let
       "~ ~ df7 ~ ~ ~ af6 ~ ~ ~ c7 ~ ~ ~ ~ ~",
       "~ ~ g6 ~ ~ ~ bf5 ~ ~ ~ ef7 ~ ~ ~ ~ ~",
       "~ ~ ef7 ~ ~ ~ c7 ~ ~ ~ g6 ~ ~ ~ ~ ~"])
-    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+    # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012
     # attack 0.12 # release 1.4 # sustain 0.5
     # room 0.9 # size 0.9 # amp 3
   --
@@ -114,7 +114,7 @@ let
       "~ ~ ~ ~ ~ ~ df5 ~ ~ ~ ~ ~ ~ ~ ~ ~",
       "~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
       "~ ~ ~ ~ ~ ~ ef5 ~ ~ ~ ~ ~ ~ ~ ~ ~"])
-    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012 # pF "breath" 0.07
+    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012
     # attack 0.3 # release 1.6 # sustain 1.2
     # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
   --
@@ -124,7 +124,7 @@ let
       "~ ~ ~ ~ ~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~ ~",
       "~ ~ df5 ~ ~ ~ ~ ~ ~ ~ ef5 ~ ~ ~ ~ ~",
       "~ ~ ~ ~ ~ ~ af4 ~ ~ ~ ~ ~ ~ ~ ~ ~"])
-    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012 # pF "breath" 0.07
+    # s "hedge_horn" # pF "limitertype" 0 # pF "vib" 3.6 # pF "depth" 0.012
     # attack 0.08 # release 1.8 # sustain 0.5
     # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
   --
@@ -151,7 +151,7 @@ let
   --
   melodicaPlay score = swing8 $ note score
     # s "hedge_melodica" # pF "limitertype" 0
-    # pF "vib" 5 # pF "depth" 0.01 # pF "breath" 0.12
+    # pF "vib" 5 # pF "depth" 0.01
     # pF "reed" 0.7 # pF "bright" 1700
     # attack 0.18 # release 0.7 # sustain 1.2
     # pF "pan" (-0.35) # room 0.8 # size 0.85 # amp 1.5
@@ -300,12 +300,12 @@ multi clutchIn 1 [
 -- asking all along. The clock starts pulling the promise out of tune.
 glideBpm 88 30 -- from 75
 multi clutchIn 16 [
-  (2,  16 sawAnswer),
-  (7,  16 whistleQuestion),
-  (8,  16 silence),
-  (10, 16 silence),
-  (11, 16 clockDissonant),
-  (12, 16 silence)]
+  (2,  sawAnswer),
+  (7,  whistleQuestion),
+  (8,  silence),
+  (10, silence),
+  (11, clockDissonant),
+  (12, silence)]
 
 -- d6 at this point may resonate a bit too much. If silencing
 -- that is not enough, d7 (whistle) and d9 (strings) are next
@@ -315,13 +315,13 @@ clutchIn 6 8 silence
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.
 multi clutchIn 16 [
-  (2,  16 silence),
-  (4,  16 silence),
-  (5,  16 silence),
-  (8,  16 silence),
-  (10, 16 silence),
-  (12, 16 silence),
-  (11, 16 $ clockDissonant # pF "metal" 0.9)]
+  (2,  silence),
+  (4,  silence),
+  (5,  silence),
+  (8,  silence),
+  (10, silence),
+  (12, silence),
+  (11, clockDissonant # pF "metal" 0.9)]
 
 -- 15 · The builder withdraws — the clock stops; the promise runs on
 -- without its author.
@@ -334,7 +334,7 @@ clutchIn 11 16 silence
 -- 16 · What remains — one suspended breath, unresolved; the promise
 -- keeps running without the builder.
 clutchIn 7 32 $ slow 4 $ note "af6 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
-  # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012 # pF "breath" 0.12
+  # s "hedge_whistle" # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012
   # attack 0.25 # release 2.2 # sustain 0.6
   # room 0.9 # size 0.9 # amp 3
 clutchIn 1 32 $ bed # lpf 1800 # room 0.9 # size 0.9

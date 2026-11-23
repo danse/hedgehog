@@ -85,5 +85,5 @@ See [visuals/README.md](../visuals/README.md) and
 | Script | Purpose |
 |---|---|
 | `check.sh` | Environment sanity check: binaries, audio, Tidal, samples, disk, reverb limits, and a silent typecheck of every track. |
-| `check-tidal.sh [file ...]` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. |
+| `check-tidal.sh [file ...]` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. Errors report the `.tidal` file and line number, not GHCi's `<interactive>` counter. |
 | `check-tidal.py` | Convert `.tidal` blocks to GHCi `:{ :}` commands for syntax checks (output can be piped into ghci). |

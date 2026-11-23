@@ -39,7 +39,7 @@
 
     // Breathy whistle: a clear pitched core with low, non-hissy air.
     SynthDef(\hedge_whistle, { |out, freq = 440, sustain = 1, pan,
-        vib = 4.2, depth = 0.03, breath = 0.3, attack = 0.12, release = 0.9|
+        vib = 4.2, depth = 0.03, breath = 0.12, attack = 0.12, release = 0.9|
         var env = EnvGen.ar(Env.linen(attack, sustain, release), doneAction: 2);
         var pitch = Lag.kr(freq, 0.08) * (1 + SinOsc.kr(vib, 0, depth));
         var tone = SinOsc.ar(pitch) + (SinOsc.ar(pitch * 2) * 0.08);
@@ -49,7 +49,7 @@
 
     // Distant horn: soft brass core with low, non-hissy air.
     SynthDef(\hedge_horn, { |out, freq = 220, sustain = 1, pan,
-        vib = 3.6, depth = 0.012, breath = 0.07, attack = 0.3, release = 1.6|
+        vib = 3.6, depth = 0.012, breath = 0.01, attack = 0.3, release = 1.6|
         var env = EnvGen.ar(Env.linen(attack, sustain, release), doneAction: 2);
         var pitch = Lag.kr(freq, 0.1) * (1 + SinOsc.kr(vib, 0, depth));
         var brass = Saw.ar(pitch * [0.995, 1.0, 1.005]).sum;
@@ -75,7 +75,7 @@
     // Single bowed folk string: one narrow saw through a soft body filter,
     // with low bow air and slow pitch drift instead of a synth-ensemble shimmer.
     SynthDef(\hedge_fiddle, { |out, freq = 220, sustain = 1, pan,
-        vib = 5.0, depth = 0.006, bow = 0.12, body = 1800,
+        vib = 5.0, depth = 0.006, bow = 0.03, body = 1800,
         attack = 0.18, release = 0.8|
         var env = EnvGen.ar(Env.linen(attack, sustain, release), doneAction: 2);
         var drift = LFNoise2.kr(0.6, 0.004);
@@ -89,7 +89,7 @@
 
     // Reedy free-reed voice: narrow saw with tracked breath, below the whistle.
     SynthDef(\hedge_melodica, { |out, freq = 440, sustain = 1, pan,
-        vib = 5.0, depth = 0.01, breath = 0.12, attack = 0.18, release = 0.7,
+        vib = 5.0, depth = 0.01, breath = 0.01, attack = 0.18, release = 0.7,
         reed = 0.7, bright = 1700|
         var env = EnvGen.ar(Env.linen(attack, sustain, release), doneAction: 2);
         var pitch = Lag.kr(freq, 0.08) * (1 + SinOsc.kr(vib, 0, depth));

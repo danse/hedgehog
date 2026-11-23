@@ -131,7 +131,7 @@ d3 $ s "~ gretsch:16 ~ gretsch:16 ~ gretsch:16 ~ gretsch:16"
 --    the pocket keeps its pulse while the grid takes over.
 
 -- high voices
-fadeMulti 8
+multi clutchIn 8
   [ (6, struct "t ~ t ~ t ~ t ~ t ~ t ~ t ~ t ~"
       $ s "pluck" # n 8
       # speedAt "d5" hClav
@@ -162,6 +162,7 @@ fadeMulti 64
   , (7, slow 4 $ s "hedge_pad" # n "<b4,fs5,a5>"
       # sustain 2 # amp 0.38 # room 0.45 # size 0.6)
   ]
+
 
 -- 5. Breakdown — the grid thins to the kick, a bass pedal, the pad and the
 --    horn. The trumpet phrase (trump:4, a 107 BPM funk line) is dropped a
@@ -229,6 +230,7 @@ fadeMulti 24
   ]
 
 xfadeIn 8 16 silence -- trump
+
 
 -- it could finish with the following
 

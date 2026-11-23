@@ -87,7 +87,6 @@ let
   stringBed :: Pattern Note -> ControlPattern
   stringBed p = note p
     # s "hedge_fiddle" # pF "vib" 5 # pF "depth" 0.006
-    # pF "bow" 0.12 # pF "body" 1800
     # attack 0.18 # release 0.8 # sustain 0.7
     # pan 0.5 # room 0.45 # size 0.62 # amp 2.4
   --
@@ -95,7 +94,7 @@ let
   reed :: Pattern Note -> ControlPattern
   reed p = note p
     # s "hedge_melodica" # pF "vib" 5.5 # pF "depth" 0.008
-    # pF "breath" 0.12 # pF "reed" 0.8 # pF "bright" 2400
+    # pF "reed" 0.8 # pF "bright" 2400
     # attack 0.06 # release 0.3 # sustain 0.35
     # pan (-0.3) # room 0.35 # size 0.55 # amp 2.4
   --
@@ -147,11 +146,11 @@ d4 $ bass bassNotes
 d5 shaker
 d6 wood
 
+
 -- 3 · Reed — 64 bars. The theme enters over the pulse and the bowed bed
 --     opens under it. Nothing else changes.
 d8 $ stringBed bedNotes
 clutchIn 7 16 $ reed reedNotes
-
 
 -- 4 · Step — 64 bars. Cimbalom fills the gaps between reed and wood. This is
 --     the complete band; the hand drum comes forward to match it.
@@ -162,10 +161,10 @@ clutchIn 9 16 $ cimbalom cimbalomNotes
 -- 5 · Turn — 64 bars. Bed, bass, reed and cimbalom are the same patterns
 --     with `|+ 5`, into D harmonic minor. The drums stay exactly where they
 --     were, so the key change is the only new information.
-d8 $ stringBed (bedNotes |+ 5)
-d4 $ bass (bassNotes |+ 5)
-d7 $ reed (reedNotes |+ 5)
-d9 $ cimbalom (cimbalomNotes |+ 5)
+d8 . stringBed $ bedNotes |+ 5
+d4 . bass $ bassNotes |+ 5
+d7 . reed $ reedNotes |+ 5
+d9 . cimbalom $ cimbalomNotes |+ 5
 
 -- 6 · Break — 48 bars. Drums, bass, pluck and wood go; the bed holds the
 --     turned loop with a longer tail and the reed is alone above the air.
@@ -191,7 +190,7 @@ glideBpm 76 24
 d5 $ s "house:3*14"
   # amp "0.3 0.12 0.18 0.3 0.12 0.26 0.12 0.3 0.12 0.18 0.3 0.12 0.26 0.12"
   # hpf 700 # room 0.08 # size 0.2 # pan 0.2
-d10 $ violin (violinNotes |+ 5)
+d10 . violin $ violinNotes |+ 5
 
 -- 9 · Peak — 64 bars. The reed brightens and the bed opens, the cimbalom
 --     comes forward and the wood gets louder; the air leaves. Everything

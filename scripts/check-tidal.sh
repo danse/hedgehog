@@ -4,7 +4,8 @@
 # Loads boot/BootTidal.hs into GHCi with its OSC target redirected to an unused
 # port, so evaluating patterns cannot reach a running SuperDirt. Each file gets
 # a fresh GHCi session, so a missing definition cannot be masked by a previous
-# track.
+# track. check-tidal.py emits LINE pragmas, so errors report the .tidal file
+# and line number instead of <interactive>.
 #
 # Usage: scripts/check-tidal.sh [track.tidal ...]
 #        scripts/check-tidal.sh            # every tracks/*/*.tidal track

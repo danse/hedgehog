@@ -47,7 +47,6 @@ let
   -- One octave down from the score.
   leadAt :: Pattern Note -> ControlPattern
   leadAt p = note (p - 12) # s "hedge_fiddle"
-      # pF "bow" 0.08
       # attack 0.06 # sustain 0.28 # release 0.32
       # room 0.62 # size 0.8 # amp 1.1
   -- Broken chords: just enough tail to join one pluck to the next. The pluck

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Render a project SynthDef offline and report its band balance.
 
+Reports noise in two places: high-band hiss (>3 kHz) and noise-like air in
+the harmonic range (120-3000 Hz), where a low-passed scrape hides from the
+high-band test. The inter-harmonic floor compares the spectrum between the
+note's harmonics with the peaks themselves, in dB.
+
 Uses sclang + scsynth -N, so it needs no running server and cannot disturb
 the live set. The audio numbers come from scripts/analyse-audio.py.
 
@@ -11,6 +16,7 @@ Usage:
 Options:
   --defs FILE      SynthDef source (default boot/HedgeSynths.scd)
   --freq HZ        note frequency (default 440)
+  --pitches LIST   comma-separated Hz to sweep; one verdict line per pitch
   --sustain S      event sustain (default 0.5)
   --param K=V      synth control, repeatable (e.g. --param bow=0.12)
   --window S       analysis window (default 0.25)
@@ -20,6 +26,7 @@ Options:
 """
 import argparse
 import importlib.util
+import math
 import os
 import re
 import subprocess
@@ -90,7 +97,56 @@ def render(name, args, tmp, duration):
     return wav
 
 
-def analyse(wav, args):
+def band_flatness(mag, freqs, lo, hi):
+    """Geometric / arithmetic mean in a band: flat means noise-like."""
+    m = (freqs >= lo) & (freqs < hi)
+    if m.sum() < 8:
+        return None
+    band = mag[m] + 1e-12
+    return float(np.exp(np.log(band).mean()) / band.mean())
+
+
+def harmonic_floor(mag, freqs, f0, lo, hi, tol=5.0):
+    """Gap level between harmonics relative to their peaks, in dB.
+
+    Only partials within 34 dB of the fundamental count. Past a synth's body
+    filter the harmonics are gone, and scoring the noise there as a 'gap'
+    falsely raises the floor on low notes. Skip non-harmonic sources too.
+    """
+    if not f0 or f0 <= 0 or hi <= lo + f0:
+        return None
+    harmonic, fundamental = [], None
+    for n in range(1, int(hi / f0)):
+        if n * f0 < lo:
+            continue
+        pk = np.abs(freqs - n * f0) <= tol
+        if not pk.any():
+            continue
+        p = float(mag[pk].max())
+        if fundamental is None:
+            if p < 1e-9:
+                return None
+            fundamental = p
+        if p >= fundamental * 0.02:
+            harmonic.append((n, p))
+    if len(harmonic) < 4:
+        return None
+    gaps = []
+    for (a, _), (b, _) in zip(harmonic, harmonic[1:]):
+        if b != a + 1:
+            continue
+        gp = np.abs(freqs - (a + 0.5) * f0) <= tol
+        if gp.any():
+            gaps.append(float(np.median(mag[gp])))
+    if not gaps:
+        return None
+    db = 20 * math.log10(np.median(gaps)
+                         / (np.median([p for _, p in harmonic]) + 1e-12))
+    return db if db < -12 else None
+
+
+def analyse(wav, args, label=None):
+    label = label or wav.stem
     x, sr = analyse_audio.load_wav(str(wav))
     peak = float(np.max(np.abs(x))) if len(x) else 0.0
     if 0.0 < peak < 0.05:
@@ -102,15 +158,16 @@ def analyse(wav, args):
             out.setframerate(sr)
             out.writeframes((y * 32767).astype("<i2").tobytes())
         print("(quiet synth: normalised by %.1f for analysis)" % factor)
-    cmd = [sys.executable, str(ANALYSER), "--window", str(args.window),
-           "--bands", args.bands, str(wav)]
-    out = subprocess.run(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE).stdout
-    print(out.strip())
+    if not args.pitches:
+        cmd = [sys.executable, str(ANALYSER), "--window", str(args.window),
+               "--bands", args.bands, str(wav)]
+        out = subprocess.run(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE).stdout
+        print(out.strip())
     x, sr = analyse_audio.load_wav(str(wav))
     size = max(256, int(sr * args.window))
     cutoff = next((b for b in (int(v) for v in args.bands.split(","))
                    if b >= 3000), 3000)
-    shares, flats = [], []
+    shares, flats, mids, floors = [], [], [], []
     for start in range(0, len(x) - size, size):
         seg = x[start:start + size]
         if np.sqrt(np.mean(seg ** 2)) < 0.01:
@@ -122,6 +179,12 @@ def analyse(wav, args):
             continue
         shares.append(hi.sum() / mag.sum())
         flats.append(np.exp(np.log(hi).mean()) / hi.mean())
+        mid = band_flatness(mag, freqs, 120, cutoff)
+        if mid is not None:
+            mids.append(mid)
+        floor = harmonic_floor(mag, freqs, args.freq, 120, cutoff)
+        if floor is not None:
+            floors.append(floor)
     if shares:
         share, flat = float(np.mean(shares)), float(np.mean(flats))
         if share > 0.05 and flat > 0.15:
@@ -131,7 +194,20 @@ def analyse(wav, args):
         else:
             verdict = "clean"
         print("\n%s: >%d Hz = %.1f%% of power, flatness %.2f -> %s (%d windows)"
-              % (wav.stem, cutoff, 100 * share, flat, verdict, len(shares)))
+              % (label, cutoff, 100 * share, flat, verdict, len(shares)))
+    if mids:
+        mid = float(np.mean(mids))
+        if mid > 0.04:
+            air = "noise-like air in the harmonic band"
+        elif mid > 0.015:
+            air = "a little air"
+        else:
+            air = "tonal"
+        print("mid 120-%d Hz: flatness %.3f -> %s" % (cutoff, mid, air))
+    if floors:
+        db = float(np.mean(floors))
+        state = "raised (noise-like floor)" if db > -50 else "deep"
+        print("harmonic floor: %.0f dB below the peaks -> %s" % (db, state))
 
 
 def def_names(path):
@@ -144,6 +220,8 @@ def main():
     ap.add_argument("name", nargs="?", help="SynthDef name without the backslash")
     ap.add_argument("--defs", type=Path, default=ROOT / "boot" / "HedgeSynths.scd")
     ap.add_argument("--freq", type=float, default=440.0)
+    ap.add_argument("--pitches", metavar="LIST",
+                    help="comma-separated Hz to sweep, e.g. 147,220,294")
     ap.add_argument("--sustain", type=float, default=0.5)
     ap.add_argument("--param", action="append", default=[], metavar="K=V")
     ap.add_argument("--window", type=float, default=0.25)
@@ -153,24 +231,38 @@ def main():
     args = ap.parse_args()
     if bool(args.name) == bool(args.all):
         ap.error("give a NAME or --all, not both")
+    try:
+        freqs = ([float(p) for p in args.pitches.split(",")]
+                 if args.pitches else [args.freq])
+    except ValueError:
+        ap.error("--pitches must be comma-separated Hz values")
+    if any(f <= 0 for f in freqs):
+        ap.error("--pitches values must be positive")
 
     names = def_names(args.defs) if args.all else [args.name]
     if not names:
         ap.error("no SynthDefs found in %s" % args.defs)
+    many = len(names) * len(freqs) > 1
     tmp_root = "/tmp/opencode" if os.path.isdir("/tmp/opencode") else None
     try:
         for name in names:
-            with tempfile.TemporaryDirectory(prefix="hedgehog-synth-",
-                                             dir=tmp_root) as td:
-                tmp = Path(td)
-                wav = render(name, args, tmp, max(3.0, args.sustain + 4.0))
-                print("\n=== %s (%g Hz, sustain %g) ===" %
-                      (name, args.freq, args.sustain))
-                analyse(wav, args)
-                if args.keep:
-                    out = args.keep if len(names) == 1 else args.keep / (name + ".wav")
-                    out.parent.mkdir(parents=True, exist_ok=True)
-                    out.write_bytes(wav.read_bytes())
+            for freq in freqs:
+                args.freq = freq
+                with tempfile.TemporaryDirectory(prefix="hedgehog-synth-",
+                                                 dir=tmp_root) as td:
+                    tmp = Path(td)
+                    wav = render(name, args, tmp, max(3.0, args.sustain + 4.0))
+                    if args.pitches:
+                        analyse(wav, args, label="%s @ %g Hz" % (name, freq))
+                    else:
+                        print("\n=== %s (%g Hz, sustain %g) ===" %
+                              (name, freq, args.sustain))
+                        analyse(wav, args)
+                    if args.keep:
+                        out = (args.keep / ("%s-%g.wav" % (name, freq))
+                               if many else args.keep)
+                        out.parent.mkdir(parents=True, exist_ok=True)
+                        out.write_bytes(wav.read_bytes())
     except (RuntimeError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
