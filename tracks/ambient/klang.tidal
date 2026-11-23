@@ -28,23 +28,20 @@ let
     "c6 _ _ _ bf5 _ af5 _",
     "bf5 _ _ _ af5 _ _ _",
     "g5 _ _ _ f5 _ _ _"]
-  pad = n harm # s "hedge_pad" # legato 0.9 # lpf 1800
-    # room 0.9 # size 0.85 # amp 2
-  padUp = n harmUp # s "hedge_pad" # legato 0.9 # lpf 2200
-    # room 0.9 # size 0.85 # amp 1.6
+  space p = p # room 0.9 # size 0.85
+  pad = space $ n harm # s "hedge_pad" # legato 0.9 # lpf 1800 # amp 2
+  padUp = space $ n harmUp # s "hedge_pad" # legato 0.9 # lpf 2200 # amp 1.6
   bass = speedAt "g1" roots # s "moog:3" # lpf 300
     # room 0.3 # size 0.5
   whistle = note hook # s "hedge_whistle" # legato 0.9 # attack 0.05 # release 0.2
     # pF "limitertype" 0 # pF "vib" 4.2 # pF "depth" 0.012
     # room 0.85 # size 0.8 # amp 0.45
-  answer = note hook2 # s "hedge_strings" # legato 1.1
-    # room 0.9 # size 0.85 # amp 0.5
+  answer = space $ note hook2 # s "hedge_strings" # legato 1.1 # amp 0.5
   air = slow 8 $ s "wind:4" # speed 0.65 # pan rand
     # room 0.95 # size 0.9 # lpf 900 # amp 0.3
 
 -- 1. pad and air — establish the four-bar loop (8 cycles).
-xfadeIn 1 8 pad
-xfadeIn 2 8 air
+multi clutchIn 8 [(1, pad), (2, air)]
 
 -- 2. bass enters (8 cycles).
 xfadeIn 3 8 bass
@@ -64,12 +61,11 @@ multi clutchIn 64 [
 
 -- 6. strip back — whistle and answer out, bass filtered down, pad returns
 -- to its root voicing (8 cycles).
-multi clutchIn 64 [
+multi xfadeIn 64 [
   (1, pad),
   (3, bass # lpf 200),
   (4, silence),
   (5, silence)]
--- clutching silence in produces an odd effect
 
 
 -- 7. outro. Let the last chord ring before fading.

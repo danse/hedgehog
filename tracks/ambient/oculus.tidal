@@ -11,7 +11,7 @@ d1 $ s "~ ~ ~ ~ ~ ~ ~ sundance:3"
 
 -- lead. notes:0, a plucked C♯4, tuned to a sparse E♭-major line. The gaps
 -- are deliberate — it answers the chords instead of filling them.
-d2 $ speedAt "cs4" (cat [
+clutchIn 2 8 $ speedAt "cs4" (cat [
     "g4 ~ ~ bf4 ~ ~ c5 ~",
     "ef5 ~ ~ c5 ~ bf4 ~ ~",
     "c5 ~ ~ ef5 ~ ~ g5 ~",
@@ -45,7 +45,7 @@ xfadeIn 4 24 bed1
 
 -- creepy choir. Hmm, a hummed G♯3, transposed to the chord tones. Two
 -- bars per chord, long sustain, most of the reverb.
-d5 $ slow 2 $ s "hmm"
+clutchIn 5 16 . slow 2 $ s "hmm"
   # speedAt "gs3" (cat [
       "ef4,g4,bf4",
       "ef4,g4,bf4",
@@ -56,7 +56,7 @@ xfadeIn 2 16 silence -- lead
 
 -- guitar answer. The lead line mirrored around F4 (n -> 130 - n) and dropped
 -- an octave: E♭3-E♭4, between the bed and the choir.
-d2 $ speedAt "c2" (cat [
+clutchIn 2 16 $ speedAt "c2" (cat [
     "ef4 ~ ~ c4 ~ ~ bf3 ~",
     "g3 ~ ~ bf3 ~ ~ c4 ~",
     "bf3 ~ ~ g3 ~ ~ ef3 ~",
