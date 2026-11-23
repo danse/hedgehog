@@ -145,10 +145,12 @@ window.addEventListener('keydown', resumeAudio);
 // makes a bookmark or a link to one cue work; `current.txt` is only the fallback
 // for a browser that has never swapped a cue.
 const SKETCH_KEY = 'hedgehog.sketch';
+const SKETCH_COUNT = 10; // single source of truth for the arrow cycle
+let currentSketch = null;
 
 function sketchNumber(v) {
   const n = parseInt(v, 10);
-  return (n >= 1 && n <= 9) ? n : null;
+  return (n >= 1 && n <= SKETCH_COUNT) ? n : null;
 }
 
 function storedSketch() {
@@ -190,8 +192,9 @@ async function initialSketch() {
 }
 
 async function loadSketch(n) {
+  currentSketch = n;
   rememberSketch(n);
-  const base = `0${n}`;
+  const base = String(n).padStart(2, '0');
   const file = `${base}.js`;
   try {
     const mod = await import(`../sketches/${file}?t=${Date.now()}`);
@@ -215,6 +218,19 @@ function bindKeys() {
   window.addEventListener('keydown', (e) => {
     if (e.key >= '1' && e.key <= '9') {
       loadSketch(parseInt(e.key));
+      return;
+    }
+    if (e.key === '0') {
+      loadSketch(10);
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault(); // don't scroll the page
+      const at = currentSketch === null ? 1 : currentSketch;
+      const next = e.key === 'ArrowRight'
+        ? (at % SKETCH_COUNT) + 1
+        : (at === 1 ? SKETCH_COUNT : at - 1);
+      loadSketch(next);
       return;
     }
     if (e.key === 'h') {

@@ -75,7 +75,7 @@ name, use the `pw-link` lines above.
 Without this, starting `pw-loopback` can make WirePlumber reapply an old saved
 volume and drop the headset to near-silence. It also only saves/restores real
 `Audio/Source` nodes, so a stale sink ID cannot become the default source.
-| `vis-hydra-swap.sh <n>` | Set the fallback cue sketch (1-9) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
+| `vis-hydra-swap.sh <n>` | Set the fallback cue sketch (1-10) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
 
 See [visuals/README.md](../visuals/README.md) and
 [visuals/hydra/README.md](../visuals/hydra/README.md).

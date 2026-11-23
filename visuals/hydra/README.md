@@ -5,7 +5,7 @@ This folder contains the local Hydra setup for the Hedgehog set.
 ## Files
 - `index.html` - Loads Hydra synth and boots our app
 - `css/style.css` - Fullscreen, minimal UI
-- `js/main.js` - Boot, virtual-mic selection, sketch loader, hotkeys (1-9)
+- `js/main.js` - Boot, virtual-mic selection, sketch loader, hotkeys (1-9, 0)
 - `js/utils.js` - Helpers for slow-fluid motion (smoothing, lerp, motion budget)
 - `js/osc.js` - Optional OSC receiver for hybrid cues (off by default)
 - `sketches/` - Cue and test sketches; see [sketches/README.md](sketches/README.md)
@@ -28,11 +28,12 @@ page loaded — start routing and reload.
 ## Usage
 1. Serve + route: `../../scripts/vis-hydra-up.sh` (starts server, opens browser)
 2. Confirm the HUD says `Hydra-Virtual-Mic · live`
-3. Swap sketches with keys `1-9` or `../../scripts/vis-hydra-swap.sh <n>`.
-   The page remembers the cue in `localStorage` and mirrors it in `?sketch=N`,
-   so a reload, a restored tab, or a copied URL comes back to the same sketch.
-   `current.txt` is only the fallback for a browser that has no stored cue.
-   Open `index.html?sketch=3` to jump straight to one.
+3. Jump to a sketch with keys `1-9` (or `0` for audio-warp), or cycle through
+   all ten with `←`/`→` (wraps at both ends). The page remembers the cue in
+   `localStorage` and mirrors it in `?sketch=N`, so a reload, a restored tab, or
+   a copied URL comes back to the same sketch. `current.txt` (set by
+   `../../scripts/vis-hydra-swap.sh <n>`) is only the fallback for a browser that
+   has no stored cue. Open `index.html?sketch=3` to jump straight to one.
 
 Routing manually: `../../scripts/vis-audio-route.sh {start|status|stop}`.
 `stop` also restores the previous default source.

@@ -34,6 +34,7 @@ These follow the five movements in [notes/set-plan.md](../../../notes/set-plan.m
 | 7 | `07-oscillators.js` | `osc()` modulated by audio |
 | 8 | `08-spectrum.js` | Frequency bands as bars |
 | 9 | `09-pulse-basic.js` | Simple circle pulsing with bass |
+| 0 | `10-audio-warp.js` | Bass-driven warp; audio displaces a voronoi field |
 
 ## Adding a sketch
 
