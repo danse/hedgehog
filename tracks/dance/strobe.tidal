@@ -1,0 +1,213 @@
+-- Strobe — breakbeat / the amen and one lift
+-- 140 BPM · E minor. Em9 | Cmaj9 | G6/9 | D6/9, one chord per bar; up a tone
+-- in 8-11, back for the outro. breaks152 is a three-bar amen at 152, tuned to
+-- a three-cycle phrase at 140, so it slips against the four-bar loop.
+-- dN in entry order: 1 kick, 2 break/hats, 3 bass, 4 pad, 5 clap, 6 stabs,
+-- 7 open hat, 8 rim, 9 lead, 10 vocal/air. clutchIn every change; hush at the end.
+-- Double blank = landing: hold there before the next change. ~9:00 at 140 BPM.
+-- Gotchas: notes/learning/gotchas.md. juno:8 = C5, jvbass:0 ~ fs2, pluck:8 ~ d5
+-- (speedAt tunes them); hoover takes `n` as pitch; rave:0 = shout, jungle:7 = open hat.
+
+glideBpm 140 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. The loop, break, hats, kick, bass, stabs and lead are named
+-- once; the arrangements stay at their sections. `multi clutchIn t` groups
+-- seats that change together; `clear` is the same for silence. Keep this whole
+-- block one paragraph.
+-- ---------------------------------------------------------------------------
+let
+  loop :: Pattern Note
+  loop = chordAt "<e3 c3 g3 d3>" "<min9 maj9 sixNine sixNine>"
+  pad :: Pattern Note -> ControlPattern
+  pad p = s "juno" # n 8 # speedAt "c5" p
+        # sustain 1.5 # release 0.8 # hpf 150
+        # room 0.45 # size 0.65 # amp 0.22
+  -- Three bars of amen at 152 tuned to three cycles at 140: the break keeps
+  -- its own accent and leans across the bar line of the chord loop.
+  amen :: ControlPattern
+  amen = slow 3 $ s "breaks152" # n 0 # speed (140/152)
+       # hpf 170 # lpf 7000 # room 0.12 # size 0.28 # amp 0.7
+  hats :: ControlPattern
+  hats = s "feel:1*16"
+       # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
+       # hpf 620 # room 0.06 # size 0.16
+  kick :: Pattern String
+  kick = "<feel:0*4 feel:0*4 [feel:0 ~ feel:0 [feel:0 feel:0]] [feel:0*3 ~]>"
+  bassA :: Pattern Note
+  bassA = "<[e2 ~ e2 ~ e2 ~ e3 ~] [c2 ~ c2 ~ c2 ~ c3 ~] [g2 ~ g2 ~ g2 ~ g3 ~] [d2 ~ d2 ~ d2 ~ d3 ~]>"
+  bass :: Pattern Note -> ControlPattern
+  bass p = speedAt "fs2" p # s "jvbass" # n 0
+         # sustain 0.22 # release 0.1 # lpf 640 # lpq 0.25
+         # shape 0.2 # room 0.1 # size 0.22 # amp 0.9
+  stabs :: Pattern Note
+  stabs = "<[g4,b4,d5,fs5] [e4,g4,b4,d5] [b4,d5,g5,a5] [a4,d5,fs5,e5]>"
+  stab :: Pattern Note -> ControlPattern
+  stab p = struct "~ t ~ t ~ t ~ t"
+         $ s "pluck" # n 8 # speedAt "d5" p
+         # sustain 0.16 # release 0.12 # lpf 2600 # lpq 0.3
+         # room 0.32 # size 0.5 # amp 0.4 # pan 0.4
+  lead :: Pattern Note
+  lead = "<[e4 g4 ~ b4 ~ fs5 ~ d5] [~ g4 ~ e4 c4 ~ ~ ~] [~ b4 d5 ~ a5 ~ g5 ~] [~ fs4 a4 ~ e5 ~ d5 ~]>"
+  hooverLead :: Pattern Note -> ControlPattern
+  hooverLead p = n p # s "hoover" # legato 0.85 # lpf 1600
+               # room 0.4 # size 0.6 # amp 0.5
+  clear :: Time -> [ID] -> IO ()
+  clear t ds = multi clutchIn t [(d, silence) | d <- ds]
+
+-- 1. Doors — 32 cycles. Filtered kick, hats, sub and pad: the loop is stated
+--    before anything moves.
+clutchIn 1 16 $ s kick # lpf 300 # room 0.04 # size 0.12 # amp 0.85
+clutchIn 2 24 hats
+clutchIn 3 20 $ bass bassA
+clutchIn 4 28 $ pad loop
+-- TODO: technically the bass enters before the hats so it should get stream 2
+
+-- Doors landing — let the bed settle before the break arrives.
+
+-- 2. Break — 24 cycles. The amen takes the hats' seat; the clap lands on 2
+--    and 4 and the kick loses its blanket.
+clutchIn 1 8 $ s kick # lpf 600 # room 0.04 # size 0.12 # amp 0.95
+clutchIn 2 16 amen
+clutchIn 5 12 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
+  # amp 0.5 # room 0.22 # size 0.34
+
+-- 3. Stabs — 24 cycles. Rootless comp on the offbeats, open hat under it.
+multi clutchIn 16
+  [ (6, stab stabs)
+  , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+      # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
+  ]
+
+-- 4. Rim — 24 cycles. The rim ticks and the hoover enters behind a filter:
+--    a shape rather than a tune yet.
+clutchIn 8 12 $ s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+clutchIn 9 16 $ degrade $ hooverLead lead
+
+
+-- Band landing — all ten seats are present; hold before the first peak.
+
+-- 5. Peak one — 32 cycles. Nothing new but the shout: the same band gets
+--    brighter and louder, and the hats double under the break.
+glideBpm 142 30
+multi clutchIn 4
+  [ (1, s kick # amp 1 # room 0.04 # size 0.1)
+  , (2, stack [amen, s "feel:1*32" # hpf 620 # room 0.06 # size 0.16])
+  , (6, stab stabs # lpf 4000 # amp 0.46)
+  , (9, hooverLead lead # lpf 3200 # amp 0.55)
+  ]
+clutchIn 10 8 $ slow 8 $ s "rave" # n 0
+  # sustain 1.6 # release 0.4 # room 0.3 # size 0.5 # amp 0.5
+
+
+-- Peak landing — let the shout ring and the band hold before it is stripped.
+
+-- 6. Break — 16 cycles. Pad, sub and a filtered amen; a riser takes the
+--    shout's seat. Evaluate 7 on the last bar.
+clear 4 [1,5,6,7,8,9]
+multi clutchIn 4
+  [ (2, amen # lpf 700 # hpf 120 # amp 0.4)
+  , (10, s "hedge_noise" # sustain 16
+      # lpf (range 400 5000 $ slow 16 sine)
+      # room 0.4 # size 0.6 # amp 0.28)
+  ]
+
+-- 7. Back — 32 cycles. The band returns in two passes: drums over two bars,
+--    harmony over four, so the kick lands before the chords do.
+multi clutchIn 2
+  [ (1, s kick # amp 1 # room 0.04 # size 0.1)
+  , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.5 # room 0.22 # size 0.34)
+  , (8, s "~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+      # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34)
+  , (10, silence)
+  ]
+multi clutchIn 4
+  [ (2, stack [amen, hats])
+  , (3, bass bassA # lpf 720)
+  , (6, stab stabs # lpf 3600)
+  , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+      # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
+  , (9, hooverLead lead # lpf 3000)
+  ]
+
+
+-- Drop landing — the full band is back; hold before the key moves.
+
+-- 8. Turn — 24 cycles. Up a tone: pad, sub, comp and lead are the same
+--    patterns with `|+ 2`. The drums stay, so the key is the only new fact.
+multi clutchIn 4
+  [ (4, pad (loop |+ 2))
+  , (3, bass (bassA |+ 2) # lpf 720)
+  , (6, stab (stabs |+ 2) # lpf 3600)
+  , (9, hooverLead (lead |+ 2) # lpf 3000)
+  ]
+
+
+-- Turn landing — the new key has to be heard before the room empties.
+
+-- 9. Deep — 32 cycles. Dub room: hats, open hat and lead go, the comp drops
+--    to one stab every two bars and the clap softens. Let it breathe.
+clear 8 [2,7,9]
+multi clutchIn 8
+  [ (5, s "~ ~ cp:0 ~ ~ ~ ~ ~" # amp 0.4 # room 0.3 # size 0.44)
+  , (6, slow 2 $ stab (stabs |+ 2) # lpf 1200 # amp 0.35)
+  ]
+
+
+-- Deep landing — nobody leaves on the lift; pressure builds on this band.
+
+-- 10. Lift — 16 cycles. Hats return and double, the clap rolls into the last
+--     bar of every four, the comp opens to 2.2 kHz and a riser climbs. The
+--     lead and the open hat are held back for section 11.
+multi clutchIn 4
+  [ (5, s "<[~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ [cp:0 cp:0 cp:0 cp:0]]>"
+      # amp (range 0.4 0.6 $ slow 16 saw) # room 0.24 # size 0.36)
+  , (10, s "hedge_noise" # sustain 16
+      # lpf (range 400 4000 $ slow 16 saw)
+      # room 0.4 # size 0.6 # amp 0.26)
+  ]
+multi clutchIn 8
+  [ (2, stack [amen, s "feel:1*32" # hpf 620 # room 0.06 # size 0.16])
+  , (6, stab (stabs |+ 2) # lpf (range 700 2200 $ slow 16 saw))
+  ]
+
+-- 11. Peak two — 32 cycles. The lift tops out: open hat and lead arrive in
+--     the new key, the riser clears, and the tempo lifts two beats. Kick,
+--     sub and pad never stopped, so this is arrival, not a second drop.
+glideBpm 144 30
+multi clutchIn 2
+  [ (2, stack [amen, hats])
+  , (5, s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.5 # room 0.22 # size 0.34)
+  , (7, s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+      # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56)
+  , (9, hooverLead (lead |+ 2) # lpf 3200 # amp 0.55)
+  , (10, silence)
+  ]
+
+
+-- Peak landing — hold the second peak before it resolves.
+
+-- 12. Outro — 24 cycles. Back to E minor: the band thins to kick, sub and
+--     pad, then the pad becomes one Em9, re-blooming every two bars.
+glideBpm 140 30
+multi clutchIn 4
+  [ (4, pad loop # room 0.55 # size 0.7)
+  , (3, bass bassA # lpf 620)
+  ]
+multi clutchIn 8
+  [ (1, s kick # lpf 380 # amp 0.9 # room 0.08 # size 0.2)
+  , (2, silence)
+  , (3, silence)
+  , (4, slow 2 $ pad "[e3,g3,b3,d4,fs4]"
+      # sustain 3.4 # release 1.6 # room 0.62 # size 0.8)
+  , (5, silence)
+  , (6, silence)
+  , (7, silence)
+  , (8, silence)
+  , (9, silence)
+  , (10, silence)
+  ]
+
+-- `hush` after the last chord
+hush
