@@ -2,7 +2,8 @@
 setbpm 138
 
 -- Four bars in D minor/Dorian, then the centre moves up a fourth over the
--- comp's G/C and B/G figures: G major, with the bass holding D as a pedal.
+-- comp's G/C and B/G figures: G major.
+-- All voices are dry (no room/size), so d1-d3 share one space.
 let m1 = cat [
       "d5 _ _ f5 _ _ e5 _ d5 _ _ _",
       "g5 _ _ f5 _ _ a5 _ g5 _ _ _",
@@ -13,7 +14,6 @@ let m1 = cat [
       "d5 _ _ _ fs5 _ _ a5 _ _ _ _",
       "g5 _ _ _ _ e5 _ _ _ _ _ _"]
 d1 . slow 4 $ note m1 # s "hedge_melodica"
-  # room 0.9 # size 0.8
 
 let c1 = cat [
       "a3 b3 ~ a3 b3 ~ a3 b3 ~ a3 b3 ~ ",
@@ -27,11 +27,16 @@ let c1 = cat [
 d2 . slow 4 $ note c1 # s "gtr"
 
 -- Bass: three 4-slot notes per line against the comp's four 3-slot beats.
+let bPlay score = slow 4 $ speedAt "f1" score # s "bass1:19" # amp 0.3
 let b1 = cat [
       "d2 _ _ _ a2 _ _ _ d2 _ _ _",
       "d2 _ _ _ c3 _ _ _ d2 _ _ _",
       "g2 _ _ _ d2 _ _ _ g2 _ _ _",
       "g2 _ _ _ b2 _ _ _ d2 _ _ _"]
-d3 . slow 4 $ speedAt "g1" b1 # s "moog:3"
-  # room 0.3 # size 0.5 # amp 0.2
-
+-- A root under the comp's A/C/B figures, then G, agreeing with lines 3-4.
+let bAlt = cat [
+      "a2 _ _ _ e2 _ _ _ a2 _ _ _",
+      "a2 _ _ _ c3 _ _ _ a2 _ _ _",
+      "g2 _ _ _ d2 _ _ _ g2 _ _ _",
+      "g2 _ _ _ b2 _ _ _ d2 _ _ _"]
+d3 $ bPlay bAlt
