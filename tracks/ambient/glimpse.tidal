@@ -1,0 +1,37 @@
+
+setbpm 138
+
+-- Four bars in D minor/Dorian, then the centre moves up a fourth over the
+-- comp's G/C and B/G figures: G major, with the bass holding D as a pedal.
+let m1 = cat [
+      "d5 _ _ f5 _ _ e5 _ d5 _ _ _",
+      "g5 _ _ f5 _ _ a5 _ g5 _ _ _",
+      "a5 _ _ c6 _ _ a5 _ g5 _ f5 _",
+      "e5 _ _ d5 _ _ _ _ f5 _ e5 _",
+      "g5 _ _ _ _ b5 _ _ d6 _ _ _",
+      "e5 _ _ c5 _ _ _ _ b4 _ _ _",
+      "d5 _ _ _ fs5 _ _ a5 _ _ _ _",
+      "g5 _ _ _ _ e5 _ _ _ _ _ _"]
+d1 . slow 4 $ note m1 # s "hedge_melodica"
+  # room 0.9 # size 0.8
+
+let c1 = cat [
+      "a3 b3 ~ a3 b3 ~ a3 b3 ~ a3 b3 ~ ",
+      "c4 a3 ~ c4 a3 ~ c4 a3 ~ c4 a3 ~ ",
+      "a3 b3 ~ a3 b3 ~ a3 b3 ~ a3 b3 ~ ",
+      "c4 a3 ~ c4 a3 ~ c4 a3 ~ c4 a3 ~ ",
+      "g3 c4 ~ g3 c4 ~ g3 c4 ~ g3 c4 ~ ",
+      "b3 g3 ~ b3 g3 ~ b3 g3 ~ b3 g3 ~ ",
+      "g3 c4 ~ g3 c4 ~ g3 c4 ~ g3 c4 ~ ",
+      "b3 g3 ~ b3 g3 ~ b3 g3 ~ b3 g3 ~ "]
+d2 . slow 4 $ note c1 # s "gtr"
+
+-- Bass: three 4-slot notes per line against the comp's four 3-slot beats.
+let b1 = cat [
+      "d2 _ _ _ a2 _ _ _ d2 _ _ _",
+      "d2 _ _ _ c3 _ _ _ d2 _ _ _",
+      "g2 _ _ _ d2 _ _ _ g2 _ _ _",
+      "g2 _ _ _ b2 _ _ _ d2 _ _ _"]
+d3 . slow 4 $ speedAt "g1" b1 # s "moog:3"
+  # room 0.3 # size 0.5 # amp 0.2
+
