@@ -6,6 +6,11 @@
 
 glideBpm 88 24
 
+-- Each voice with two scores keeps its variants in one record, so a live call
+-- reads `koto utopia` or `melodica plain`: the field is the score selector.
+-- For a one-off score, use `koto $ const score`.
+data Variants = Variants { plain :: Pattern Note, utopia :: Pattern Note }
+
 let
   -- string bed; replaces hedge_pad with the Hammond's string ensemble drawbar
   bed = slow 4 $ note (cat [
@@ -67,23 +72,22 @@ let
     # s "superhammond" # voice 0 # pF "vibrato" 0.12 # pF "vrate" 4
     # sustain 2.5 # lpf 520 # room 0.55 # size 0.6 # amp 0.34
   --
-  glintsPlay score = swing8 $ note score
+  -- high glints: three lean strokes a bar with the vibraphone's slow tremolo,
+  -- then a brighter long-short shuffle for the promised order
+  glintsVariants = Variants {
+      plain = cat [
+        "c5 ~ ~ ~ ~ ~ c5 ~ ~ ~ c5 ~ ~ ~ ~ ~",
+        "~ ~ f5 ~ ~ ~ ~ ~ f5 ~ f5 ~ ~ ~ ~ ~",
+        "bf4 ~ ~ ~ ~ ~ ~ ~ bf4 ~ ~ ~ d5 ~ ~ ~",
+        "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"],
+      utopia = cat [
+        "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ ef5 ~ ~ ~ g5 ~",
+        "df5 ~ f5 ~ ~ ~ df5 ~ df5 ~ af5 ~ ~ ~ f5 ~",
+        "bf4 ~ d5 ~ ~ ~ bf4 ~ bf4 ~ g5 ~ ~ ~ d5 ~",
+        "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"] }
+  glints select = swing8 $ note (select glintsVariants)
     # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
     # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 1
-  --
-  -- high glints; three lean strokes a bar, with the vibraphone's slow tremolo
-  glints = glintsPlay $ cat [
-      "c5 ~ ~ ~ ~ ~ c5 ~ ~ ~ c5 ~ ~ ~ ~ ~",
-      "~ ~ f5 ~ ~ ~ ~ ~ f5 ~ f5 ~ ~ ~ ~ ~",
-      "bf4 ~ ~ ~ ~ ~ ~ ~ bf4 ~ ~ ~ d5 ~ ~ ~",
-      "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"]
-  --
-  -- brighter glints in a long-short shuffle for the promised order
-  glintsUtopia = glintsPlay $ cat [
-      "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ ef5 ~ ~ ~ g5 ~",
-      "df5 ~ f5 ~ ~ ~ df5 ~ df5 ~ af5 ~ ~ ~ f5 ~",
-      "bf4 ~ d5 ~ ~ ~ bf4 ~ bf4 ~ g5 ~ ~ ~ d5 ~",
-      "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"]
   --
   -- clear whistle pitch with a thin veil of air and slight pitch drift
   whistle = swing8 $ note (cat [
@@ -128,47 +132,44 @@ let
     # attack 0.08 # release 1.8 # sustain 0.5
     # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
   --
-  stringsPlay score = slow 4 $ note score
+  -- bowed shimmer, a separate voice from the plucked tremolo; four notes
+  -- for the richest melodic sections
+  stringsVariants = Variants {
+      plain = cat [
+        "af4,c5,ef5",
+        "f4,af4,df5",
+        "g4,bf4,c5",
+        "ef4,g4,bf4"],
+      utopia = cat [
+        "af4,c5,ef5,af5",
+        "f4,af4,df5,f5",
+        "g4,bf4,c5,g5",
+        "ef4,g4,bf4,ef5"] }
+  strings select = slow 4 $ note (select stringsVariants)
     # s "hedge_strings" # pF "limitertype" 0
     # pF "vib" 5 # pF "depth" 0.006
     # pF "tremrate" 6.5 # pF "tremdepth" 0.18
     # attack 0.8 # release 1.4 # sustain 3.4
     # pan 0.55 # room 0.85 # size 0.9 # amp 1.5
   --
-  -- sustained bowed shimmer: a separate voice from the plucked tremolo
-  strings = stringsPlay $ cat [
-      "af4,c5,ef5",
-      "f4,af4,df5",
-      "g4,bf4,c5",
-      "ef4,g4,bf4"]
-  --
-  -- four-note bowed chord for the richest melodic sections
-  stringsUtopia = stringsPlay $ cat [
-      "af4,c5,ef5,af5",
-      "f4,af4,df5,f5",
-      "g4,bf4,c5,g5",
-      "ef4,g4,bf4,ef5"]
-  --
-  melodicaPlay score = swing8 $ note score
+  -- reedy mid-high answer between strings and whistle; denser for utopia
+  melodicaVariants = Variants {
+      plain = cat [
+        "c5 ~ ef5 ~ ~ ~ g5 ~ c5 ~ g5 ~ ~ ~ ef5 ~",
+        "f5 ~ df5 ~ ~ ~ af5 ~ f5 ~ af5 ~ ~ ~ df5 ~",
+        "g5 ~ bf4 ~ ~ ~ ef5 ~ g5 ~ ef5 ~ ~ ~ bf4 ~",
+        "ef5 ~ c5 ~ ~ ~ g5 ~ ef5 ~ g5 ~ ~ ~ c5 ~"],
+      utopia = cat [
+        "c5 ~ ef5 ~ g5 ~ ef5 ~ c5 ~ ~ ~",
+        "df5 ~ f5 ~ af5 ~ f5 ~ df5 ~ ~ ~",
+        "bf4 ~ d5 ~ g5 ~ d5 ~ bf4 ~ ~ ~",
+        "g4 ~ c5 ~ ef5 ~ c5 ~ g4 ~ ~ ~"] }
+  melodica select = swing8 $ note (select melodicaVariants)
     # s "hedge_melodica" # pF "limitertype" 0
     # pF "vib" 5 # pF "depth" 0.01
     # pF "reed" 0.7 # pF "bright" 1700
     # attack 0.18 # release 0.7 # sustain 1.2
     # pF "pan" (-0.35) # room 0.8 # size 0.85 # amp 1.5
-  --
-  -- reedy melodica: a swung mid-high answer between strings and whistle
-  melodica = melodicaPlay $ cat [
-      "c5 ~ ef5 ~ ~ ~ g5 ~ c5 ~ g5 ~ ~ ~ ef5 ~",
-      "f5 ~ df5 ~ ~ ~ af5 ~ f5 ~ af5 ~ ~ ~ df5 ~",
-      "g5 ~ bf4 ~ ~ ~ ef5 ~ g5 ~ ef5 ~ ~ ~ bf4 ~",
-      "ef5 ~ c5 ~ ~ ~ g5 ~ ef5 ~ g5 ~ ~ ~ c5 ~"]
-  --
-  -- denser reed figure for the promised order
-  melodicaUtopia = melodicaPlay $ cat [
-      "c5 ~ ef5 ~ g5 ~ ef5 ~ c5 ~ ~ ~",
-      "df5 ~ f5 ~ af5 ~ f5 ~ df5 ~ ~ ~",
-      "bf4 ~ d5 ~ g5 ~ d5 ~ bf4 ~ ~ ~",
-      "g4 ~ c5 ~ ef5 ~ c5 ~ g4 ~ ~ ~"]
   --
   -- dry clockwork cuckoo: inharmonic metal ticks, two to a bar
   clock = swing8 $ note (cat [
@@ -190,27 +191,24 @@ let
     # pF "metal" 0.85 # decay 0.09
     # sustain 0.08 # pan 0.7 # room 0 # size 0 # amp 2
   --
-  -- swung koto: bent plucks marking the pulse, clear of the mandolin
-  koto = swing8 $ note (cat [
-      "c5 ~ af4 ~ ~ ~ af4 ~ c5 ~ g4 ~ ~ ~ g4 ~",
-      "df5 ~ f4 ~ ~ ~ f4 ~ df5 ~ af4 ~ ~ ~ af4 ~",
-      "bf4 ~ g4 ~ ~ ~ g4 ~ bf4 ~ f4 ~ ~ ~ f4 ~",
-      "g4 ~ ef4 ~ ~ ~ ef4 ~ g4 ~ c4 ~ ~ ~ c4 ~"])
+  -- swung koto voice, clear of the mandolin
+  koto select = swing8 $ note (select kotoVariants)
     # s "hedge_koto" # pF "limitertype" 0
     # pF "damp" 0.3 # pF "bend" 0.6 # pF "bright" 3200
-    # decay 2.0 # sustain 2.5
+    # decay 2.5 # sustain 2.5
     # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
-  --
-  -- bent answering figure in the same shuffle for the promised order
-  kotoUtopia = swing8 $ note (cat [
-      "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ af4 ~ ~ ~ af4 ~",
-      "df5 ~ af5 ~ ~ ~ df5 ~ df5 ~ bf4 ~ ~ ~ bf4 ~",
-      "bf4 ~ f5 ~ ~ ~ bf4 ~ bf4 ~ g4 ~ ~ ~ g4 ~",
-      "g4 ~ df5 ~ ~ ~ g4 ~ g4 ~ ef4 ~ ~ ~ ef4 ~"])
-    # s "hedge_koto" # pF "limitertype" 0
-    # pF "damp" 0.3 # pF "bend" 0.6 # pF "bright" 3200
-    # decay 3.0 # sustain 2.5
-    # pF "pan" (-0.55) # room 0.6 # size 0.8 # amp 2
+  -- bent plucks: the plain figure marks the pulse, the answer is for utopia
+  kotoVariants = Variants {
+      plain = cat [
+        "c5 ~ af4 ~ ~ ~ af4 ~ c5 ~ g4 ~ ~ ~ g4 ~",
+        "df5 ~ f4 ~ ~ ~ f4 ~ df5 ~ af4 ~ ~ ~ af4 ~",
+        "bf4 ~ g4 ~ ~ ~ g4 ~ bf4 ~ f4 ~ ~ ~ f4 ~",
+        "g4 ~ ef4 ~ ~ ~ ef4 ~ g4 ~ c4 ~ ~ ~ c4 ~"],
+      utopia = cat [
+        "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ af4 ~ ~ ~ af4 ~",
+        "df5 ~ af5 ~ ~ ~ df5 ~ df5 ~ bf4 ~ ~ ~ bf4 ~",
+        "bf4 ~ f5 ~ ~ ~ bf4 ~ bf4 ~ g4 ~ ~ ~ g4 ~",
+        "g4 ~ df5 ~ ~ ~ g4 ~ g4 ~ ef4 ~ ~ ~ ef4 ~"] }
   -- clear every seat with a clutch fade
   clearAll :: Time -> IO ()
   clearAll t = mapM_ (\d -> clutchIn d t silence)
@@ -246,10 +244,10 @@ multi clutchIn 16 [
   (1,  ritualBed # lpf 1000),
   (2,  sawAsk # lpf 2400),
   (8,  horn),
-  (12, koto)]
+  (12, koto plain)]
 
 -- 7 · Frost — objects catch light; glints refuse to settle.
-clutchIn 6 16 glints
+clutchIn 6 16 $ glints plain
 clutchIn 1 16 $ ritualBed # lpf 1200
 
 -- 8 · The interval — the mechanism wakes and starts counting.
@@ -262,21 +260,21 @@ clutchIn 11 16 clock
 -- 9 · Borrowed breath — the reed breathes without the officiant.
 multi clutchIn 8 [
   (1,  ritualBed # lpf 1600),
-  (10, melodica),
+  (10, melodica plain),
   (11, clock # pF "metal" 0.8)]
 
 -- 10 · Handless pluck — the pluck bends sharper under the pulse.
 multi clutchIn 16 [
   (1,  ritualBed # lpf 1800),
-  (10, melodica # pF "bright" 2100),
-  (12, koto # pF "bright" 3800)]
+  (10, melodica plain # pF "bright" 2100),
+  (12, koto plain # pF "bright" 3800)]
 
 -- 11 · The slope joins — the whole terrain shimmers; fine grain arrives.
 multi clutchIn 16 [
   (1, bed # lpf 2800),
   (3, stack [air # lpf 900, dust]),
   (5, lowStrings # lpf 820),
-  (9, strings # release 2.0)]
+  (9, strings plain # release 2.0)]
 
 
 -- 12 · The utopia — a perfect world in the promised order. The possessed
@@ -287,13 +285,13 @@ multi clutchIn 1 [
   (2,  sawLead),
   (3,  stack [air # lpf 900 # release 2, dust]),
   (4,  tremolo # room 0.85 # size 0.85),
-  (6,  glintsUtopia),
+  (6,  glints utopia),
   (7,  whistle # release 1.8),
   (8,  hornStab),
-  (9,  stringsUtopia),
-  (10, melodicaUtopia),
+  (9,  strings utopia),
+  (10, melodica utopia),
   (11, clock),
-  (12, kotoUtopia)]
+  (12, koto utopia)]
 -- TODO too saturated here, equalise streams (second pass)
 
 -- 13 · The call turns — whistle asks, officiant replies: the whistle was
