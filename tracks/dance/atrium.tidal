@@ -110,7 +110,7 @@ xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
 --    already there.
 d8 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
   # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
-d9 . degrade $ speedAt "c4" hook
+clutchIn 9 8 $ speedAt "c4" hook
   # s "moog" # n 2
   # sustain 0.26 # release 0.2 # lpf 900 # lpq 0.35
   # room 0.35 # size 0.55 # amp 0.42 # pan 0.6
@@ -148,7 +148,7 @@ xfadeIn 10 8 $ s "hedge_noise"
 fadeSilence 16 [1, 2, 5, 6, 7, 8, 9]
 
 
--- 6. Back — 32 bars. This is the first peak again, a fourth down from
+-- 6. sharp back — 32 bars. This is the first peak again, a fourth down from
 --    where the track ends. The band comes back in two passes: drums
 --    over two bars, everything else over four, so the kick lands
 --    before the harmony does.
@@ -301,6 +301,9 @@ xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t"
   # sustain 0.2 # release 0.2 # lpf 1400 # lpq 0.28
   # room 0.42 # size 0.62 # amp 0.36 # pan 0.42
 
+
+-- if you want to leave from here, keep in mind there are still high
+-- streams
 
 -- 12. End — 8 bars. The band leaves; the pad becomes one Am9, re-blooming
 --     every two bars, and the kick goes with it. `hush` after the chord has

@@ -117,7 +117,7 @@ xfadeIn 4 8 $ slow 4 $ s "jvbass" # n 0
   # room 0.45 # size 0.65 # amp 0.85
 
 
--- coda — the last chorus. A new bass and lead over a turnaround, Bm9
+-- ex coda — the last chorus. A new bass and lead over a turnaround, Bm9
 -- – E9 – Amaj9 – Dmaj9, on the same four-bar form. Play it twice,
 -- then stop short.
 d4 $ speedAt "fs2" "<[b2 ~ b2 ~ fs3 ~ b2 ~] [e3 ~ e3 ~ b2 ~ e3 ~] [a2 ~ a2 ~ e3 ~ a2 ~] [d3 ~ d3 ~ a2 ~ d3 ~]>"
@@ -143,7 +143,7 @@ xfadeIn 1 8 $ s (cat [
   "kicklinn*4",
   "kicklinn*4",
   "kicklinn kicklinn kicklinn ~"])
-  # n 0 # amp 1 # room 0.05 # size 0.15
+  # n 0 # amp 1.5 # room 0.05 # size 0.15
 
 xfadeIn 2 12 $ s "~ cp ~ cp" # n 0
   # amp 0.6 # room 0.2 # size 0.32

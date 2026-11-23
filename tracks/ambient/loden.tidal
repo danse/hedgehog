@@ -67,23 +67,23 @@ let
     # s "superhammond" # voice 0 # pF "vibrato" 0.12 # pF "vrate" 4
     # sustain 2.5 # lpf 520 # room 0.55 # size 0.6 # amp 0.34
   --
+  glintsPlay score = swing8 $ note score
+    # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
+    # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 1
+  --
   -- high glints; three lean strokes a bar, with the vibraphone's slow tremolo
-  glints = swing8 $ note (cat [
+  glints = glintsPlay $ cat [
       "c5 ~ ~ ~ ~ ~ c5 ~ ~ ~ c5 ~ ~ ~ ~ ~",
       "~ ~ f5 ~ ~ ~ ~ ~ f5 ~ f5 ~ ~ ~ ~ ~",
       "bf4 ~ ~ ~ ~ ~ ~ ~ bf4 ~ ~ ~ d5 ~ ~ ~",
-      "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"])
-    # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
-    # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 2
+      "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"]
   --
   -- brighter glints in a long-short shuffle for the promised order
-  glintsUtopia = swing8 $ note (cat [
+  glintsUtopia = glintsPlay $ cat [
       "c5 ~ g5 ~ ~ ~ c5 ~ c5 ~ ef5 ~ ~ ~ g5 ~",
       "df5 ~ f5 ~ ~ ~ df5 ~ df5 ~ af5 ~ ~ ~ f5 ~",
       "bf4 ~ d5 ~ ~ ~ bf4 ~ bf4 ~ g5 ~ ~ ~ d5 ~",
-      "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"])
-    # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
-    # decay 0.6 # sustain 1.8 # room 0.85 # size 0.9 # amp 2
+      "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"]
   --
   -- clear whistle pitch with a thin veil of air and slight pitch drift
   whistle = swing8 $ note (cat [
@@ -128,53 +128,47 @@ let
     # attack 0.08 # release 1.8 # sustain 0.5
     # pF "pan" (-0.2) # room 0.7 # size 0.8 # amp 10
   --
-  -- sustained bowed shimmer: a separate voice from the plucked tremolo
-  strings = slow 4 $ note (cat [
-      "af4,c5,ef5",
-      "f4,af4,df5",
-      "g4,bf4,c5",
-      "ef4,g4,bf4"])
+  stringsPlay score = slow 4 $ note score
     # s "hedge_strings" # pF "limitertype" 0
     # pF "vib" 5 # pF "depth" 0.006
     # pF "tremrate" 6.5 # pF "tremdepth" 0.18
     # attack 0.8 # release 1.4 # sustain 3.4
-    # pan 0.55 # room 0.85 # size 0.9 # amp 3
+    # pan 0.55 # room 0.85 # size 0.9 # amp 1.5
+  --
+  -- sustained bowed shimmer: a separate voice from the plucked tremolo
+  strings = stringsPlay $ cat [
+      "af4,c5,ef5",
+      "f4,af4,df5",
+      "g4,bf4,c5",
+      "ef4,g4,bf4"]
   --
   -- four-note bowed chord for the richest melodic sections
-  stringsUtopia = slow 4 $ note (cat [
+  stringsUtopia = stringsPlay $ cat [
       "af4,c5,ef5,af5",
       "f4,af4,df5,f5",
       "g4,bf4,c5,g5",
-      "ef4,g4,bf4,ef5"])
-    # s "hedge_strings" # pF "limitertype" 0
-    # pF "vib" 5 # pF "depth" 0.006
-    # pF "tremrate" 6.5 # pF "tremdepth" 0.18
-    # attack 0.8 # release 2.2 # sustain 3.4
-    # pan 0.55 # room 0.9 # size 0.9 # amp 3
+      "ef4,g4,bf4,ef5"]
   --
-  -- reedy melodica: a swung mid-high answer between strings and whistle
-  melodica = swing8 $ note (cat [
-      "c5 ~ ef5 ~ ~ ~ g5 ~ c5 ~ g5 ~ ~ ~ ef5 ~",
-      "f5 ~ df5 ~ ~ ~ af5 ~ f5 ~ af5 ~ ~ ~ df5 ~",
-      "g5 ~ bf4 ~ ~ ~ ef5 ~ g5 ~ ef5 ~ ~ ~ bf4 ~",
-      "ef5 ~ c5 ~ ~ ~ g5 ~ ef5 ~ g5 ~ ~ ~ c5 ~"])
+  melodicaPlay score = swing8 $ note score
     # s "hedge_melodica" # pF "limitertype" 0
     # pF "vib" 5 # pF "depth" 0.01 # pF "breath" 0.12
     # pF "reed" 0.7 # pF "bright" 1700
     # attack 0.18 # release 0.7 # sustain 1.2
-    # pF "pan" (-0.35) # room 0.8 # size 0.85 # amp 3
+    # pF "pan" (-0.35) # room 0.8 # size 0.85 # amp 1.5
+  --
+  -- reedy melodica: a swung mid-high answer between strings and whistle
+  melodica = melodicaPlay $ cat [
+      "c5 ~ ef5 ~ ~ ~ g5 ~ c5 ~ g5 ~ ~ ~ ef5 ~",
+      "f5 ~ df5 ~ ~ ~ af5 ~ f5 ~ af5 ~ ~ ~ df5 ~",
+      "g5 ~ bf4 ~ ~ ~ ef5 ~ g5 ~ ef5 ~ ~ ~ bf4 ~",
+      "ef5 ~ c5 ~ ~ ~ g5 ~ ef5 ~ g5 ~ ~ ~ c5 ~"]
   --
   -- denser reed figure for the promised order
-  melodicaUtopia = swing8 $ note (cat [
+  melodicaUtopia = melodicaPlay $ cat [
       "c5 ~ ef5 ~ g5 ~ ef5 ~ c5 ~ ~ ~",
       "df5 ~ f5 ~ af5 ~ f5 ~ df5 ~ ~ ~",
       "bf4 ~ d5 ~ g5 ~ d5 ~ bf4 ~ ~ ~",
-      "g4 ~ c5 ~ ef5 ~ c5 ~ g4 ~ ~ ~"])
-    # s "hedge_melodica" # pF "limitertype" 0
-    # pF "vib" 5 # pF "depth" 0.01 # pF "breath" 0.12
-    # pF "reed" 0.7 # pF "bright" 2100
-    # attack 0.18 # release 1.2 # sustain 1.2
-    # pF "pan" (-0.35) # room 0.85 # size 0.9 # amp 3
+      "g4 ~ c5 ~ ef5 ~ c5 ~ g4 ~ ~ ~"]
   --
   -- dry clockwork cuckoo: inharmonic metal ticks, two to a bar
   clock = swing8 $ note (cat [
@@ -234,11 +228,13 @@ clutchIn 3 16 air
 clutchIn 1 16 $ bed # lpf 1900
 clutchIn 5 16 lowStrings
 
+
 -- 4 · The officiant — their theme enters with the first pulse.
-clutchIn 2 16 sawLead
-clutchIn 1 16 $ bed # lpf 2200
-clutchIn 4 16 tremolo
-clutchIn 5 16 $ lowStrings # lpf 620
+multi clutchIn 16 [
+  (2, sawLead),
+  (1, bed # lpf 2200),
+  (4, tremolo),
+  (5, lowStrings # lpf 620)]
 
 -- 5 · First answer — an invitation, not a reply: saw asks on odd bars,
 -- whistle answers on even.
@@ -246,10 +242,11 @@ clutchIn 2 16 sawAsk
 clutchIn 7 16 whistleReply
 
 -- 6 · The horn raised — the formal call; the bed becomes a held chord.
-clutchIn 1 16 $ ritualBed # lpf 1000
-clutchIn 8 16 horn
-clutchIn 12 16 koto
-clutchIn 2 16 $ sawAsk # lpf 2400
+multi clutchIn 16 [
+  (1,  ritualBed # lpf 1000),
+  (2,  sawAsk # lpf 2400),
+  (8,  horn),
+  (12, koto)]
 
 -- 7 · Frost — objects catch light; glints refuse to settle.
 clutchIn 6 16 glints
@@ -257,73 +254,80 @@ clutchIn 1 16 $ ritualBed # lpf 1200
 
 -- 8 · The interval — the mechanism wakes and starts counting.
 clutchIn 1 16 $ ritualBed # lpf 1400
-clutchIn 11 16 clock
 clutchIn 5 16 $ lowStrings # lpf 700
+clutchIn 11 16 clock
 -- here the texture is already full
 
+
 -- 9 · Borrowed breath — the reed breathes without the officiant.
-clutchIn 1 16 $ ritualBed # lpf 1600
-clutchIn 10 16 melodica
-clutchIn 11 16 $ clock # pF "metal" 0.8
+multi clutchIn 8 [
+  (1,  ritualBed # lpf 1600),
+  (10, melodica),
+  (11, clock # pF "metal" 0.8)]
 
 -- 10 · Handless pluck — the pluck bends sharper under the pulse.
-clutchIn 1 16 $ ritualBed # lpf 1800
-clutchIn 10 16 $ melodica # pF "bright" 2100
-clutchIn 12 16 $ koto # pF "bright" 3800
+multi clutchIn 16 [
+  (1,  ritualBed # lpf 1800),
+  (10, melodica # pF "bright" 2100),
+  (12, koto # pF "bright" 3800)]
 
 -- 11 · The slope joins — the whole terrain shimmers; fine grain arrives.
-clutchIn 3 16 $ stack [air # lpf 900, dust]
-clutchIn 9 16 $ strings # release 2.0
-clutchIn 5 16 $ lowStrings # lpf 820
-clutchIn 1 16 $ bed # lpf 2800
+multi clutchIn 16 [
+  (1, bed # lpf 2800),
+  (3, stack [air # lpf 900, dust]),
+  (5, lowStrings # lpf 820),
+  (9, strings # release 2.0)]
 
 
 -- 12 · The utopia — a perfect world in the promised order. The possessed
 -- officiant believes they can build it. Richest melodic section.
-clutchIn 1 24 $ stack [
-  bed # lpf 2800,
-  bed # lpf 1400 # pan (-0.3)]
-clutchIn 3 24 $ stack [air # lpf 900 # release 2, dust]
-clutchIn 2 24 sawLead
-clutchIn 7 24 $ whistle # release 1.8
-clutchIn 8 24 hornStab
-clutchIn 4 24 $ tremolo # room 0.85 # size 0.85
-clutchIn 6 24 glintsUtopia
-clutchIn 9 24 stringsUtopia
-clutchIn 10 24 melodicaUtopia
-clutchIn 11 24 clock
-clutchIn 12 24 kotoUtopia
--- TODO too saturated here, equalise streams (also see below)
+glideBpm 75 30 -- from 88
+multi clutchIn 1 [
+  (1,  stack [bed # lpf 2800, bed # lpf 1400 # pan (-0.3)]),
+  (2,  sawLead),
+  (3,  stack [air # lpf 900 # release 2, dust]),
+  (4,  tremolo # room 0.85 # size 0.85),
+  (6,  glintsUtopia),
+  (7,  whistle # release 1.8),
+  (8,  hornStab),
+  (9,  stringsUtopia),
+  (10, melodicaUtopia),
+  (11, clock),
+  (12, kotoUtopia)]
+-- TODO too saturated here, equalise streams (second pass)
 
 -- 13 · The call turns — whistle asks, officiant replies: the whistle was
 -- asking all along. The clock starts pulling the promise out of tune.
-clutchIn 2 16 sawAnswer
-clutchIn 7 16 whistleQuestion
-clutchIn 8 16 silence
-clutchIn 10 16 silence
-clutchIn 11 16 clockDissonant
-clutchIn 12 16 silence
+glideBpm 88 30 -- from 75
+multi clutchIn 16 [
+  (2,  16 sawAnswer),
+  (7,  16 whistleQuestion),
+  (8,  16 silence),
+  (10, 16 silence),
+  (11, 16 clockDissonant),
+  (12, 16 silence)]
 
--- TODO: d6 at this point may resonate a bit too much. If silencing
+-- d6 at this point may resonate a bit too much. If silencing
 -- that is not enough, d7 (whistle) and d9 (strings) are next
 --
 clutchIn 6 8 silence
 
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.
-clutchIn 2 16 silence
-clutchIn 4 16 silence
-clutchIn 5 16 silence
-clutchIn 8 16 silence
-clutchIn 10 16 silence
-clutchIn 12 16 silence
-clutchIn 11 16 $ clockDissonant # pF "metal" 0.9
+multi clutchIn 16 [
+  (2,  16 silence),
+  (4,  16 silence),
+  (5,  16 silence),
+  (8,  16 silence),
+  (10, 16 silence),
+  (12, 16 silence),
+  (11, 16 $ clockDissonant # pF "metal" 0.9)]
 
 -- 15 · The builder withdraws — the clock stops; the promise runs on
 -- without its author.
-clutchIn 11 16 silence
 clutchIn 6 16 silence
 clutchIn 9 16 silence
+clutchIn 11 16 silence
 
 -- TODO sharp ending
 

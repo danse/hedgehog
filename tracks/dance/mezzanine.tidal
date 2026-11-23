@@ -150,7 +150,7 @@ d10 air
 -- guide, not a timer. The final fadeSilence is the ending — evaluate it last.
 -- ---------------------------------------------------------------------------
 
--- 2. Break — 8 bars, half-time. The kit, the tops and the organ stop dead on
+-- 2. sharp break — 8 bars, half-time. The kit, the tops and the organ stop dead on
 --    the bar; the pad, the sub and the vocal switch to two bars per chord at
 --    the same instant, so what is left is the loop in slow motion. Nothing
 --    fades — the reverb tail of the last hits is the join. Evaluate this
