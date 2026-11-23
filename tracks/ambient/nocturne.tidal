@@ -70,6 +70,8 @@ let
       # attack 1.5 # sustain 3 # release 2.5
       # room 0.7 # size 0.85 # amp 1.2
 
+-- TODO: riser noise starting from the next block already
+
 -- 1. A — score bars 1-8 — the tune in E-flat over its broken chords.
 resetCycles
 d2 $ leadAt (cat [

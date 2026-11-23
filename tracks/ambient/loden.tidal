@@ -74,7 +74,7 @@ let
       "bf4 ~ ~ ~ ~ ~ ~ ~ bf4 ~ ~ ~ d5 ~ ~ ~",
       "~ ~ ~ ~ g5 ~ ~ ~ ~ ~ ~ ~ g5 ~ ef5 ~"])
     # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
-    # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 3
+    # decay 0.6 # sustain 1.6 # room 0.85 # size 0.9 # amp 2
   --
   -- brighter glints in a long-short shuffle for the promised order
   glintsUtopia = swing8 $ note (cat [
@@ -83,7 +83,7 @@ let
       "bf4 ~ d5 ~ ~ ~ bf4 ~ bf4 ~ g5 ~ ~ ~ d5 ~",
       "g4 ~ c5 ~ ~ ~ g4 ~ g4 ~ ef5 ~ ~ ~ c5 ~"])
     # s "supervibe" # pF "modamp" 1.3 # pF "modfreq" 0.8 # detune 0.18
-    # decay 0.6 # sustain 1.8 # room 0.85 # size 0.9 # amp 3
+    # decay 0.6 # sustain 1.8 # room 0.85 # size 0.9 # amp 2
   --
   -- clear whistle pitch with a thin veil of air and slight pitch drift
   whistle = swing8 $ note (cat [
@@ -259,6 +259,7 @@ clutchIn 1 16 $ ritualBed # lpf 1200
 clutchIn 1 16 $ ritualBed # lpf 1400
 clutchIn 11 16 clock
 clutchIn 5 16 $ lowStrings # lpf 700
+-- here the texture is already full
 
 -- 9 · Borrowed breath — the reed breathes without the officiant.
 clutchIn 1 16 $ ritualBed # lpf 1600
@@ -276,6 +277,7 @@ clutchIn 9 16 $ strings # release 2.0
 clutchIn 5 16 $ lowStrings # lpf 820
 clutchIn 1 16 $ bed # lpf 2800
 
+
 -- 12 · The utopia — a perfect world in the promised order. The possessed
 -- officiant believes they can build it. Richest melodic section.
 clutchIn 1 24 $ stack [
@@ -291,6 +293,7 @@ clutchIn 9 24 stringsUtopia
 clutchIn 10 24 melodicaUtopia
 clutchIn 11 24 clock
 clutchIn 12 24 kotoUtopia
+-- TODO too saturated here, equalise streams (also see below)
 
 -- 13 · The call turns — whistle asks, officiant replies: the whistle was
 -- asking all along. The clock starts pulling the promise out of tune.
@@ -304,7 +307,7 @@ clutchIn 12 16 silence
 -- TODO: d6 at this point may resonate a bit too much. If silencing
 -- that is not enough, d7 (whistle) and d9 (strings) are next
 --
--- clutchIn 6 8 silence
+clutchIn 6 8 silence
 
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.

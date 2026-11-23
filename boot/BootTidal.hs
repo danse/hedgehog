@@ -108,6 +108,10 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     fadeSilence n = mapM_ (\d -> xfadeIn d n silence)
     fadeMulti :: Time -> [(ID, ControlPattern)] -> IO ()
     fadeMulti t = mapM_ (\(d, p) -> xfadeIn d t p)
+    multi
+      :: (Foldable t, Monad m)
+      => (a -> b -> c -> m d) -> b -> t (a, c) -> m ()
+    multi f t = mapM_ (\(d, p) -> f d t p)
 :}
 
 -- You can also add your own aliases in this file. For example:

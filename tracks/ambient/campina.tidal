@@ -149,14 +149,14 @@ d6 wood
 
 -- 3 · Reed — 64 bars. The theme enters over the pulse and the bowed bed
 --     opens under it. Nothing else changes.
-d7 $ reed reedNotes
 d8 $ stringBed bedNotes
+clutchIn 7 16 $ reed reedNotes
 
 
 -- 4 · Step — 64 bars. Cimbalom fills the gaps between reed and wood. This is
 --     the complete band; the hand drum comes forward to match it.
-d9 $ cimbalom cimbalomNotes
 d3 $ tarabuka # amp 1.2
+clutchIn 9 16 $ cimbalom cimbalomNotes
 
 
 -- 5 · Turn — 64 bars. Bed, bass, reed and cimbalom are the same patterns
@@ -173,6 +173,7 @@ fadeSilence 1 [2,3,4,5,6,9]
 d8 $ stringBed (bedNotes |+ 5)
   # sustain 1.4 # release 1.2 # room 0.6 # size 0.8
 d1 $ air # lpf 1200
+
 
 -- 7 · 64 bars. The band comes back in D minor: drums, bass, pluck and
 --     wood all at once. The bed and reed never left, so nothing is rebuilt.
