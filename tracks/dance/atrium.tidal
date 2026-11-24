@@ -110,7 +110,7 @@ xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
 --    already there.
 d8 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
   # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
-clutchIn 9 8 $ speedAt "c4" hook
+clutchIn 9 24 $ speedAt "c4" hook
   # s "moog" # n 2
   # sustain 0.26 # release 0.2 # lpf 900 # lpq 0.35
   # room 0.35 # size 0.55 # amp 0.42 # pan 0.6
