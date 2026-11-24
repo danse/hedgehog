@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+"""Read a MIDI file and print its voices as a 16th-note grid, with no deps.
+
+The one-off parses of MIDI exports live here so they survive a /tmp wipe, the
+same way analyse-audio.py holds the audio ones. Note-on/off events are paired
+per pitch in each track; notes are named in Tidal spelling (fs4, bf3, ...).
+
+Usage:
+  scripts/midi-reader FILE.mid
+
+Output: header, tempo changes, then one block per voice. Grid cells show the
+note name followed by `_` for each further 16th it is held, clamped at the
+next note in that voice. The raw list above each grid gives exact tick positions
+and durations, which is the detail to trust when writing mini-notation.
+"""
+import argparse
+import struct
+import sys
+
+NAMES = ["c", "cs", "d", "ds", "e", "f", "fs", "g", "gs", "a", "as", "b"]
+
+
+def note_name(pitch):
+    """Tidal spelling: MIDI 60 is c5 (note value 0), not c4."""
+    return NAMES[pitch % 12] + str(pitch // 12)
+
+
+def varlen(data, i):
+    """Read a MIDI variable-length quantity at i; return (value, next i)."""
+    value = 0
+    while True:
+        byte = data[i]
+        i += 1
+        value = (value << 7) | (byte & 0x7F)
+        if not byte & 0x80:
+            return value, i
+
+
+def read_midi(path):
+    """Return (division, tempo_changes, tracks) from a format 0/1 MIDI file."""
+    data = open(path, "rb").read()
+    if data[:4] != b"MThd":
+        raise ValueError("not a MIDI file: " + path)
+    fmt, ntracks, division = struct.unpack(">HHH", data[8:14])
+    if fmt not in (0, 1):
+        raise ValueError("unsupported MIDI format %d" % fmt)
+
+    pos = 14
+    tempos, tracks = [], []
+    for _ in range(ntracks):
+        if data[pos:pos + 4] != b"MTrk":
+            raise ValueError("missing MTrk at byte %d" % pos)
+        length = struct.unpack(">I", data[pos + 4:pos + 8])[0]
+        track = data[pos + 8:pos + 8 + length]
+        pos += 8 + length
+        i, tick, running = 0, 0, None
+        name, events = "", []
+        while i < len(track):
+            delta, i = varlen(track, i)
+            tick += delta
+            status = track[i]
+            if status & 0x80:
+                i += 1
+                running = status
+            else:
+                status = running
+            if status == 0xFF:
+                kind = track[i]
+                i += 1
+                size, i = varlen(track, i)
+                body = track[i:i + size]
+                i += size
+                if kind == 0x03:
+                    name = body.decode("utf-8", "replace")
+                elif kind == 0x51:
+                    us = int.from_bytes(body, "big")
+                    tempos.append((tick, round(60000000 / us, 2)))
+                elif kind == 0x58 and len(body) >= 2:
+                    events.append((tick, "timesig", (body[0], 2 ** body[1])))
+            elif status in (0xF0, 0xF7):
+                size, i = varlen(track, i)
+                i += size
+            else:
+                nargs = 1 if status & 0xF0 in (0xC0, 0xD0) else 2
+                args = track[i:i + nargs]
+                i += nargs
+                if status & 0xF0 == 0x90 and args[1] > 0:
+                    events.append((tick, "on", args[0]))
+                elif status & 0xF0 == 0x80 or (status & 0xF0 == 0x90):
+                    events.append((tick, "off", args[0]))
+        tracks.append((name, events))
+    return division, tempos, tracks
+
+
+def pair_notes(events):
+    """Pair note-on/off per pitch; return (start, end, pitch) triples.
+
+    `_` in the grid comes from these note-offs (0x80 or 0x90 velocity 0).
+    Not covered yet: exports with no note-off that let the next note-on end
+    the previous note, notes left open at end of track (dropped here), and
+    overlapping same-pitch notes in one track, which are paired in order and
+    may mispair. Extend this function if a file shows any of those.
+    """
+    active, notes = {}, []
+    for tick, kind, pitch in events:
+        if kind == "on":
+            active.setdefault(pitch, []).append(tick)
+        elif active.get(pitch):
+            notes.append((active[pitch].pop(0), tick, pitch))
+    return sorted(notes)
+
+
+def grid(notes, division, ticks_per_bar):
+    step = division // 4  # 16ths
+    per_bar = ticks_per_bar // step
+    bars = {}
+    for start, end, pitch in notes:
+        bars.setdefault(start // ticks_per_bar, []).append((start, end, pitch))
+    lines = []
+    for bar in sorted(bars):
+        cells = ["~"] * per_bar
+        for k, (start, end, pitch) in enumerate(sorted(bars[bar])):
+            col = (start % ticks_per_bar) // step
+            held = max(1, round((end - start) / step))
+            if k + 1 < len(bars[bar]):
+                nxt = sorted(bars[bar])[k + 1][0]
+                held = min(held, max(1, round((nxt - start) / step)))
+            if col < per_bar:
+                cells[col] = note_name(pitch)
+                for held_step in range(1, held):
+                    if col + held_step < per_bar:
+                        cells[col + held_step] = "_"
+        lines.append('    "%s"' % " ".join(cells[:per_bar]))
+    return lines
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("file", help="MIDI file to read")
+    args = ap.parse_args()
+
+    division, tempos, tracks = read_midi(args.file)
+    # Time signatures live in the conductor track, so gather them across all
+    # tracks rather than reading each voice in isolation.
+    timesigs = [ts for _, ev in tracks for _, kind, ts in ev if kind == "timesig"]
+    num, den = timesigs[0] if timesigs else (4, 4)
+    ticks_per_bar = division * 4 * num // den
+    print("division %d ticks/quarter · %d/%d, %d ticks/bar"
+          % (division, num, den, ticks_per_bar))
+    for tick, bpm in tempos:
+        print("tick %5d  %g BPM" % (tick, bpm))
+
+    for name, events in tracks:
+        notes = pair_notes(events)
+        if not notes:
+            continue
+        print("\n-- %s (%d notes)" % (name or "voice", len(notes)))
+        for start, end, pitch in notes:
+            length = end - start
+            print("  %5d → %5d  %-4s  %5d ticks (%.2f 16ths)"
+                  % (start, end, note_name(pitch), length, length / (division / 4)))
+        print("  grid:")
+        for line in grid(notes, division, ticks_per_bar):
+            print(line)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, ValueError, IndexError) as exc:
+        sys.exit("midi-reader: %s" % exc)

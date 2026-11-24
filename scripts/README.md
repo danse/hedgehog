@@ -29,6 +29,7 @@ file does not boot a server; run `pw-jack scsynth ...` first if starting by hand
 | Script | Purpose |
 |---|---|
 | `analyse-audio.py [--window S] [--bands Hz,...] [--f0] [--raw-f32 SR CH] FILE…` | Per-window RMS, peak, spectral centroid and band balance, with optional pitch. Needs only numpy. This is where the one-off audio analyses live so they survive a `/tmp` wipe — e.g. the pluck sample's hissy tail (centroid 333 → 4057 Hz over 1.5 s). |
+| `midi-reader FILE.mid` | Print a MIDI file's tempo map and note lists, plus a 16th-note grid per voice in Tidal spelling. Stdlib only; pairs note-on/off per pitch. This is where one-off MIDI parses live so they survive a `/tmp` wipe. |
 
 ## JACK clients and the default sink
 
