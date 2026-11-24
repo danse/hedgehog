@@ -33,10 +33,6 @@ d4 $ struct "~ ~ t ~" $ slow 2 $ s "pluck" # n 5
   # sustain 1.6 # release 0.7 # lpf 1200 # lpq 0.2
   # room 0.55 # size 0.7 # amp 0.55
 
--- 3. Extras — try them over the bed. Each block is its own paragraph, so
---    evaluate just the one you want. Blocks sharing a stream replace each
---    other; evaluating the whole section at once will be dense on purpose.
-
 -- d5 · woodblock, 3 against 4 — Cantilever's `wood3`, stripped back
 d5 $ degradeBy 0.3 $ fast 3 (s "east" # n 0)
   # amp 0.38 # pan 0.4 # room 0.3 # size 0.4
@@ -65,10 +61,6 @@ d8 $ slow 2 $ speedAt "c4" "d5 ~ f5 ~ a5 ~ g5 ~"
   # room 0.6 # size 0.8
 
 
--- Pitch reminder: `n` picks the file, `note`/`speedAt` is the pitch.
--- pluck:8 → d5, sax:5 → c4, bass1:2 → c2, moog:2 (C4) → c5.
--- `stab` and `arpy` have no documented pitch — tune those by ear.
-
 -- 4. Turn — a second take on the beat. Evaluate a stream to replace its bed
 --    version; the others keep running, so mix and match with sections 1–2.
 --    Re-evaluate the section 1/2 lines to come back to the bed.
@@ -88,10 +80,10 @@ d3 $ degradeBy 0.1 $ s "~ gretsch:17 ~ gretsch:17 ~ gretsch:17 ~ gretsch:17"
   # sustain 0.3 # release 0.2 # lpf 9000
   # room 0.15 # size 0.28 # amp 0.9
 
+
 -- 5. Emphasis — after the turn, d5 stops ticking and starts singing: a slow
 --    sax line in D dorian. d6 takes the piano motif and runs it at 16x — a
 --    flicker of notes against the half-time bed. Evaluate the two together.
-
 d5 $ slow 2 $ speedAt "c4" "<[d4 ~ ~ ~ a4 ~ ~ ~] [c5 ~ a4 ~ f4 ~ e4 ~] [d4 ~ ~ ~ f4 ~ e4 ~] [d4 ~ ~ ~ ~ ~ ~ ~]>"
   # s "sax" # n 5
   # sustain 1.2 # release 1.0 # hpf 150 # lpf 1800 # lpq 0.25
@@ -105,9 +97,7 @@ d6 piano
 --    apart. The melody goes first and each layer below it takes longer to
 --    leave, so the bottom of the track is the last thing holding. One cycle
 --    is ~2.3 s at 104 BPM.
-
--- the beat is left alone
-fadeSilence 16 [
+fadeSilence 16 [ -- the beat is left alone
   5, -- sax
   6, -- piano
   8] -- other wind-blown sample
@@ -115,8 +105,7 @@ fadeSilence 16 [
 -- the open hats follow; the kick holds on a little longer
 fadeSilence 8 [3]
 fadeSilence 16 [1]
-
--- we have a present bass walking on the 2
+-- we still have a present bass walking on the 2
 
 
 -- we are closing. The bass drops to a low D pedal and the bed's piano
@@ -129,8 +118,8 @@ xfadeIn 4 8 $ slow 4 $ s "pluck" # n 5
   # speedAt "c4" (chordAt "d4" "min9")
   # sustain 3.2 # release 2.0 # lpf 1000 # lpq 0.2
   # room 0.8 # size 0.9 # amp 0.6
-
 -- here it may sound stuck but it has some surprising blinks
+
 
 -- let the chord ring a few bars, then it and the pedal go under a last
 -- breath; the reverb tail is the end

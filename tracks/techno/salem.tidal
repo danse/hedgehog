@@ -167,9 +167,8 @@ clutchIn 4 8 $ bass dScore
 clutchIn 5 8 $ horn cScore
 clutchIn 6 8 $ midVoice bScore
 clutchIn 7 8 $ topVoice aScore
-
-
 -- Landing: the clean loop holds.
+
 
 -- 2. Drift. Open the top two voices; the beat stays put.
 clutchIn 7 4 $ topVoice aScore # room 0.6 # size 0.8 # lpf 2400

@@ -207,6 +207,7 @@ fadeMulti 24 [
   -- a distant reed hears the work
   (9, reedShore)]
 
+
 -- 4. Abutment — the old block is underpinned; new mass is keyed in behind it.
 -- ~40 cycles (~102 s at 94 BPM).
 
@@ -224,6 +225,7 @@ d9 reedAbut
 -- the new mass: wood, metal and site air
 xfadeIn 5 16 $ degradeBy 0.4 (stack [woodTick, metalTool])
 xfadeIn 3 32 $ stack [air, gravel]
+
 
 -- Act III. Return
 
@@ -246,6 +248,7 @@ fadeSilence 8 [5]
 
 -- air returns
 xfadeIn 3 24 $ stack [air, windBed]
+
 
 -- 6. Occupancy — the span is rebuilt; people return; the abutment disappears
 -- under the approach. ~40 cycles (~107 s at 90 BPM).
@@ -274,9 +277,8 @@ glideBpm 86 30 -- from 90
 -- strip the rhythm and the high projection
 fadeSilence 16 [5,6,7,8,9,10]
 
--- the abutment remains: low piano, bass and air
+d2 $ bassSteady # amp 0.4 -- the abutment remains: low piano, bass and air
 
-d2 $ bassSteady # amp 0.4
 
 -- rhythm change
 d1 pianoSteady
@@ -286,7 +288,6 @@ fadeMulti 16 [
   (4, pianoAfter # amp 0.3),
   (10, trumpetSteady)]
                  
--- leave this ringing
 
 fadeSilence 32 [1,2,3,4,10]
 
