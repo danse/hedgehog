@@ -92,8 +92,8 @@ d3 $ chordFlow # lpf 1100
 -- optional: reveal anchor
 d4 $ bassAnchor # lpf 220
 
--- 2. Build — layer bass complexity, add harmony stabs and pulse
 
+-- 2. Build — layer bass complexity, add harmony stabs and pulse
 -- open bass filter slowly
 d2 $ bassMain # lpf (range 180 520 $ slow 16 sine)
 -- structural anchor + ghost detail
@@ -108,14 +108,15 @@ d1 $ stack [glitchTex, degradeBy 0.2 $ spaceTex]
 d6 click
 -- or: hats
 
--- 3. Main — full groove, bass remains the complex center
 
+-- 3. Main — full groove, bass remains the complex center
 once riser -- transition swell into main
 d7 kick
 d6 hats
 d8 $ degradeBy 0.2 perc
 d1 $ stack [glitchTex, metalTex]
 xfadeIn 3 24 $ stack [chordFlow, sometimes (const chordStabAlt) chordStab]
+
 
 xfadeIn 3 16 stabHit -- alternate melody
 

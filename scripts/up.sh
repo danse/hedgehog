@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 # Start SuperDirt (headless) and open Emacs on the set.
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  cat <<'EOF'
+Usage: scripts/up.sh [--no-emacs]
+Start scsynth and SuperDirt under pw-jack, route audio to USB, then open Emacs.
+  --no-emacs  start only SuperCollider; print scripts/edit.sh instead of opening it
+EOF
+  exit 0
+fi
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root"

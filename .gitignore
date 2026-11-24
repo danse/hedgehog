@@ -13,6 +13,7 @@ visuals/hydra/sketches/current.js
 *.o
 
 # emacs
+TAGS
 custom.el
 emacs/eln-cache/
 emacs/projects

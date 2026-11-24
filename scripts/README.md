@@ -1,13 +1,14 @@
 # Scripts
 
 Helper scripts for running the set, switching audio, recording, and driving
-visuals. Paths are relative to the repo root.
+visuals. Paths are relative to the repo root. Scripts with arguments describe
+them in their own `--help`.
 
 ## Start / stop
 
 | Script | Purpose |
 |---|---|
-| `up.sh` | Start `scsynth` and SuperDirt under `pw-jack`, route audio to Bluetooth, and open Emacs on the project. `--no-emacs` starts only SuperCollider. |
+| `up.sh` | Start `scsynth` and SuperDirt under `pw-jack`, route audio, and open Emacs on the project. |
 | `down.sh` | Stop SuperDirt and project `scsynth`. |
 | `edit.sh` | Open the project-contained Emacs in `tracks/`. |
 
@@ -22,15 +23,15 @@ file does not boot a server; run `pw-jack scsynth ...` first if starting by hand
 |---|---|
 | `audio-usb.sh` | Route SuperCollider output to the USB audio device. |
 | `audio-bt.sh` | Route SuperCollider output to Bluetooth headphones. |
-| `record.sh [name]` | Record the default monitor to 24-bit WAV in `recordings/`. |
+| `record.sh` | Record the default monitor to 24-bit WAV in `recordings/`. |
 
 ## Analysis
 
 | Script | Purpose |
 |---|---|
-| `analyse-audio.py [--window S] [--bands Hz,...] [--f0] [--raw-f32 SR CH] FILE…` | Per-window RMS, peak, spectral centroid and band balance, with optional pitch. Needs only numpy. This is where the one-off audio analyses live so they survive a `/tmp` wipe — e.g. the pluck sample's hissy tail (centroid 333 → 4057 Hz over 1.5 s). |
-| `midi-reader FILE.mid [--steps N] [--bars N] [--compact \| --gates]` | Print a MIDI file's tempo map and note lists, plus a grid per voice in Tidal spelling. Stdlib only; pairs note-on/off per pitch. This is where one-off MIDI parses live so they survive a `/tmp` wipe. |
-| `landings.hs` | Count double-blank landings across `tracks/**/*.tidal` and print a grouped table. Uses a `ReadP` line parser that also recognises TODO and Workaround comments. |
+| `analyse-audio.py` | Per-window RMS, peak, spectral centroid and band balance, with optional pitch. Needs only numpy; the durable home for one-off audio analyses. |
+| `midi-reader` | Print a MIDI file's tempo map and note lists, plus a grid per voice in Tidal spelling. Stdlib only; the durable home for one-off MIDI parses. |
+| `landings.hs` | Count double-blank landings across `tracks/**/*.tidal` and print a grouped table. |
 
 ## JACK clients and the default sink
 
@@ -70,14 +71,14 @@ name, use the `pw-link` lines above.
 
 | Script | Purpose |
 |---|---|
-| `vis-audio-route.sh {start\|status\|stop}` | Create/link `Hydra-Virtual-Mic`, set it as default source, restore on stop. |
+| `vis-audio-route.sh` | Create/link `Hydra-Virtual-Mic`, set it as default source, restore on stop. |
 | `vis-hydra-up.sh` | Start routing, serve `visuals/hydra` on `localhost:8000`, open the browser. |
+| `vis-hydra-swap.sh` | Set the fallback cue sketch (1-10) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
 
 `vis-audio-route.sh start` preserves the default sink's volume and mute state.
 Without this, starting `pw-loopback` can make WirePlumber reapply an old saved
 volume and drop the headset to near-silence. It also only saves/restores real
 `Audio/Source` nodes, so a stale sink ID cannot become the default source.
-| `vis-hydra-swap.sh <n>` | Set the fallback cue sketch (1-10) in `current.txt` and print the hotkey and `?sketch=` URL for a live swap. |
 
 See [visuals/README.md](../visuals/README.md) and
 [visuals/hydra/README.md](../visuals/hydra/README.md).
@@ -87,5 +88,5 @@ See [visuals/README.md](../visuals/README.md) and
 | Script | Purpose |
 |---|---|
 | `check.sh` | Environment sanity check: binaries, audio, Tidal, samples, disk, reverb limits, and a silent typecheck of every track. |
-| `check-tidal.sh [file ...]` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. Errors report the `.tidal` file and line number, not GHCi's `<interactive>` counter. |
+| `check-tidal.sh` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. Errors report the `.tidal` file and line number, not GHCi's `<interactive>` counter. |
 | `check-tidal.py` | Convert `.tidal` blocks to GHCi `:{ :}` commands for syntax checks (output can be piped into ghci). |

@@ -7,8 +7,15 @@
 # track. check-tidal.py emits LINE pragmas, so errors report the .tidal file
 # and line number instead of <interactive>.
 #
-# Usage: scripts/check-tidal.sh [track.tidal ...]
-#        scripts/check-tidal.sh            # every tracks/*/*.tidal track
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  cat <<EOF
+Usage: $0 [track.tidal ...]
+Typecheck track files without making sound. With no arguments, checks every
+tracks/*/*.tidal file. Relative paths are resolved from the calling directory.
+Errors report the .tidal file and line number, not GHCi's <interactive> counter.
+EOF
+  exit 0
+fi
 set -u
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 invoke_dir="$PWD"

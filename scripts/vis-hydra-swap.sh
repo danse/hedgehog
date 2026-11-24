@@ -4,11 +4,19 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root/visuals/hydra/sketches"
 
+usage() {
+  echo "Usage: $0 <1-10>"
+  echo "  Set the fallback cue sketch and print the live hotkey and URL."
+  echo "  1=emergence 2=pulse 3=bloat 4=drift 5=dissolve"
+  echo "  6=basic-shapes 7=oscillators 8=spectrum 9=pulse-basic 10=audio-warp"
+}
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  usage
+  exit 0
+fi
 n="${1:-}"
 if [[ ! "$n" =~ ^([1-9]|10)$ ]]; then
-  echo "Usage: $0 <1-10>" >&2
-  echo "  1=emergence 2=pulse 3=bloat 4=drift 5=dissolve" >&2
-  echo "  6=basic-shapes 7=oscillators 8=spectrum 9=pulse-basic 10=audio-warp" >&2
+  usage >&2
   exit 1
 fi
 

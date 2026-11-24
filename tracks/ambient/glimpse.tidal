@@ -27,6 +27,7 @@ let c1 = cat [
 d2 . slow 4 $ note c1 # s "gtr"
 
 -- Bass: three 4-slot notes per line against the comp's four 3-slot beats.
+-- TODO: still not sustained enough
 let bPlay score = slow 4 $ speedAt "f1" score # s "bass1:19" # amp 0.3
 let b1 = cat [
       "d2 _ _ _ a2 _ _ _ d2 _ _ _",

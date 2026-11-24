@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Record the default PipeWire/Pulse monitor to recordings/ as 24-bit WAV.
-# Usage: scripts/record.sh [name]   (Ctrl-C to stop)
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  cat <<'EOF'
+Usage: scripts/record.sh [name]
+Record the default monitor to recordings/<name>.wav as 24-bit WAV.
+  name  optional file name (default: take-YYYYmmdd-HHMMSS); Ctrl-C to stop
+EOF
+  exit 0
+fi
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 mkdir -p "$root/recordings"

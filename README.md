@@ -82,6 +82,14 @@ batch checks skip it), and `recordings/` the gitignored takes.
 `swing16`, `chordAt`, `fadeSilence`, `fadeMulti`, `glideBpm`, `cycleD`), so each
 track's setup block only defines its own voices and arrangements.
 
+The root `TAGS` file indexes the boot files, tracks, scripts, agent tools and
+Hydra sketches for Emacs (`visit-tags-table`). It is generated and gitignored;
+regenerate it from the repo root with:
+
+```sh
+find boot tracks scripts agents emacs visuals/hydra -type f \( -name '*.hs' -o -name '*.tidal' -o -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.el' -o -name 'midi-reader' \) -print0 | xargs -0 etags
+```
+
 ## Sound check
 
 ```sh

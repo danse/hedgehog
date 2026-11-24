@@ -2,6 +2,16 @@
 # Hedgehog Hydra audio routing via PipeWire loopback.
 # Creates a virtual microphone fed by the default sink's monitor, links it, and
 # (by default) makes it the default source so browser getUserMedia picks it up.
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  cat <<EOF
+Usage: $0 {start|status|stop}
+  start   create/link Hydra-Virtual-Mic from the default sink's monitor and make
+          it the default source; saves the previous source and is idempotent
+  status  print whether it is running, the default sink/source and monitor links
+  stop    unlink and remove the virtual mic, restore the previous default source
+EOF
+  exit 0
+fi
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root"
