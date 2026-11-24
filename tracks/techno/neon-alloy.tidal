@@ -7,7 +7,7 @@
 --
 -- Gotchas: shared rules in notes/learning/gotchas.md.
 
-glideBpm 118 30
+glideBpm 118 60
 
 -- ---------------------------------------------------------------------------
 -- Voices / patterns (eval this whole block together)
@@ -22,7 +22,7 @@ let
   clap = s "~ cp ~ [~ cp?]" # gain 0.8 # room 0.18 # size 0.3 # lpf 5000
   --
   -- hats / percussion
-  hats = s "[808hc*2 808oh] 808hc*2 [808hc 808oh?] 808hc*2" # gain (range 0.68 0.8 $ slow 4 rand)
+  hats = s "[808hc*2 808oh] 808hc*2 [808hc 808oh?] 808hc*2"
     # pan (range 0.4 0.6 $ fast 2 rand) # lpf 9000 # room 0.06 # size 0.1
   hatsOpen = s "~ ~ 808oh ~" # gain 0.76 # release 0.12 # room 0.08 # size 0.12
   perc = degradeBy 0.25 $ s "glitch(3,8,<0 5>)" # n (irand 8) # gain 0.72 # speed (choose [1,1.5,2]) # lpf 5000 # room 0.1 # size 0.15
@@ -67,9 +67,9 @@ let
   impact = s "industrial:1" # gain 0.82 # speed 0.7 # lpf 1800 # room 0.3 # size 0.4
 
 -- 1. Intro — beat + bass + filtered synths
-
-d1 kick
-xfadeIn 2 16 hats
+let loud = level 2
+d1 $ loud kick
+xfadeIn 2 16 $ loud hats -- TODO: amplify more voices?
 
 d3 $ bassMain # lpf 320
 
@@ -92,12 +92,11 @@ d6 $ stack [shimmer, stab]
 xfadeIn 5 8 chordsStab -- noticeable
 
 -- 3. Chorus — full lift
-
 d4 $ stack [snare, clap]
 d2 $ stack [hats, hatsOpen, perc # gain 0.66]
 d7 hook
 d6 $ stack [stab, shimmer # gain 0.64]
-xfadeIn 5 8 silence
+xfadeIn 5 8 silence -- security belt
 
 
 xfadeIn 5 32 $ stack [chords, arp] -- juggler melody

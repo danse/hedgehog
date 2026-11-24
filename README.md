@@ -39,6 +39,12 @@ through the sections below (the file header lists the order).
 Within a track, `dN` numbers follow the order the streams first enter, so `d1`
 is always the opening sound.
 
+Landing a track with fewer seats over one with more leaves **voice overflows** —
+`dN` streams from the first track that the incoming track never rewrites. See
+`notes/learning/voice-overflows.md` for the set-difference method and selective
+fades; prefer those to a blanket `clearAll` when the outgoing tail is worth
+keeping.
+
 | Key | Action |
 |---|---|
 | `C-RET` | eval the block under point (blank-line separated) |

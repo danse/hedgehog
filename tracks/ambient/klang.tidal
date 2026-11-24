@@ -2,7 +2,7 @@
 -- Seats: 1 pad, 2 air, 3 bass, 4 whistle, 5 answer. Section 4 is a landing.
 -- Gotchas: shared rules in notes/learning/gotchas.md.
 
-setbpm 90
+glideBpm 90 90
 
 -- ---------------------------------------------------------------------------
 -- Reused voices. Keep this block one paragraph: C-RET evaluates the paragraph.

@@ -72,8 +72,8 @@ xfadeIn 4 16 $ synth (cat [
     "bf3 ~ ~ g3 ~ ~ ef3 ~"])
   # lpf 2600 # amp 0.25
 
-xfadeIn 5 16 silence -- choir
 
+xfadeIn 5 16 silence -- choir
 
 fadeSilence 16 [
   1, -- "bells"

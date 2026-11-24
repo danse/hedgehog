@@ -103,6 +103,12 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     chordAt :: Pattern Note -> Pattern String -> Pattern Note
     chordAt r q = chord r q []
     --
+    -- Flat linear level. `amp` is the level control; `gain` is only a quartic
+    -- trim. `level a p` clears the trim, so the same `a` means the same level
+    -- on every voice. Keep it off voices whose moving `gain` is the effect.
+    level :: Pattern Double -> ControlPattern -> ControlPattern
+    level a p = p # gain 1 # amp a
+    --
     -- Convenience fades: crossfade one or more streams to silence.
     fadeSilence :: Time -> [ID] -> IO ()
     fadeSilence n = mapM_ (\d -> xfadeIn d n silence)
