@@ -68,7 +68,8 @@ Each area documents itself:
   `.tidal` file per track; `scripts/edit.sh` opens Emacs here
 - `scripts/` — see `scripts/README.md`
 - `agents/` — agent-facing material: `agents/making_of/` (score sources and
-  generators) and `agents/toolbox/` (helper scripts), each with its own README
+  generators), `agents/toolbox/` (helper scripts) and `agents/skills/` (OpenCode
+  skills), each with its own README
 - `visuals/` — see `visuals/README.md`
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`
 - `samples/` — see `samples/README.md`
