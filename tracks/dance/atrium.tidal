@@ -312,6 +312,7 @@ fadeSilence 2 [1, 3, 6]
 xfadeIn 4 2 $ slow 2 $ pad "[a3,c4,e4,g4,b4]"
   # sustain 3.4 # release 1.6 # room 0.62 # size 0.8
 fadeSilence 8 [4]
+-- Warning: may like to use density based fades instead
 
 -- `hush` after the last chord
 hush

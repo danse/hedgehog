@@ -11,6 +11,7 @@ General-purpose helper scripts live in the sibling [`../toolbox/`](../toolbox/).
 | `scores/giselle.ly`, `scores/giselle.mid` | Adam, *Pas de deux (1er acte)*, "New arrangement" typeset by Laurence Sardain, Mutopia-2006/12/22-897 | Placed in the public domain by the typesetter |
 | `scores/chopin_nocturne_op9_n2.ly`, `.mid`, `-a4.pdf` | Chopin, Nocturne Op. 9 No. 2 (1833), edition by Renato Biolcati Rinaldi, Mutopia-2014/12/18-1590; from G. Schirmer, New York, 1881 scans at the Library of Congress | © 2014 Renato Biolcati Rinaldi, CC BY-SA 3.0 |
 | `scores/melos.mid` | Four-bar LilyPond export, three labelled voices, read with `scripts/midi-reader` | User-produced; no external rights |
+| `scores/salem.midi` | Ten-bar LilyPond 2.24.4 export titled "Test", four labelled voices on a 60-step/bar grid, read with `scripts/midi-reader --steps 60 --bars 10` (and `--gates --bars 10` for the onset grid) | User-produced; no external rights |
 
 The track headers carry the same credits. Keep them when reusing the scores.
 

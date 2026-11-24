@@ -32,6 +32,10 @@ library checkout.
 - `dN` numbers follow the order streams first enter: `d1` is the opening sound,
   and each new layer takes the next free number. Keep that order when adding
   sections.
+- At a tempo change, note the tempo it leaves in a trailing comment, e.g.
+  `glideBpm 104 40 -- from 100` (as in `daywork.tidal` and `loden.tidal`). The
+  opening `glideBpm` that sets the track's home tempo is not a change and needs
+  no annotation.
 - Keep a pattern inline at its section if it is used only once; name it in the
   setup `let` block only when another section reuses it. A bare audition track
   may have no `let` block at all.

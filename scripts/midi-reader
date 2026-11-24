@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""Read a MIDI file and print its voices as a 16th-note grid, with no deps.
+"""Read a MIDI file and print its voices as a grid, with no deps.
 
 The one-off parses of MIDI exports live here so they survive a /tmp wipe, the
 same way analyse-audio.py holds the audio ones. Note-on/off events are paired
 per pitch in each track; notes are named in Tidal spelling (fs4, bf3, ...).
 
 Usage:
-  scripts/midi-reader FILE.mid
+  scripts/midi-reader FILE.mid [--steps N] [--bars N] [--compact | --gates]
 
 Output: header, tempo changes, then one block per voice. Grid cells show the
-note name followed by `_` for each further 16th it is held, clamped at the
-next note in that voice. The raw list above each grid gives exact tick positions
-and durations, which is the detail to trust when writing mini-notation.
+note name followed by `_` for each further step it is held, clamped at the next
+note in that voice. Default is 16 steps/bar (16ths). Use `--steps` for scores
+on another grid: `salem.midi`, for instance, is written on 60 steps/bar
+(1/15 quarter), so `--steps 60` renders its holds exactly. By default only
+bars containing notes are printed; `--bars N` prints exactly N bars per voice
+including empty ones, so a Tidal `cat` list stays aligned with the MIDI.
+`--compact` prints each note or rest as `token@count` steps; `--gates` instead
+prints a long `t`/`~` onset grid, ready for Tidal `struct`. The raw list above
+each grid gives exact tick positions and durations, which is the detail to
+trust when writing mini-notation.
 """
 import argparse
 import struct
@@ -110,34 +117,68 @@ def pair_notes(events):
     return sorted(notes)
 
 
-def grid(notes, division, ticks_per_bar):
-    step = division // 4  # 16ths
-    per_bar = ticks_per_bar // step
+def grid(notes, ticks_per_bar, steps=16, compact=False, gates=False,
+         total_bars=None):
+    """Render notes onto `steps` equal cells per bar; `_` continues a note.
+
+    `total_bars` prints that many bars including empty ones; otherwise only
+    bars with notes appear. `compact` prints `token@count` runs. `gates`
+    instead prints a long `t`/`~` line with `t` only at note onsets, ready for
+    Tidal `struct`.
+    """
+    step = ticks_per_bar / steps
     bars = {}
     for start, end, pitch in notes:
         bars.setdefault(start // ticks_per_bar, []).append((start, end, pitch))
+    indices = range(total_bars) if total_bars is not None else sorted(bars)
     lines = []
-    for bar in sorted(bars):
-        cells = ["~"] * per_bar
-        for k, (start, end, pitch) in enumerate(sorted(bars[bar])):
-            col = (start % ticks_per_bar) // step
+    for bar in indices:
+        cells = ["~"] * steps
+        for k, (start, end, pitch) in enumerate(sorted(bars.get(bar, []))):
+            col = min(steps - 1, max(0, round((start % ticks_per_bar) / step)))
             held = max(1, round((end - start) / step))
-            if k + 1 < len(bars[bar]):
-                nxt = sorted(bars[bar])[k + 1][0]
+            if k + 1 < len(bars.get(bar, [])):
+                nxt = sorted(bars.get(bar, []))[k + 1][0]
                 held = min(held, max(1, round((nxt - start) / step)))
-            if col < per_bar:
-                cells[col] = note_name(pitch)
-                for held_step in range(1, held):
-                    if col + held_step < per_bar:
-                        cells[col + held_step] = "_"
-        lines.append('    "%s"' % " ".join(cells[:per_bar]))
+            cells[col] = note_name(pitch)
+            for held_step in range(1, held):
+                if col + held_step < steps:
+                    cells[col + held_step] = "_"
+        if gates:
+            cells = ["t" if c not in ("_", "~") else "~" for c in cells]
+        elif compact:
+            # `note@N` is one event N steps long; `~@N` is N steps of rest.
+            # That is both exact and readable, unlike long `_!N` runs.
+            tokens, i = [], 0
+            while i < len(cells):
+                token = cells[i]
+                j = i + 1
+                while j < len(cells) and cells[j] == ("_" if token != "~" else "~"):
+                    j += 1
+                tokens.append("%s@%d" % (token, j - i))
+                i = j
+            cells = tokens
+        lines.append('    "%s"' % " ".join(cells))
     return lines
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("file", help="MIDI file to read")
+    ap.add_argument("--steps", type=int, default=16, metavar="N",
+                    help="grid steps per bar (default: 16, i.e. 16ths)")
+    ap.add_argument("--bars", type=int, metavar="N",
+                    help="print exactly N bars per voice, including empty ones")
+    style = ap.add_mutually_exclusive_group()
+    style.add_argument("--compact", action="store_true",
+                       help="print each note/rest as token@count steps for Tidal")
+    style.add_argument("--gates", action="store_true",
+                       help="print a long t/~ onset grid for Tidal struct")
     args = ap.parse_args()
+    if args.steps < 1:
+        raise ValueError("--steps must be positive")
+    if args.bars is not None and args.bars < 1:
+        raise ValueError("--bars must be positive")
 
     division, tempos, tracks = read_midi(args.file)
     # Time signatures live in the conductor track, so gather them across all
@@ -145,8 +186,8 @@ def main():
     timesigs = [ts for _, ev in tracks for _, kind, ts in ev if kind == "timesig"]
     num, den = timesigs[0] if timesigs else (4, 4)
     ticks_per_bar = division * 4 * num // den
-    print("division %d ticks/quarter · %d/%d, %d ticks/bar"
-          % (division, num, den, ticks_per_bar))
+    print("division %d ticks/quarter · %d/%d, %d ticks/bar · %d steps/bar"
+          % (division, num, den, ticks_per_bar, args.steps))
     for tick, bpm in tempos:
         print("tick %5d  %g BPM" % (tick, bpm))
 
@@ -157,10 +198,12 @@ def main():
         print("\n-- %s (%d notes)" % (name or "voice", len(notes)))
         for start, end, pitch in notes:
             length = end - start
-            print("  %5d → %5d  %-4s  %5d ticks (%.2f 16ths)"
-                  % (start, end, note_name(pitch), length, length / (division / 4)))
+            print("  %5d → %5d  %-4s  %5d ticks (%.2f steps)"
+                  % (start, end, note_name(pitch), length,
+                     length / (ticks_per_bar / args.steps)))
         print("  grid:")
-        for line in grid(notes, division, ticks_per_bar):
+        for line in grid(notes, ticks_per_bar, args.steps,
+                         args.compact, args.gates, args.bars):
             print(line)
 
 

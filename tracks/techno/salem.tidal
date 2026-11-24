@@ -1,0 +1,198 @@
+-- Salem — clean, smooth reading of a high, fast-modulating counterpoint.
+-- 132 BPM · 4/4 · G minor (G A Bb C D Eb F). One cycle is one score bar;
+-- 60 steps/bar (1/15 quarter), ten score bars. The long `_` strings are the
+-- literal MIDI grids from `scripts/midi-reader --steps 60 --bars 10`; the
+-- `t`/`~` strings are its onsets from `--gates --bars 10`. `--bars 10` keeps
+-- empty bars as `~` lines, so each `cat` stays aligned with the MIDI.
+-- No waveshaping and no modulation
+-- overrides: breath and bow behaviour stay in the SynthDefs. Kick and hat keep
+-- a steady pulse; the sub reads c:'s written onsets, and all four voices read
+-- their own lines. Sections: entry, drift, cut, return.
+-- Source: agents/making_of/scores/salem.midi (LilyPond 2.24.4, title "Test",
+-- four voices a:/b:/c:/d:). Gotchas: notes/learning/gotchas.md.
+
+glideBpm 132 60
+
+-- ---------------------------------------------------------------------------
+-- Scores, onset gates and voices. Keep this whole block one paragraph.
+-- a: bowed string, b: hum, c: horn, d: moog bass. Gates come from the same
+-- note-ons as the scores, so the sub cannot drift from the counterpoint.
+-- ---------------------------------------------------------------------------
+let
+  aScore :: Pattern Note
+  aScore = cat [
+    "g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ as7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ f7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "as7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ c7 _ _ _ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ a7 _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "c7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ds7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ as7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ g7 _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "f7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ as7 _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ f7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ g7 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"]
+  --
+  bScore :: Pattern Note
+  bScore = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ g6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d6 _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ds6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ d6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ ~ ~ f6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ g6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "d6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ g6 _ _ _ _ _ _ _ _ _ _ _ _ _ c6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ ds6 _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "as6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ a6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ f6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d6 _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ ds6 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d6 _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  cScore :: Pattern Note
+  cScore = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ f5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "g5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ f5 _ _ _ _ _ _ _ _ _ _ as5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ f5 _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as5 _ _ _ _ _ _ _ _ _ _ g5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ f5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ds5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ c5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ a5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ g5 _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d5 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ as5 _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  dScore :: Pattern Note
+  dScore = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ d4 _ _ _ _ _ _ _ _ _ _ as4 _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ as4 _ _ _ _ _ _ _ ~ ~ ~ ~ ~ ~ ~ d4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ as4 _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ds4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ds4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ c4 _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ f4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ~ d4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "f4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ as4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+    "g4 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"]
+  --
+  aGates :: Pattern Bool
+  aGates = cat [
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  bGates :: Pattern Bool
+  bGates = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  cGates :: Pattern Bool
+  cGates = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  dGates :: Pattern Bool
+  dGates = cat [
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  -- a: high bowed string. Slow attack and a long tail keep the written g7/as7
+  -- smooth; no tremolo or vibrato overrides.
+  topVoice :: Pattern Note -> ControlPattern
+  topVoice p = note p # s "hedge_strings" # legato 0.96
+    # lpf 2000 # attack 0.25 # release 1.2
+    # pan 0.35 # room 0.5 # size 0.65 # amp 1.4
+  --
+  -- b: soft hum, sitting just under the top line.
+  midVoice :: Pattern Note -> ControlPattern
+  midVoice p = note p # s "hedge_hum" # legato 0.96
+    # lpf 1800 # room 0.45 # size 0.6 # pan (-0.25) # amp 1.8
+  --
+  -- c: horn, further back with a gentle envelope.
+  horn :: Pattern Note -> ControlPattern
+  horn p = note p # s "hedge_horn" # legato 0.95
+    # attack 0.12 # release 0.7 # lpf 1400
+    # pan 0.15 # room 0.42 # size 0.6 # amp 2.4
+  --
+  -- d: moog bass, tuned from moog:1's c4 base. Low Q, no drive.
+  bass :: Pattern Note -> ControlPattern
+  bass p = speedAt "c4" p # s "moog:1" # legato 0.85
+    # sustain 0.3 # release 0.15 # lpf 450 # lpq 0.3
+    # room 0.06 # size 0.16 # amp 1.2
+  --
+  -- Engine: a plain kick and offbeat hat; the sub follows c:'s written onsets.
+  kickPat :: ControlPattern
+  kickPat = s "909*4" # amp 1 # lpf 300 # room 0.04 # size 0.1
+  subPat :: ControlPattern
+  subPat = struct cGates $ s "808bd"
+    # amp 0.9 # lpf 220 # room 0.05 # size 0.14
+  hatPat :: ControlPattern
+  hatPat = s "~ hh:0 ~ hh:0"
+    # amp 0.28 # hpf 6000 # room 0.12 # size 0.24 # pan 0.35
+  --
+
+-- 1. Entry. The beat is plain from the start; the written rests make the
+--    stagger. Evaluate each clutch line, or the whole paragraph, as one block.
+clutchIn 1 8 kickPat
+clutchIn 2 8 subPat
+clutchIn 3 8 hatPat
+clutchIn 4 8 $ bass dScore
+clutchIn 5 8 $ horn cScore
+clutchIn 6 8 $ midVoice bScore
+clutchIn 7 8 $ topVoice aScore
+
+
+-- Landing: the clean loop holds.
+
+-- 2. Drift. Open the top two voices; the beat stays put.
+clutchIn 7 4 $ topVoice aScore # room 0.6 # size 0.8 # lpf 2400
+clutchIn 5 4 $ horn cScore # room 0.55 # size 0.75
+
+-- 3. Cut. Drop the sub and bass; kick, hat and upper lines carry the bar.
+clutchIn 2 2 silence
+clutchIn 4 2 silence
+
+-- 4. Return. Bring the low end back a touch fuller.
+clutchIn 2 4 subPat
+clutchIn 4 4 $ bass dScore # lpf 520
+
+
+-- Landing: full, smooth loop.
+multi clutchIn 64 $ (, silence) <$> [1,2,3,4,5,6,7]
+
+-- Live nudges — uncomment one line to call it.
+-- Pull the hum back so the written gaps read more clearly:
+-- clutchIn 6 4 $ midVoice bScore # lpf 1200
+--
+-- Thin the hat for a bar without touching the beat:
+-- clutchIn 3 4 $ hatPat # amp 0.18
+--
+-- Bring a whisper of b:'s written rhythm back in:
+-- clutchIn 8 4 $ struct bGates $ s "hh:0" # amp 0.1

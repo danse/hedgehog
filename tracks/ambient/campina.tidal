@@ -196,7 +196,7 @@ d10 . violin $ violinNotes |+ 5
 --     comes forward and the wood gets louder; the air leaves. Everything
 --     else is already playing, so the peak is four new settings, not a new
 --     band.
-glideBpm 78 30
+glideBpm 78 90
 d1 silence
 d6 $ wood # amp 10
 d7 $ reed (reedNotes |+ 5)
@@ -204,17 +204,18 @@ d7 $ reed (reedNotes |+ 5)
 d8 $ stringBed (bedNotes |+ 5) # amp 2.8
 d9 $ cimbalom (cimbalomNotes |+ 5) # amp 2.4
 
--- 10 · Home — 64 bars. Eval this offbeat. The loop comes back down to
+-- 10 · Bounce — 64 bars. Eval this offbeat. The loop comes back down to
 --      A minor. Bed, bass, reed and pluck switch back; the violin
 --      leaves and the tempo settles while the drums keep the room
 --      open.
-glideBpm 72 16
+glideBpm 72 90
 d1 air
 d4 $ bass bassNotes
 d7 $ reed reedNotes
 d8 $ stringBed bedNotes
 d9 $ cimbalom cimbalomNotes
 d10 silence -- violin
+
 
 -- 11 · End — 48 bars. The band leaves; the bed becomes one Am chord,
 --      re-blooming every four bars, and the air stays under it. `hush` after

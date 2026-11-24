@@ -112,6 +112,12 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
       :: (Foldable t, Monad m)
       => (a -> b -> c -> m d) -> b -> t (a, c) -> m ()
     multi f t = mapM_ (\(d, p) -> f d t p)
+    clear :: Time -> [ID] -> IO ()
+    clear t = multi clutchIn t . fmap ( , silence)
+    -- clear every seat with a clutch fade
+    clearAll :: Time -> IO ()
+    clearAll t = clear t
+      ([1,2,3,4,5,6,7,8,9,10,11,12] :: [ID])
 :}
 
 -- You can also add your own aliases in this file. For example:

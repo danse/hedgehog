@@ -209,10 +209,6 @@ let
         "df5 ~ af5 ~ ~ ~ df5 ~ df5 ~ bf4 ~ ~ ~ bf4 ~",
         "bf4 ~ f5 ~ ~ ~ bf4 ~ bf4 ~ g4 ~ ~ ~ g4 ~",
         "g4 ~ df5 ~ ~ ~ g4 ~ g4 ~ ef4 ~ ~ ~ ef4 ~"] }
-  -- clear every seat with a clutch fade
-  clearAll :: Time -> IO ()
-  clearAll t = mapM_ (\d -> clutchIn d t silence)
-    ([1,2,3,4,5,6,7,8,9,10,11,12] :: [ID])
 
 -- 1 · Stillness — the place waits; bed alone, slowly filling in.
 clearAll 64
@@ -227,12 +223,13 @@ clutchIn 1 16 $ bed # lpf 1900
 clutchIn 5 16 lowStrings
 
 
--- 4 · The officiant — their theme enters with the first pulse.
+-- 4 · The officiant with their theme
 multi clutchIn 16 [
   (2, sawLead),
   (1, bed # lpf 2200),
   (4, tremolo),
   (5, lowStrings # lpf 620)]
+
 
 -- 5 · First answer — an invitation, not a reply: saw asks on odd bars,
 -- whistle answers on even.
@@ -250,11 +247,11 @@ multi clutchIn 16 [
 clutchIn 6 16 $ glints plain
 clutchIn 1 16 $ ritualBed # lpf 1200
 
+
 -- 8 · The interval — the mechanism wakes and starts counting.
 clutchIn 1 16 $ ritualBed # lpf 1400
 clutchIn 5 16 $ lowStrings # lpf 700
 clutchIn 11 16 clock
--- here the texture is already full
 
 
 -- 9 · Borrowed breath — the reed breathes without the officiant.
@@ -279,53 +276,82 @@ multi clutchIn 16 [
 
 -- 12 · The utopia — a perfect world in the promised order. The possessed
 -- officiant believes they can build it. Richest melodic section.
-glideBpm 75 30 -- from 88
-multi clutchIn 1 [
-  (1,  stack [bed # lpf 2800, bed # lpf 1400 # pan (-0.3)]),
-  (2,  sawLead),
-  (3,  stack [air # lpf 900 # release 2, dust]),
-  (4,  tremolo # room 0.85 # size 0.85),
-  (6,  glints utopia),
-  (7,  whistle # release 1.8),
-  (8,  hornStab),
-  (9,  strings utopia),
-  (10, melodica utopia),
-  (11, clock),
-  (12, koto utopia)]
--- TODO too saturated here, equalise streams (second pass)
+glideBpm 75 90 -- from 88
+-- First pass, kept for A/B — too saturated: every seat present, but the
+-- four-note strings, horn stabs and whistle sit far above the bed.
+-- multi clutchIn 1 [
+--   (1,  stack [bed # lpf 2800, bed # lpf 1400 # pan (-0.3)]),
+--   (2,  sawLead),
+--   (3,  stack [air # lpf 900 # release 2, dust]),
+--   (4,  tremolo # room 0.85 # size 0.85),
+--   (6,  glints utopia),
+--   (7,  whistle # release 1.8),
+--   (8,  hornStab),
+--   (9,  strings utopia),
+--   (10, melodica utopia),
+--   (11, clock),
+--   (12, koto utopia)]
+--
+-- Second pass: same eleven seats, levelled so the richness stays but the
+-- high mids stop stacking up. Compare by uncommenting the block above.
+multi clutchIn 12 [
+  (1,  stack [bed # lpf 2800, bed # lpf 1400 # pan (-0.3) # amp 0.18]),
+  (2,  sawLead # amp 0.32),
+  (3,  stack [air # lpf 900 # release 2, dust # amp 0.07]),
+  (4,  tremolo # room 0.85 # size 0.85 # amp 1.2),
+  (6,  glints utopia # amp 0.6),
+  (7,  whistle # release 1.8 # amp 1.8),
+  (8,  hornStab # amp 5),
+  (9,  strings utopia # amp 1),
+  (10, melodica utopia # amp 1),
+  (11, clock # amp 1.2),
+  (12, koto utopia # amp 1.3) ]
+--
+-- If it now reads thin, add the missing low anchor:
+-- clutchIn 5 8 $ lowStrings # lpf 700 # amp 0.25
+--
+-- Workaround: if it still fogs up, trim tails before cutting more amp
+-- clutchIn 9 4 $ strings utopia # room 0.7 # size 0.75 # amp 1
+-- clutchIn 6 4 $ glints utopia # room 0.7 # size 0.75 # amp 0.6
 
 -- 13 · The call turns — whistle asks, officiant replies: the whistle was
 -- asking all along. The clock starts pulling the promise out of tune.
-glideBpm 88 30 -- from 75
+glideBpm 88 90 -- from 75
 multi clutchIn 16 [
   (2,  sawAnswer),
+  (6, silence), -- resonating now
   (7,  whistleQuestion),
   (8,  silence),
   (10, silence),
   (11, clockDissonant),
   (12, silence)]
 
--- d6 at this point may resonate a bit too much. If silencing
--- that is not enough, d7 (whistle) and d9 (strings) are next
+-- 7 (whistle) at this point may have become tiring. If silencing that
+-- is not enough d9 (strings) is next
 --
-clutchIn 6 8 silence
+-- clutchIn 7 16 silence
 
+-- Voices: 1 bed, 2 saw, 3 air/dust, 4 tremolo, 5 low strings, 6 glints,
+-- 7 whistle, 8 horn, 9 strings, 10 melodica, 11 clock, 12 koto.
+--
 -- 14 · The plan outlives the builder — human signals stop; the dissonant
 -- clock keeps measuring an empty utopia.
 multi clutchIn 16 [
-  (2,  silence),
-  (4,  silence),
-  (5,  silence),
-  (8,  silence),
-  (10, silence),
-  (12, silence),
-  (11, clockDissonant # pF "metal" 0.9)]
+  (2,  silence),                          -- saw
+  (4,  silence),                          -- tremolo
+  (5,  silence),                          -- low strings
+  (8,  silence),                          -- horn
+  (10, silence),                          -- melodica
+  (12, silence),                          -- koto
+  (11, clockDissonant # pF "metal" 0.9)]  -- clock
+-- for quema, leave here
+
 
 -- 15 · The builder withdraws — the clock stops; the promise runs on
 -- without its author.
-clutchIn 6 16 silence
-clutchIn 9 16 silence
-clutchIn 11 16 silence
+clutchIn 6 16 silence   -- glints
+clutchIn 9 16 silence   -- strings
+clutchIn 11 16 silence  -- clock
 
 -- TODO sharp ending
 

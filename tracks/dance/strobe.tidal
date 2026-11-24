@@ -52,8 +52,6 @@ let
   hooverLead :: Pattern Note -> ControlPattern
   hooverLead p = n p # s "hoover" # legato 0.85 # lpf 1600
                # room 0.4 # size 0.6 # amp 0.5
-  clear :: Time -> [ID] -> IO ()
-  clear t ds = multi clutchIn t [(d, silence) | d <- ds]
 
 -- 1. Doors — 32 cycles. Filtered kick, hats, sub and pad: the loop is stated
 --    before anything moves.
