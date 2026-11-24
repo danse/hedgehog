@@ -128,18 +128,18 @@ let
   topVoice :: Pattern Note -> ControlPattern
   topVoice p = note p # s "hedge_strings" # legato 0.96
     # lpf 2000 # attack 0.25 # release 1.2
-    # pan 0.35 # room 0.5 # size 0.65 # amp 1.4
+    # pan 0.35 # room 0.5 # size 0.65 # amp 0.6
   --
   -- b: soft hum, sitting just under the top line.
   midVoice :: Pattern Note -> ControlPattern
   midVoice p = note p # s "hedge_hum" # legato 0.96
-    # lpf 1800 # room 0.45 # size 0.6 # pan (-0.25) # amp 1.8
+    # lpf 1800 # room 0.45 # size 0.6 # pan (-0.25) # amp 0.65
   --
   -- c: horn, further back with a gentle envelope.
   horn :: Pattern Note -> ControlPattern
   horn p = note p # s "hedge_horn" # legato 0.95
     # attack 0.12 # release 0.7 # lpf 1400
-    # pan 0.15 # room 0.42 # size 0.6 # amp 2.4
+    # pan 0.15 # room 0.42 # size 0.6 # amp 0.65
   --
   -- d: moog bass, tuned from moog:1's c4 base. Low Q, no drive.
   bass :: Pattern Note -> ControlPattern

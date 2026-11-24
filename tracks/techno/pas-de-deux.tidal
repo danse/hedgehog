@@ -43,11 +43,11 @@ let
   leadAt :: Pattern Note -> ControlPattern
   leadAt p = note p # s "hedge_whistle"
       # attack 0.04 # sustain 0.5 # release 0.3
-      # room 0.35 # size 0.55 # amp 1.5
+      # room 0.35 # size 0.55 # amp 0.5
   reedAt :: Pattern Note -> ControlPattern
   reedAt p = note p # s "hedge_melodica"
       # attack 0.05 # sustain 0.1 # release 0.12
-      # room 0.25 # size 0.45 # amp 1.1
+      # room 0.25 # size 0.45 # amp 0.85
 
 -- One start block: evaluate this whole paragraph with C-RET. All five voices
 -- fade in from silence over four cycles.

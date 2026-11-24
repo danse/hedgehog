@@ -39,11 +39,11 @@ let
   lowVoice :: Pattern Note -> ControlPattern
   lowVoice p = note p # s "hedge_horn" # legato 0.95
     # attack 0.03 # release 0.15 # lpf 1200
-    # room 0.12 # size 0.25 # amp 4
+    # room 0.12 # size 0.25 # amp 0.85
   topVoice :: Pattern Note -> ControlPattern
   topVoice p = note p # s "hedge_whistle" # legato 0.95
     # attack 0.02 # release 0.1 # hpf 900
-    # room 0.15 # size 0.25 # amp 4
+    # room 0.15 # size 0.25 # amp 1
 
 -- 1. Engine: kick, hats, clap. Evaluate d1-d3 as one paragraph.
 clutchIn 1 8 $ s "909*4" # amp 1 # lpf 320 # room 0.04 # size 0.1

@@ -74,17 +74,17 @@ let
   lead p = note p # s "hedge_melodica" # legato 0.6
     # pF "reed" 0.72 # pF "bright" 2100
     # attack 0.05 # release 0.25
-    # pan (-0.3) # room 0.4 # size 0.55 # amp 1.4
+    # pan (-0.3) # room 0.4 # size 0.55 # amp 0.9
   --
   stringBed :: Pattern Note -> ControlPattern
   stringBed p = note p # s "hedge_fiddle" # pF "vib" 5 # pF "depth" 0.006
     # attack 0.18 # release 0.8 # sustain 0.7
-    # pan 0.5 # room 0.45 # size 0.62 # amp 2.4
+    # pan 0.5 # room 0.45 # size 0.62 # amp 1
   --
   cimbalom :: Pattern Note -> ControlPattern
   cimbalom p = note p # s "hedge_koto" # pF "damp" 0.35 # pF "bend" 0.2
     # pF "bright" 3000 # decay 0.9 # sustain 1
-    # pan (-0.5) # room 0.32 # size 0.52 # amp 2
+    # pan (-0.5) # room 0.32 # size 0.52 # amp 0.7
   --
   brass :: Pattern Note -> ControlPattern
   brass p = struct "t ~ t t ~ t ~" $ speedAt "b4" p # s "trump" # n 1
@@ -148,7 +148,7 @@ clutchIn 2 8 $ tapan # amp 1.15
 clutchIn 5 8 $ s "house:3*14"
   # amp "0.34 0.15 0.2 0.12 0.2 0.12 0.34 0.15 0.2 0.12 0.3 0.15 0.2 0.12"
   # hpf 700 # room 0.08 # size 0.2 # pan 0.2
-clutchIn 7 8 $ lead (leadNotes |+ 5) # pF "bright" 2800 # amp 1.6
+clutchIn 7 8 $ lead (leadNotes |+ 5) # pF "bright" 2800 # amp 1.05
 clutchIn 10 8 $ brass (brassNotes |+ 5) # amp 0.6
 
 -- 10 · Outro. Home to A minor; thin to the dance core.

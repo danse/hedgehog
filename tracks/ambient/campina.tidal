@@ -88,7 +88,7 @@ let
   stringBed p = note p
     # s "hedge_fiddle" # pF "vib" 5 # pF "depth" 0.006
     # attack 0.18 # release 0.8 # sustain 0.7
-    # pan 0.5 # room 0.45 # size 0.62 # amp 2.4
+    # pan 0.5 # room 0.45 # size 0.62 # amp 1
   --
   -- Free reed: short, bright, leaning forward on the accented eighths.
   reed :: Pattern Note -> ControlPattern
@@ -96,14 +96,14 @@ let
     # s "hedge_melodica" # pF "vib" 5.5 # pF "depth" 0.008
     # pF "reed" 0.8 # pF "bright" 2400
     # attack 0.06 # release 0.3 # sustain 0.35
-    # pan (-0.3) # room 0.35 # size 0.55 # amp 2.4
+    # pan (-0.3) # room 0.35 # size 0.55 # amp 0.9
   --
   -- Cimbalom: bent plucks on the three accents, filling under the reed.
   cimbalom :: Pattern Note -> ControlPattern
   cimbalom p = note p
     # s "hedge_koto" # pF "damp" 0.35 # pF "bend" 0.2
     # pF "bright" 3000 # decay 0.9 # sustain 1
-    # pan (-0.5) # room 0.32 # size 0.52 # amp 2
+    # pan (-0.5) # room 0.32 # size 0.52 # amp 0.7
   --
   -- Shaker: seven eighths, accented on the same three beats as the tapan.
   shaker :: ControlPattern
@@ -118,7 +118,7 @@ let
     "~ tok:0 ~ ~ ~ tok:0 ~",
     "~ ~ tok:0 ~ ~ tok:0 ~",
     "~ tok:0 ~ tok:0 ~ tok:0 ~"])
-    # amp 8 # hpf 200 # room 0.1 # size 0.22 # pan 0.42
+    # amp 1.7 # hpf 200 # room 0.1 # size 0.22 # pan 0.42
   --
   -- Violin answer: the last three eighths of each bar, after the reed.
   violin :: Pattern Note -> ControlPattern
@@ -198,11 +198,11 @@ d10 . violin $ violinNotes |+ 5
 --     band.
 glideBpm 78 90
 d1 silence
-d6 $ wood # amp 10
+d6 $ wood # amp 2.1
 d7 $ reed (reedNotes |+ 5)
-  # pF "bright" 3000 # amp 2.8
-d8 $ stringBed (bedNotes |+ 5) # amp 2.8
-d9 $ cimbalom (cimbalomNotes |+ 5) # amp 2.4
+  # pF "bright" 3000 # amp 1.05
+d8 $ stringBed (bedNotes |+ 5) # amp 1.17
+d9 $ cimbalom (cimbalomNotes |+ 5) # amp 0.84
 
 -- 10 · Bounce — 64 bars. Eval this offbeat. The loop comes back down to
 --      A minor. Bed, bass, reed and pluck switch back; the violin

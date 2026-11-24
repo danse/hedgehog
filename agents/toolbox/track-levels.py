@@ -313,7 +313,8 @@ def parse_statements(code):
         text = " ".join(t.strip() for _, t in block if t.strip())
         if not text or text.startswith("let"):
             continue
-        out.append(text)
+        lineno = min((n for n, t in block if t.strip()), default=0)
+        out.append((lineno, text))
     return out
 
 
@@ -782,19 +783,20 @@ def measure_track(track, sampler, beats_override=None):
     beats = beats_override if beats_override else track.beats
     cycle_sec = 4.0 * 60.0 / track.bpm * (beats / 4.0)
     ctx = {"sampler": sampler, "cycle_sec": cycle_sec}
-    streams = {}
-    for statement in track.statements:
+    streams, sources = {}, {}
+    for lineno, statement in track.statements:
         if statement.startswith("once "):
             continue
         for sid, expr in stream_items(statement):
             voice = evaluate(expr, track.aliases, ctx)
             if sid not in streams or voice.energy > streams[sid].energy:
                 streams[sid] = voice
+                sources[sid] = lineno
     total = Voice()
     for voice in streams.values():
         total.add(voice)
-    return {"track": track, "streams": streams, "total": total,
-            "cycle_sec": cycle_sec, "beats": beats}
+    return {"track": track, "streams": streams, "sources": sources,
+            "total": total, "cycle_sec": cycle_sec, "beats": beats}
 
 
 # --------------------------------------------------------------------------
@@ -828,13 +830,14 @@ def print_track_view(results):
     for result in results:
         t = result["track"]
         print("\n%s — streams (loudest section)" % t.path.stem)
-        print("  %-6s %8s %7s %7s %9s  %s" %
-              ("STREAM", "LEVEL", "DENS", "DUR_S", "RMS/CYC", "SOURCE"))
+        print("  %-6s %6s %8s %7s %7s %9s  %s" %
+              ("STREAM", "LINE", "LEVEL", "DENS", "DUR_S", "RMS/CYC", "SOURCE"))
         for sid, v in sorted(result["streams"].items()):
             source = "sample" if "sample" in v.flags else \
                 ("synth" if "synth" in v.flags else "nominal")
-            print("  %-6s %8s %7s %7s %9s  %s" %
-                  ("d%d" % sid, fmt(v.level(), 8, 3), fmt(v.events, 7, 1),
+            print("  %-6s %6d %8s %7s %7s %9s  %s" %
+                  ("d%d" % sid, result["sources"].get(sid, 0),
+                   fmt(v.level(), 8, 3), fmt(v.events, 7, 1),
                    fmt(v.dur(result["cycle_sec"]), 7, 2),
                    fmt(v.rms(result["cycle_sec"]), 9, 3), source))
     print("\nLEVEL = amp * gain^4 * source; DENS = events/cycle; DUR_S = "

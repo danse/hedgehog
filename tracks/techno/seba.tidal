@@ -143,7 +143,7 @@ xfadeIn 1 8 $ s (cat [
   "kicklinn*4",
   "kicklinn*4",
   "kicklinn kicklinn kicklinn ~"])
-  # n 0 # amp 1.5 # room 0.05 # size 0.15
+  # n 0 # amp 1.2 # room 0.05 # size 0.15
 
 xfadeIn 2 12 $ s "~ cp ~ cp" # n 0
   # amp 0.6 # room 0.2 # size 0.32
@@ -174,7 +174,7 @@ d7 $ speedAt "c4" (cat [
     "speechless:7 ~ speechless:8 ~ speechless:4 ~ speechless:9 ~"])
   # note "c5" # begin 0.42 # hpf 300 # lpf 2400
   # sustain 0.32
-  # pan 0.25 # room 0.3 # size 0.45 # amp 3
+  # pan 0.25 # room 0.3 # size 0.45 # amp 0.7
 
 
 -- sharp drop: after the second pass: the kit and lead stop on the

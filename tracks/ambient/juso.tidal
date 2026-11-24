@@ -87,7 +87,7 @@ let
   fiddle :: Pattern Note -> ControlPattern
   fiddle p = note p # s "hedge_fiddle"
     # legato 0.9 # attack 0.12 # release 0.5
-    # pan 0.3 # room 0.6 # size 0.8 # amp 2
+    # pan 0.3 # room 0.6 # size 0.8 # amp 0.72
   horn = note (hornLine |+ 12) # s "hedge_horn" # legato 0.9
     # attack 0.08 # release 0.4 # room 0.8 # size 0.85 # amp 0.7
   air = slow 4 $ s "hedge_noise" # sustain 3.2

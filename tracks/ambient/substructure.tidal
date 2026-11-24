@@ -127,6 +127,7 @@ d9 $ motif # amp 0.5
 
 xfadeIn 9 8 $ motifArp # amp 0.5 -- denser
 
+
 -- 4. Breakdown — strip rhythm/detail, expose bass structure
 
 fadeSilence 8 [5,6,7,8,9]
@@ -165,8 +166,8 @@ fadeMulti 16 [
   (7, kick),  -- optional: add the kick for the last wave
   (9, motifArp)] -- higher, more active motif
 
--- 6. Outro — dissolve to bass fragments and sparse texture, then silence
 
+-- 6. Outro — dissolve to bass fragments and sparse texture, then silence
 -- transition into the outro
 once riser
 -- remove layers gradually
