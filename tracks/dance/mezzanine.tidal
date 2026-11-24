@@ -150,11 +150,11 @@ d10 air
 -- guide, not a timer. The final fadeSilence is the ending — evaluate it last.
 -- ---------------------------------------------------------------------------
 
--- 2. sharp break — 8 bars, half-time. The kit, the tops and the organ stop dead on
---    the bar; the pad, the sub and the vocal switch to two bars per chord at
---    the same instant, so what is left is the loop in slow motion. Nothing
---    fades — the reverb tail of the last hits is the join. Evaluate this
---    paragraph on a downbeat.
+-- 2. sharp break — 8 bars, half-time. The kit, the tops and the organ
+--    stop dead on the bar; the pad, the sub and the vocal switch to
+--    two bars per chord at the same instant, so what is left is the
+--    loop in slow motion. Nothing fades — the reverb tail of the last
+--    hits is the join. Evaluate this paragraph on a downbeat.
 d1 silence
 d2 silence
 d5 silence
@@ -243,6 +243,7 @@ xfadeIn 4 4 $ keysPad
 xfadeIn 3 4 $ sub
 xfadeIn 10 8 air
 fadeSilence 8 [1, 2, 5, 6, 7, 8, 9]
+
 
 -- End
 fadeSilence 24 [1,2,3,4,5,6,7,8,9,10]

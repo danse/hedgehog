@@ -185,13 +185,3 @@ clutchIn 4 4 $ bass dScore # lpf 520
 
 -- Landing: full, smooth loop.
 multi clutchIn 64 $ (, silence) <$> [1,2,3,4,5,6,7]
-
--- Live nudges — uncomment one line to call it.
--- Pull the hum back so the written gaps read more clearly:
--- clutchIn 6 4 $ midVoice bScore # lpf 1200
---
--- Thin the hat for a bar without touching the beat:
--- clutchIn 3 4 $ hatPat # amp 0.18
---
--- Bring a whisper of b:'s written rhythm back in:
--- clutchIn 8 4 $ struct bGates $ s "hh:0" # amp 0.1
