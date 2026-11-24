@@ -1,6 +1,6 @@
-// 3 - Bloom (6:00-10:00) | +d6,d7
+// 3 - Bloat (6:00-10:00) | +d6,d7
 // Gentle folds/morphs, warmer hues creep in
-export const name = 'bloom';
+export const name = 'bloat';
 export default function run({ Motion }){
   const mb = (Motion && Motion.budget) ? Motion.budget : 0.6;
   voronoi(5, 0.15, 3)

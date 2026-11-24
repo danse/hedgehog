@@ -145,7 +145,21 @@ window.addEventListener('keydown', resumeAudio);
 // makes a bookmark or a link to one cue work; `current.txt` is only the fallback
 // for a browser that has never swapped a cue.
 const SKETCH_KEY = 'hedgehog.sketch';
-const SKETCH_COUNT = 10; // single source of truth for the arrow cycle
+// Cue number -> file. Rename a sketch here; the live keys, URL and current.txt
+// deal only in numbers, so no symlinks are needed.
+const SKETCHES = {
+  1: '01-emergence.js',
+  2: '02-pulse.js',
+  3: '03-bloat.js',
+  4: '04-drift.js',
+  5: '05-dissolve.js',
+  6: '06-basic-shapes.js',
+  7: '07-oscillators.js',
+  8: '08-spectrum.js',
+  9: '09-pulse-basic.js',
+  10: '10-audio-warp.js',
+};
+const SKETCH_COUNT = Object.keys(SKETCHES).length; // drives the arrow cycle
 let currentSketch = null;
 
 function sketchNumber(v) {
@@ -195,7 +209,7 @@ async function loadSketch(n) {
   currentSketch = n;
   rememberSketch(n);
   const base = String(n).padStart(2, '0');
-  const file = `${base}.js`;
+  const file = SKETCHES[n];
   try {
     const mod = await import(`../sketches/${file}?t=${Date.now()}`);
     if (typeof mod.default === 'function') {
