@@ -1,0 +1,171 @@
+-- Kumpania — campina's seven, set in motion
+-- 104 BPM · A harmonic minor. One cycle = one 7/8 bar, accented 3+2+2
+-- (eighths 1, 4, 6). Four-bar loop: Am | F | Dm | E, one chord per bar.
+-- §8 lifts it a fourth; §11 brings it home. No tempo moves.
+-- Tapan, tabla, bass, shaker, reed, bed and cimbalom come from campina;
+-- the sparse bass, trumpet stabs and melodica tune come from quema.
+-- dN seats: 1 air, 2 tapan, 3 tabla, 4 bass, 5 shaker, 6 guiro, 7 melodica,
+-- 8 string bed, 9 cimbalom, 10 trumpet. Campina's wood becomes the scrape;
+-- its violin gives way to brass. Double blank = landing.
+-- Gotchas: notes/learning/gotchas.md. Bases: jvbass:0 ~ fs2, trump:1 from
+-- b4, casio:2 noise, house:0/3/4; hedge_* synths are set with pF.
+
+glideBpm 104 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. Keep this block one paragraph: C-RET evaluates the paragraph.
+-- ---------------------------------------------------------------------------
+let
+  bedNotes :: Pattern Note
+  bedNotes = "<[a3,c4,e4] [f3,a3,c4] [d3,f3,a3] [e3,gs3,b3]>"
+  --
+  bassNotes :: Pattern Note
+  bassNotes = "<[a2 ~ ~ e3 ~ a2 ~] [f2 ~ ~ c3 ~ f2 ~] [d2 ~ ~ a2 ~ d2 ~] [e2 ~ ~ b2 ~ e2 ~]>"
+  --
+  leadNotes :: Pattern Note
+  leadNotes = cat [
+    "a4 ~ c5 b4 ~ a4 ~",
+    "g4 ~ b4 d5 ~ b4 ~",
+    "f4 ~ a4 c5 ~ a4 ~",
+    "e4 ~ gs4 b4 ~ d5 ~"]
+  --
+  cimbalomNotes :: Pattern Note
+  cimbalomNotes = cat [
+    "a4 ~ e4 a4 ~ c5 ~",
+    "f4 ~ c4 f4 ~ a4 ~",
+    "d4 ~ a3 d4 ~ f4 ~",
+    "e4 ~ b3 e4 ~ gs4 ~"]
+  --
+  brassNotes :: Pattern Note
+  brassNotes = "<[a3,c4,e4] [f3,a3,c4] [d3,f3,a3] [e3,gs3,b3]>"
+  --
+  tapan :: ControlPattern
+  tapan = s (cat [
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ ~ house:0 ~ house:0 ~",
+    "house:0 ~ house:0 house:0 ~ house:0 house:0"])
+    # amp 1 # lpf 380 # room 0.06 # size 0.18
+  --
+  tabla :: ControlPattern
+  tabla = s (cat [
+    "~ tabla:9 tabla:12 ~ tabla:9 ~ tabla:12",
+    "~ tabla:9 tabla:12 ~ tabla:9 tabla:12 tabla:9",
+    "~ tabla:9 tabla:12 ~ tabla:9 ~ tabla:12",
+    "~ tabla:9 tabla:12 tabla:9 ~ tabla:12 tabla:9"])
+    # amp 1 # hpf 240 # room 0.12 # size 0.26 # pan 0.3
+  --
+  bass :: Pattern Note -> ControlPattern
+  bass p = speedAt "fs2" p # s "jvbass" # n 0
+    # sustain 0.2 # release 0.1 # lpf 620 # lpq 0.3
+    # room 0.06 # size 0.16 # amp 0.9
+  --
+  shaker :: ControlPattern
+  shaker = s "house:3*7"
+    # amp "0.34 0.15 0.22 0.34 0.15 0.3 0.15"
+    # hpf 700 # room 0.08 # size 0.2 # pan 0.2
+  --
+  guiro :: ControlPattern
+  guiro = s "casio:2*7" # hpf 2500 # lpf 6500 # rate 0.6 # decay 0.04
+    # pan 0.25 # room 0.15 # size 0.3
+    # amp "0.6 0 0 0.22 0 0.2 0"
+  --
+  lead :: Pattern Note -> ControlPattern
+  lead p = note p # s "hedge_melodica" # legato 0.6
+    # pF "reed" 0.72 # pF "bright" 2100
+    # attack 0.05 # release 0.25
+    # pan (-0.3) # room 0.4 # size 0.55 # amp 1.4
+  --
+  stringBed :: Pattern Note -> ControlPattern
+  stringBed p = note p # s "hedge_fiddle" # pF "vib" 5 # pF "depth" 0.006
+    # attack 0.18 # release 0.8 # sustain 0.7
+    # pan 0.5 # room 0.45 # size 0.62 # amp 2.4
+  --
+  cimbalom :: Pattern Note -> ControlPattern
+  cimbalom p = note p # s "hedge_koto" # pF "damp" 0.35 # pF "bend" 0.2
+    # pF "bright" 3000 # decay 0.9 # sustain 1
+    # pan (-0.5) # room 0.32 # size 0.52 # amp 2
+  --
+  brass :: Pattern Note -> ControlPattern
+  brass p = struct "t ~ t t ~ t ~" $ speedAt "b4" p # s "trump" # n 1
+    # hpf 300 # lpf 5200 # room 0.18 # size 0.3 # pan 0.25 # amp 0.45
+  --
+  air :: ControlPattern
+  air = slow 4 $ s "hedge_noise"
+    # sustain 3.2 # lpf 800 # hpf 180
+    # room 0.6 # size 0.8 # amp 0.16
+
+-- 1 · Air. Campina's field, now moving.
+clutchIn 1 16 air
+clutchIn 2 16 tapan
+clutchIn 3 16 tabla
+
+-- 2 · Groove. Bass, shaker and scrape lock the three accents.
+clutchIn 4 16 $ bass bassNotes
+clutchIn 5 16 shaker
+clutchIn 6 16 guiro
+
+
+-- 3 · Tune. Quema's melodica part in seven, over the bowed bed.
+clutchIn 7 16 $ lead leadNotes
+clutchIn 8 16 $ stringBed bedNotes
+
+-- 4 · Cimbalom fills the gaps between the accents.
+clutchIn 9 16 $ cimbalom cimbalomNotes
+
+-- 5 · Brass. Trumpet stabs state the loop; the band is complete.
+clutchIn 10 16 $ brass brassNotes
+
+
+-- Landing: ten seats, the seven in motion.
+
+-- 6 · Turn. Lift a fourth to D harmonic minor; drums stay put. This
+-- an awkward transition and may take time to catch rhythm again, but
+-- then the development is more interesting
+multi clutchIn 16 [
+  (4, bass (bassNotes |+ 5)),              -- bass
+  (7, lead (leadNotes |+ 5)),              -- melodica
+  (8, stringBed (bedNotes |+ 5)),          -- bed
+  (9, cimbalom (cimbalomNotes |+ 5)),      -- cimbalom
+  (10, brass (brassNotes |+ 5))]           -- trumpet
+
+-- 7 · Break. Air, bed and cimbalom go; the pulse holds.
+fadeSilence 8 [1,8,9]
+
+-- 8 · Return. Air, bed and cimbalom come back in D minor; scrape doubles.
+multi xfadeIn 16 [
+  (1, air),
+  (6, guiro # amp "0.8 0 0 0.3 0 0.26 0"),
+  (8, stringBed (bedNotes |+ 5)),
+  (9, cimbalom (cimbalomNotes |+ 5)),
+  (10, brass (brassNotes |+ 5) # amp 0.55)]
+
+
+-- Landing: the lifted loop holds.
+
+-- 9 · Peak. Shaker to sixteenths; tapan, melodica and brass come forward.
+clutchIn 2 8 $ tapan # amp 1.15
+clutchIn 5 8 $ s "house:3*14"
+  # amp "0.34 0.15 0.2 0.12 0.2 0.12 0.34 0.15 0.2 0.12 0.3 0.15 0.2 0.12"
+  # hpf 700 # room 0.08 # size 0.2 # pan 0.2
+clutchIn 7 8 $ lead (leadNotes |+ 5) # pF "bright" 2800 # amp 1.6
+clutchIn 10 8 $ brass (brassNotes |+ 5) # amp 0.6
+
+-- 10 · Outro. Home to A minor; thin to the dance core.
+multi clutchIn 16 [
+  (4, bass bassNotes),
+  (5, shaker),
+  (7, lead leadNotes),
+  (8, stringBed bedNotes),
+  (9, cimbalom cimbalomNotes),
+  (10, brass brassNotes # amp 0.4)]
+multi clutchIn 16 $ (, silence) <$> [1,6]
+
+-- 11 · End. The band leaves; one Am chord re-blooms under the air.
+multi clutchIn 32 $ (, silence) <$> [2,3,4,5,6,7,9,10]
+clutchIn 8 16 $ stringBed (slow 4 "a3,c4,e4")
+  # sustain 3 # release 1.6 # room 0.6 # size 0.8
+clutchIn 1 16 $ air # lpf 1200
+
+-- `hush` after the chord has rung out.
+hush
