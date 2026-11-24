@@ -1,0 +1,77 @@
+-- melos — acid-techno development of a four-bar LilyPond counterpoint.
+-- 144 → 152 → 132 BPM; one 4/4 bar per cycle, one 16th grid per bar.
+-- Voices follow the MIDI's a:/b:/c: tracks. `_` holds come from the MIDI
+-- note-offs, so the rhythm is transcribed, not guessed. The middle line is
+-- the acid lead; the low and top lines keep their written pitches and holds
+-- over the kit. Tempo changes are live seams, not part of the score.
+-- Source: agents/making_of/scores/melos.mid (read with scripts/midi-reader).
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+
+glideBpm 144 60
+
+-- ---------------------------------------------------------------------------
+-- Scores and voices. Keep this block one paragraph: C-RET evaluates it whole.
+let
+  upper = cat [
+    "g6 _ b6 _ d6 f6 _ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "b6 g6 _ _ b6 _ e6 _ _ cs6 _ g6 _ _ _ ~",
+    "g6 _ _ _ _ b6 _ _ _ ~ ~ d6 _ _ _ _",
+    "~ f6 _ _ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  inner = cat [
+    "d5 _ g5 _ c5 _ ~ b5 ~ ~ ~ ~ ~ ~ ~ ~",
+    "fs5 _ _ e5 _ c5 _ _ fs5 _ b5 _ cs5 _ _ _",
+    "~ ~ ~ ~ d5 _ _ _ g5 _ ~ ~ ~ ~ c5 _",
+    "~ ~ ~ ~ d5 _ _ _ _ _ _ _ _ _ _ _"]
+  low = cat [
+    "~ c4 ~ f4 _ g4 _ _ d4 _ _ _ _ _ _ _",
+    "~ c4 cs4 _ fs4 _ ~ g4 as4 _ _ e4 as4 _ _ ~",
+    "~ ~ c4 _ _ _ _ _ _ f4 _ _ _ b4 _ _",
+    "~ ~ ~ g4 _ _ _ _ _ _ _ _ _ _ _ _"]
+  -- jungbass:3 is ~B3 (Tidal b4), 0% sub and a flat 100% hold, so the line
+  -- gets pitch-shifted barely at all: c5 is ~1.06x, b5 is 2x. Its root is an
+  -- estimate (the `~`), so check the octave by ear. Cutoff still tracks pitch,
+  -- but only 220-1320 Hz: the old moog:6 at 420-2290 Hz with lpq 0.9 was the
+  -- piercing part. Lower Q keeps the resonance from becoming a needle.
+  acid :: Pattern Note -> ControlPattern
+  acid p = speedAt "b4" p # s "jungbass:3" # legato 0.9
+    # lpf (fmap (\v -> 220 + 100 * v) (unNote <$> p))
+    # lpq 0.6 # amp "0.6 0.35 0.5 0.4" # room 0.08 # size 0.2
+  lowVoice :: Pattern Note -> ControlPattern
+  lowVoice p = note p # s "hedge_horn" # legato 0.95
+    # attack 0.03 # release 0.15 # lpf 1200
+    # room 0.12 # size 0.25 # amp 4
+  topVoice :: Pattern Note -> ControlPattern
+  topVoice p = note p # s "hedge_whistle" # legato 0.95
+    # attack 0.02 # release 0.1 # hpf 900
+    # room 0.15 # size 0.25 # amp 4
+
+-- 1. Engine: kick, hats, clap. Evaluate d1-d3 as one paragraph.
+clutchIn 1 8 $ s "909*4" # amp 1 # lpf 320 # room 0.04 # size 0.1
+clutchIn 2 16 $ s "hh:0*16" # amp "1 0.5 0.75 0.5" # hpf 6000 # room 0.1 # size 0.2
+clutchIn 3 16 $ s "~ cp ~ cp" # n 0 # amp 0.5 # room 0.2 # size 0.3
+
+
+-- Landing: the engine holds.
+
+-- 2. Acid lead from the middle line. d4.
+clutchIn 4 8 $ acid inner
+
+-- 3. Low line under the kick. d5.
+clutchIn 5 8 $ lowVoice low
+
+-- 4. Top line over the acid. d6.
+clutchIn 6 8 $ topVoice upper
+
+
+-- Landing: all six streams; the counterpoint reads over the grid.
+
+-- Tempo seams. The MIDI marks 152 at bar 2 and 132 at bar 3, but a global
+-- glide speeds the whole loop, not one score bar. Call one at a time here.
+glideBpm 152 2
+
+glideBpm 132 2
+
+-- The MIDI stops at 132. To loop from bar 1, call `glideBpm 144 2` here and
+-- re-evaluate the first section.
+
+multi clutchIn 64 $ (, silence) <$> [1,2,3,4,5,6]
