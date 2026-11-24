@@ -125,23 +125,24 @@ let
     # room 0.3 # size 0.5 # amp 0.7
 
 -- 1. Saba — drone, air, sparse fiddle. 72 BPM. 16-cycle entries.
-clutchIn 1 16 drone
-clutchIn 2 16 air
-clutchIn 3 16 $ fiddle saba
+multi clutchIn 32 [
+  (1, drone),
+  (2, air),
+  (3, fiddle saba)]
 
 
 -- Saba landing — hold before the fifth changes.
 
 -- 2. Prepare the fifth: bar 2 takes a4, bar 3 keeps af4. 24-cycle blend.
 glideBpm 78 40
-clutchIn 4 16 maqsum
-clutchIn 3 24 silence
-clutchIn 5 24 $ fiddle sabaA
+clutchIn 4 8 maqsum
+clutchIn 3 12 silence
+clutchIn 5 12 $ fiddle sabaA
 
 -- 3. Promote it: both bars take a4. Bayati. 24-cycle blend.
 glideBpm 84 40
-clutchIn 5 24 silence
-clutchIn 6 24 $ fiddle bayati
+clutchIn 5 12 silence
+clutchIn 6 12 $ fiddle bayati
 
 
 -- Bayati holds; the prepared fifth is settled.
