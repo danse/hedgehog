@@ -71,7 +71,8 @@ Each area documents itself:
   generators), `agents/toolbox/` (helper scripts) and `agents/skills/` (OpenCode
   skills), each with its own README
 - `visuals/` — see `visuals/README.md`
-- `notes/` — set plan, TODO, learning notes in `notes/learning/`
+- `notes/` — set plan, spine decks in `notes/spines/`, TODO, learning notes in
+  `notes/learning/`
 - `samples/` — see `samples/README.md`
 
 `boot/` holds the Tidal/SuperDirt boot files, with the project SynthDefs in
