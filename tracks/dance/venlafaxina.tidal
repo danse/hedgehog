@@ -1,0 +1,178 @@
+-- Venlafaxina — house / atrium, dented
+-- 124 BPM · A minor. Am9 | Fmaj9 | Cmaj9 | G6/9; §8 lifts it a minor third,
+-- §11 resolves it. No tempo moves.
+-- Seats: 1 kick, 2 hats, 3 bass, 4 pad, 5 clap, 6 stabs, 7 open hat,
+-- 8 stitch, 9 rim, 10 lead, 11 air.
+-- Eval setup, then sections. Double blank = landing.
+-- Gotchas: notes/learning/gotchas.md. juno:8/pluck:8 tuned from c5/d5;
+-- house:0/3/4, cp:0, rs, moog:2, sundance:3.
+-- Aphex-leaning details: glitch stitch, stuttered hats, glass bells —
+-- texture, not a new grid.
+
+glideBpm 124 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. Keep this block one paragraph: C-RET evaluates the paragraph.
+-- ---------------------------------------------------------------------------
+let
+  hA :: Pattern Note
+  hA = chordAt "<a3 f3 c3 g3>" "<min9 maj9 maj9 sixNine>"
+  pad :: Pattern Note -> ControlPattern
+  pad p = s "juno" # n 8 # speedAt "c5" p
+        # sustain 1.6 # release 0.9 # hpf 140 # room 0.5 # size 0.66 # amp 0.2
+  kick :: Pattern String
+  kick = "<house:0*4 house:0*4 [house:0 house:0 house:0 [house:0 house:0]] [house:0 house:0 house:0 ~]>"
+  bassA :: Pattern Note
+  bassA = "<[~ a2 ~ a2 ~ a2 ~ a3] [~ f2 ~ f2 ~ f2 ~ f3] [~ c3 ~ c3 ~ c3 ~ c4] [~ g2 ~ g2 ~ g2 ~ g3]>"
+  stabs :: Pattern Note
+  stabs = "<[c5,e5,g5,b5] [a4,c5,e5,g5] [e5,g5,b5,d6] [b4,d5,e5,a5]>"
+  hook :: Pattern Note
+  hook = "<[a4 c5 c5 ~ e5 ~ d5 ~] [a4 ~ c5 ~ a4 gs4 ~ ~] [g4 ~ a4 ~ c5 ~ e5 ~] [d5 ~ b4 ~ g4 ~ a4 ~]>"
+  stitch :: Pattern Note -> ControlPattern
+  stitch p = degradeBy 0.3 $ speedAt "c4" p # s "glitch" # n 0
+        # sustain 0.05 # release 0.03 # hpf 2800 # lpf 9000
+        # room 0.2 # size 0.3 # pan 0.55 # amp 0.3
+  air = slow 8 $ s "wind:4" # speed 0.65 # pan rand
+        # room 0.9 # size 0.9 # lpf 900 # amp 0.22
+
+-- 1. Doors — 24 bars.
+xfadeIn 1 4 $ s kick
+  # amp "0.9 0.85 0.88 0.84" # lpf 240 # room 0.04 # size 0.12
+xfadeIn 2 12 $ s "house:3*16"
+  # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
+  # hpf 520 # room 0.06 # size 0.16
+xfadeIn 3 20 $ speedAt "fs2" bassA
+  # s "jvbass" # n 0
+  # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22 # shape 0.2
+  # room 0.08 # size 0.2 # amp 0.95
+xfadeIn 4 28 $ pad hA
+
+-- 2. Room — 24 bars.
+xfadeIn 1 8 $ s kick
+  # amp "1 0.94 0.97 0.93" # lpf 380 # room 0.04 # size 0.12
+xfadeIn 5 8 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
+  # amp 0.55 # room 0.22 # size 0.34
+xfadeIn 6 16 $ struct "~ t ~ t t ~ ~ t" $ s "pluck" # n 8
+  # speedAt "d5" stabs # sustain 0.14 # release 0.1 # lpf 2400 # lpq 0.3
+  # room 0.3 # size 0.5 # amp 0.42 # pan 0.42
+xfadeIn 7 24 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+  # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56
+
+-- 3. Stitch — 16 bars. Glitch enters, then the rim.
+clutchIn 8 8 $ stitch "<a4 f4 c4 g4>"
+d9 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+
+-- 4. Lead — 24 bars.
+clutchIn 10 8 $ speedAt "c4" hook
+  # s "moog" # n 2
+  # sustain 0.26 # release 0.2 # lpf 900 # lpq 0.35
+  # room 0.35 # size 0.55 # amp 0.42 # pan 0.6
+d9 $ s "rs rs rs rs ~ rs ~ rs ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+
+-- 5. Peak one — 16 bars. Hats drop one beat every eight bars.
+xfadeIn 1 2 $ s kick
+  # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
+xfadeIn 2 2 $ every 8 (struct "~ t t t") $ s "house:3*16"
+  # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
+  # hpf 520 # room 0.06 # size 0.16
+xfadeIn 6 4 $ struct "~ t ~ t ~ ~ t t" $ s "pluck" # n 8
+  # speedAt "d5" stabs # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
+xfadeIn 9 4 $ speedAt "c4" hook
+  # s "moog" # n 2
+  # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
+  # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
+
+-- 6. Pocket — 12 bars. Bass and pad hold; stitch stretches, air enters.
+fadeSilence 12 [1,2,5,6,7,9,10]
+xfadeIn 3 4 $ slow 4 $ s "jvbass" # n 0
+  # speedAt "fs2" "a2" # sustain 6 # release 2 # lpf 420 # lpq 0.15
+  # room 0.5 # size 0.7 # amp 0.8
+xfadeIn 8 4 $ slow 2 $ stitch "<a4 f4 c4 g4>"
+xfadeIn 11 8 air
+
+
+-- 7. Re-entry — 24 bars. Additive: nothing leaves, the grid thickens.
+xfadeIn 1 2 $ s kick
+  # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
+xfadeIn 5 4 $ s "<[~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ cp:0] [~ cp:0 ~ [cp:0 cp:0 cp:0 cp:0]]>"
+  # amp (range 0.4 0.6 $ slow 16 saw) # room 0.24 # size 0.36
+xfadeIn 2 8 $ s "house:3*32"
+  # amp (range 0.2 0.45 $ slow 16 saw) # hpf 520 # room 0.06 # size 0.16
+xfadeIn 6 8 $ struct "t ~ ~ t ~ t ~ t" $ s "pluck" # n 8
+  # speedAt "d5" stabs # sustain 0.16 # release 0.1
+  # lpf (range 700 2200 $ slow 16 saw) # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
+xfadeIn 9 8 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+xfadeIn 8 8 $ stitch "<a4 f4 c4 g4 a4 f4 c4 g4>"
+xfadeIn 10 8 $ speedAt "c4" hook
+  # s "moog" # n 2
+  # sustain 0.24 # release 0.18 # lpf 1800 # lpq 0.35
+  # room 0.3 # size 0.5 # amp 0.4 # pan 0.6
+
+-- 8. Turn — 16 bars, eval offbeat. Harmony up a minor third; drums stay.
+xfadeIn 4 2 $ pad (hA |+ 3)
+xfadeIn 3 2 $ speedAt "fs2" (bassA |+ 3)
+  # s "jvbass" # n 0
+  # sustain 0.2 # release 0.08 # lpf 720 # lpq 0.22 # shape 0.2
+  # room 0.08 # size 0.2 # amp 0.95
+xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t" $ s "pluck" # n 8
+  # speedAt "d5" (stabs |+ 3) # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
+xfadeIn 10 2 $ speedAt "c4" (hook |+ 3)
+  # s "moog" # n 2
+  # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
+  # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
+xfadeIn 8 2 $ stitch "<c5 af4 ef4 bf4>"
+
+
+-- 9. Glass — 24 bars. Drums thin; bells and air carry the lifted loop.
+fadeSilence 8 [1,2,5,6,7,9]
+xfadeIn 4 4 $ pad (hA |+ 3)
+  # release 1.2 # room 0.6 # size 0.72
+xfadeIn 11 4 $ slow 2 $ speedAt "cs3" "<c5 ef5 g5 bf4>" # s "sundance:3"
+  # sustain 0.6 # release 1.2 # hpf 300 # room 0.9 # size 0.9 # amp 0.6
+xfadeIn 8 8 $ slow 4 $ stitch "<c5 af4 ef4 bf4>"
+
+-- 10. Peak two — 24 bars. The bed returns over the glass; no rebuild.
+xfadeIn 1 2 $ s kick
+  # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
+xfadeIn 2 2 $ s "house:3*32"
+  # amp "0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.2 0.5 0.2 0.32 0.2 0.44 0.2 0.3 0.22"
+  # hpf 520 # room 0.06 # size 0.16
+xfadeIn 5 2 $ s "~ ~ cp:0 ~ ~ ~ cp:0 ~"
+  # amp 0.55 # room 0.22 # size 0.34
+xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t" $ s "pluck" # n 8
+  # speedAt "d5" (stabs |+ 3) # sustain 0.16 # release 0.1 # lpf 3600 # lpq 0.3
+  # room 0.32 # size 0.52 # amp 0.46 # pan 0.42
+xfadeIn 7 2 $ s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+  # amp 0.34 # hpf 300 # room 0.12 # size 0.24 # pan 0.56
+xfadeIn 9 2 $ s "rs rs rs rs ~ ~ rs ~ ~ ~ rs ~ ~ ~ rs ~"
+  # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+xfadeIn 10 2 $ speedAt "c4" (hook |+ 3)
+  # s "moog" # n 2
+  # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
+  # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
+xfadeIn 8 2 $ stitch "<c5 af4 ef4 bf4>"
+
+
+-- 11. Outro — 16 bars. Resolve to A minor; band leaves, pad rings.
+xfadeIn 4 2 $ pad hA
+  # release 1.2 # room 0.55 # size 0.7
+xfadeIn 3 2 $ speedAt "fs2" bassA
+  # s "jvbass" # n 0
+  # sustain 0.2 # release 0.08 # lpf 620 # lpq 0.22 # shape 0.2
+  # room 0.12 # size 0.26 # amp 0.9
+xfadeIn 6 2 $ struct "~ t ~ t ~ t ~ t" $ s "pluck" # n 8
+  # speedAt "d5" stabs # sustain 0.2 # release 0.2 # lpf 1400 # lpq 0.28
+  # room 0.42 # size 0.62 # amp 0.36 # pan 0.42
+fadeSilence 8 [1,2,5,7,8,9,10,11]
+xfadeIn 4 2 $ slow 2 $ pad "[a3,c4,e4,g4,b4]"
+  # sustain 3.4 # release 1.6 # room 0.62 # size 0.8
+fadeSilence 8 [3,4,6]
+
+-- hush after the chord rings.
+hush
