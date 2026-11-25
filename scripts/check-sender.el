@@ -89,6 +89,20 @@
  "d1 $ kick\n\nd2 $ snare\n\nd3 $ hats\n"
  '("d1 $ kick" "d2 $ snare" "d3 $ hats"))
 
+(hedgehog-test-check
+ "numbered groups track source lines"
+ (hedgehog-group-statements-numbered
+  "-- intro\nd1 $ kick\n\n-- snare\nd2 $ snare\n")
+ '((1 . ((1 . "-- intro") (2 . "d1 $ kick")))
+   (4 . ((4 . "-- snare") (5 . "d2 $ snare")))))
+
+(hedgehog-test-check
+ "numbered let block"
+ (hedgehog-group-statements-numbered
+  "let\n  x = 1\n  y = 2\nd1 $ x\n")
+ '((1 . ((1 . "let") (2 . "  x = 1") (3 . "  y = 2")))
+   (4 . ((4 . "d1 $ x")))))
+
 (hedgehog-sender-check
  "emergence-style adjacent statements with a comment header"
  "d1 $ subDrone # gain 0.82\n-- the low pad appears under the drone\nxfadeIn 2 16 $ lowPad # lpf 520\n"

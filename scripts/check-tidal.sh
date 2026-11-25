@@ -4,8 +4,9 @@
 # Loads boot/BootTidal.hs into GHCi with its OSC target redirected to an unused
 # port, so evaluating patterns cannot reach a running SuperDirt. Each file gets
 # a fresh GHCi session, so a missing definition cannot be masked by a previous
-# track. check-tidal.py emits LINE pragmas, so errors report the .tidal file
-# and line number instead of <interactive>.
+# track. check-tidal.py gets its statement groups from the live Emacs sender
+# and emits LINE pragmas, so errors report the .tidal file and line number
+# instead of <interactive>.
 #
 if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
   cat <<EOF
@@ -39,6 +40,10 @@ if [ "${#files[@]}" -eq 0 ]; then
 fi
 if ! command -v ghci >/dev/null 2>&1; then
   echo "check-tidal: ghci not found" >&2
+  exit 2
+fi
+if ! command -v emacs >/dev/null 2>&1; then
+  echo "check-tidal: emacs not found (needed for sender grouping)" >&2
   exit 2
 fi
 

@@ -88,5 +88,6 @@ See [visuals/README.md](../visuals/README.md) and
 | Script | Purpose |
 |---|---|
 | `check.sh` | Environment sanity check: binaries, audio, Tidal, samples, disk, reverb limits, and a silent typecheck of every track. |
-| `check-tidal.sh` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. Errors report the `.tidal` file and line number, not GHCi's `<interactive>` counter. |
-| `check-tidal.py` | Convert `.tidal` blocks to GHCi `:{ :}` commands for syntax checks (output can be piped into ghci). |
+| `check-tidal.sh` | Typecheck tracks without sound: derives a silent boot from `boot/BootTidal.hs` and runs each file in a fresh GHCi. Defaults to every `tracks/*/*.tidal` track. Needs `emacs` as well as `ghci`. Errors report the `.tidal` file and line number, not GHCi's `<interactive>` counter. |
+| `check-tidal.py` | Convert `.tidal` groups to GHCi `:{ :}` commands with LINE pragmas. Grouping comes from the live sender, so output matches what `C-RET` would send. |
+| `tidal-groups.sh` / `tidal-groups.el` | Batch wrapper around `hedgehog-group-statements-numbered`. Emits NUL-separated `path`, start line, group text and per-line numbers for offline tools. |

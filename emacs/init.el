@@ -94,50 +94,73 @@ when they sit deeper than the region's base indentation."
           (setq base (if base (min base n) n)))))
     (or base 0)))
 
+(defun hedgehog--numbered-lines (text)
+  "Return (LINENO . TEXT) pairs for TEXT, numbered from 1."
+  (let ((n 0)
+        (out nil))
+    (dolist (line (split-string text "\n"))
+      (setq n (1+ n))
+      (push (cons n line) out))
+    (nreverse out)))
+
+(defun hedgehog--group-numbered-lines (lines)
+  "Split (LINENO . TEXT) pairs into numbered sender groups.
+Each group is (START-LINE . ((LINENO . TEXT) ...))."
+  (let* ((base (hedgehog--base-indent (mapcar #'cdr lines)))
+         (groups nil)
+         (current nil)          ; reversed entries of the current group
+         (pending-comments nil) ; reversed comments before the next group
+         in-let)
+    (dolist (entry lines)
+      (let ((line (cdr entry)))
+        (cond
+         ((hedgehog--blank-line-p line)
+          nil)
+         ((hedgehog--comment-line-p line)
+          ;; A comment indented inside the current statement belongs to it
+          ;; (notably inside a `let' block); a comment at base level is a
+          ;; header for the next statement.
+          (if (and current
+                   (or in-let
+                       (> (hedgehog--line-indent line) base)))
+              (push entry current)
+            (push entry pending-comments)))
+         ((and (not (hedgehog--continuation-start-p line))
+               (or (<= (hedgehog--line-indent line) base)
+                   (and (not in-let)
+                        (hedgehog--strong-statement-start-p line))))
+          (when current
+            (let ((group (nreverse current)))
+              (push (cons (caar group) group) groups)))
+          (setq current (cons entry pending-comments)
+                pending-comments nil
+                in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line)))
+         (current
+          (push entry current))
+         (t
+          ;; Orphan indented line: start a group with it anyway.
+          (setq current (cons entry pending-comments)
+                pending-comments nil
+                in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line))))))
+    (when current
+      (let ((group (nreverse current)))
+        (push (cons (caar group) group) groups)))
+    (nreverse groups)))
+
+(defun hedgehog-group-statements-numbered (text)
+  "Group TEXT like the sender, preserving source line numbers.
+Each group is (START-LINE . ((LINENO . TEXT) ...))."
+  (hedgehog--group-numbered-lines (hedgehog--numbered-lines text)))
+
 (defun hedgehog--group-statements (text)
   "Split TEXT into top-level Tidal statement groups.
 Indented lines normally continue the current statement, while lines at
 the region's base indentation (or clear `dN'/`xfade... actions) begin a
 new one.  Blank lines are ignored.  Comments stay with the statement
 they describe."
-  (let* ((lines (split-string text "\n"))
-         (base (hedgehog--base-indent lines))
-         (groups nil)
-         (current nil)          ; reversed lines of the current group
-         (pending-comments nil) ; reversed comments before the next group
-         in-let)
-    (dolist (line lines)
-      (cond
-       ((hedgehog--blank-line-p line)
-        nil)
-       ((hedgehog--comment-line-p line)
-        ;; A comment indented inside the current statement belongs to it
-        ;; (notably inside a `let' block); a comment at base level is a
-        ;; header for the next statement.
-        (if (and current
-                 (or in-let
-                     (> (hedgehog--line-indent line) base)))
-            (push line current)
-          (push line pending-comments)))
-       ((and (not (hedgehog--continuation-start-p line))
-             (or (<= (hedgehog--line-indent line) base)
-                 (and (not in-let)
-                      (hedgehog--strong-statement-start-p line))))
-        (when current
-          (push (string-join (nreverse current) "\n") groups))
-        (setq current (cons line pending-comments)
-              pending-comments nil
-              in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line)))
-       (current
-        (push line current))
-       (t
-        ;; Orphan indented line: start a group with it anyway.
-        (setq current (cons line pending-comments)
-              pending-comments nil
-              in-let (string-match-p "\\`[ \t]*let\\(?:[ \t]\\|\\'\\)" line)))))
-    (when current
-      (push (string-join (nreverse current) "\n") groups))
-    (nreverse groups)))
+  (mapcar (lambda (group)
+            (string-join (mapcar #'cdr (cdr group)) "\n"))
+          (hedgehog-group-statements-numbered text)))
 
 (defun hedgehog-send-region (beg end)
   "Send BEG..END to Tidal, grouping multi-line statements.
