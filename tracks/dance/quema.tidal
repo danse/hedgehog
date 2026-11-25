@@ -162,7 +162,7 @@ clutchIn 7 16 $ leadVoice leadPat
 
 -- Landing: the band is complete.
 -- Interpreter snippet — hold here and try a longer, dirtier scrape:
--- clutchIn 2 4 $ guiro # rate 0.8 # lpf 4800
+-- d2 $ guiro # rate 0.8 # lpf 4800
 
 -- Handover done: ramp to the dance floor as the kit fills out.
 glideBpm 100 40 -- from 72
@@ -182,7 +182,7 @@ clutchIn 10 16 maracas
 -- clutchIn 8 4 $ openHat # amp 0.4
 
 -- 11 · Break. Keep palmas, congas and rim; hold back the bombo and top.
-multi clutchIn 16 [
+multi xfadeIn 16 [
   (1, silence),   -- bombo
   (8, silence),   -- open hat
   (10, silence)]  -- maracas
@@ -211,7 +211,7 @@ multi clutchIn 8 [
 -- Landing: the push holds.
 
 -- 13 · Turn. One tone up, scrape doubled, rim sharper.
-multi clutchIn 16 [
+multi xfadeIn 16 [
   (1, kick # amp 1.05),                  -- bombo
   (2, guiro # amp "0.8 0.3 0.6 0.3 0.8 0.3 0.6 0.3"),  -- güiro doubled
   (3, bass (bassPat |+ 2)),              -- bajo +2
@@ -224,14 +224,14 @@ multi clutchIn 16 [
 
 -- 14 · Outro. Back to A minor, thinning to the dance core: bombo, scrape,
 -- bass, palmas, congas and lead.
-multi clutchIn 16 [
+multi xfadeIn 16 [
   (1, kick),                             -- bombo
   (2, guiro),                            -- güiro
   (3, bass bassPat),                     -- bajo
   (5, clap # amp 0.85),                  -- palmas
   (6, conga # amp 0.8),                  -- congas
   (7, leadVoice leadPat)]                -- tune
-multi clutchIn 32 $ (, silence) <$> [4,8,9,10]  -- trumpet, hat, rim, maracas out
+multi xfadeIn 32 $ (, silence) <$> [4,8,9,10]  -- trumpet, hat, rim, maracas out
 
 
-multi clutchIn 32 $ (, silence) <$> [1,2,3,4,5,6,7,8,9,10]  -- all seats out
+multi xfadeIn 32 $ (, silence) <$> [1,2,3,4,5,6,7,8,9,10]  -- all seats out

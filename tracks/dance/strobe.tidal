@@ -134,7 +134,7 @@ multi clutchIn 4
 
 -- 8. Turn — 24 cycles. Up a tone: pad, sub, comp and lead are the same
 --    patterns with `|+ 2`. The drums stay, so the key is the only new fact.
-multi clutchIn 4
+multi xfadeIn 4
   [ (4, pad (loop |+ 2))
   , (3, bass (bassA |+ 2) # lpf 720)
   , (6, stab (stabs |+ 2) # lpf 3600)
@@ -193,7 +193,7 @@ multi clutchIn 4
   [ (4, pad loop # room 0.55 # size 0.7)
   , (3, bass bassA # lpf 620)
   ]
-multi clutchIn 8
+multi xfadeIn 8
   [ (1, s kick # lpf 380 # amp 0.9 # room 0.08 # size 0.2)
   , (2, silence)
   , (3, silence)

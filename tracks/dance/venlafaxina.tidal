@@ -9,7 +9,7 @@
 -- Aphex-leaning details: glitch stitch, stuttered hats, glass bells —
 -- texture, not a new grid.
 
-glideBpm 124 30
+glideBpm 124 60
 
 -- ---------------------------------------------------------------------------
 -- Reused voices. Keep this block one paragraph: C-RET evaluates the paragraph.
@@ -113,6 +113,7 @@ xfadeIn 10 8 $ speedAt "c4" hook
   # sustain 0.24 # release 0.18 # lpf 1800 # lpq 0.35
   # room 0.3 # size 0.5 # amp 0.4 # pan 0.6
 
+
 -- 8. Turn — 16 bars, eval offbeat. Harmony up a minor third; drums stay.
 xfadeIn 4 2 $ pad (hA |+ 3)
 xfadeIn 3 2 $ speedAt "fs2" (bassA |+ 3)
@@ -159,7 +160,11 @@ xfadeIn 10 2 $ speedAt "c4" (hook |+ 3)
 xfadeIn 8 2 $ stitch "<c5 af4 ef4 bf4>"
 
 
--- 11. Outro — 16 bars. Resolve to A minor; band leaves, pad rings.
+-- 11a. Overflow fade — seats 5-11; keep 1-4 for the landing.
+fadeSilence 8 [5,6,7,8,9,10,11]
+
+
+-- 11b. Resolve — 16 bars. A minor; band leaves, pad rings.
 xfadeIn 4 2 $ pad hA
   # release 1.2 # room 0.55 # size 0.7
 xfadeIn 3 2 $ speedAt "fs2" bassA
