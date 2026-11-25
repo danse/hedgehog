@@ -73,7 +73,7 @@ let
   padVoice :: Pattern Note -> ControlPattern
   padVoice p = note p # s "hedge_pad" # sustain 5
     # lpf (range 420 1500 $ slow 24 sine)
-    # room 0.6 # size 0.75 # amp 0.5
+    # room 0.6 # size 0.75 # amp 0.3
   --
   subjectVoice :: Pattern Note -> ControlPattern
   subjectVoice p = note p # s "hedge_melodica" # legato 0.85
@@ -141,9 +141,9 @@ multi clutchIn 24 [
 
 -- 5 · Fugue. The countersubject enters two notes behind the subject, an
 -- octave up, and the slow bell states the same cell at a third rate.
-clutchIn 7 24 $ bellVoice (slow 4 counter)
 multi clutchIn 24 [
   (6, shadowVoice shadow),
+  (7, bellVoice $ slow 4 counter),
   (8, air # lpf 3600 # amp 0.14)]
 
 

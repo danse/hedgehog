@@ -54,9 +54,7 @@ clutchIn 4 64 whistle
 
 
 -- 5. answer voice; pad moves up an octave (8 cycles).
-multi clutchIn 64 [
-  (1, padUp),
-  (5, answer)]
+multi clutchIn 64 [(1, padUp), (5, answer)]
 
 
 -- 6. strip back — whistle and answer out, bass filtered down, pad returns
