@@ -17,8 +17,10 @@ see [`../../scripts/`](../../scripts/) for that.
 
 `track-ast/Facts.hs` is a static GHC parser helper, not a GHCi session. It turns
 the sender's groups into S-expression facts; `track-levels.py` does alias
-expansion and the energy model over those facts. `track-ast/build.sh` compiles
-it on demand into a GHC-versioned cache under `~/.cache/hedgehog`.
+expansion and the energy model over those facts. Nested `#` chains are
+flattened left to right before controls are read, so `voice p # pan x` keeps the
+voice's own `amp` while the outer override still wins. `track-ast/build.sh`
+compiles it on demand into a GHC-versioned cache under `~/.cache/hedgehog`.
 
 `fake-dirt.py` is for inspecting pattern output when no audio server is
 available — it emits no sound. The reusable audio analyser is in

@@ -1,0 +1,186 @@
+-- Groundwork — ambient after Pachelbel's Canon
+-- 60 BPM · D major. One score bar = one cycle; source MIDI is marked 55 BPM.
+-- Score: Johann Pachelbel, Canon per 3 Violini e Basso (1694), Mutopia edition
+-- typeset by Michael Fischer v. Mollard from IMSLP, Mutopia-2015/09/02-2047,
+-- CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). The compact grids
+-- below are pasted from `scripts/midi-reader` on that edition's MIDI; the slow
+-- tempo, octave shifts, synths and section spacing are the ambient arrangement.
+-- Pad chords are voiced from the ground's roots; no other notes are invented.
+--
+-- dN is first entry: 1 ground, 2 pad, 3 violin I, 4 violin II, 5 violin III,
+-- 6 plucked shadow, 7 air, 8 bell. Each section starts its quoted bars on the
+-- downbeat. Double blank = landing.
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+
+glideBpm 60 30
+
+-- ---------------------------------------------------------------------------
+-- Source bars. Keep this whole block as one paragraph: C-RET evaluates it.
+-- The three violin parts in the source enter two bars apart in unison, so one
+-- set of pasted bars serves all three with leading rests for the later entries.
+-- ---------------------------------------------------------------------------
+let
+  groundBars :: [Pattern Note]
+  groundBars = [
+    "d4@4 a3@4 b3@4 fs3@4",
+    "g3@4 d3@4 g3@4 a3@4"]
+  ground :: Pattern Note
+  ground = cat groundBars
+  --
+  roots :: Pattern Note
+  roots = cat ["d4 a3 b3 fs3", "g3 d3 g3 a3"]
+  qualities :: Pattern String
+  qualities = cat ["maj9 maj9 min9 min9", "maj9 maj9 maj9 maj9"]
+  harmony :: Pattern Note
+  harmony = chordAt roots qualities
+  --
+  -- Score bars 3-8: the quarter-note subject as violin I first states it.
+  entryBars :: [Pattern Note]
+  entryBars = [
+    "fs6@4 e6@4 d6@4 cs6@4",
+    "b5@4 a5@4 b5@4 cs6@4",
+    "d6@4 cs6@4 b5@4 a5@4",
+    "g5@4 fs5@4 g5@4 e5@4",
+    "d5@2 fs5@2 a5@2 g5@2 fs5@2 d5@2 fs5@2 e5@2",
+    "d5@2 b4@2 d5@2 a5@2 g5@2 b5@2 a5@2 g5@2"]
+  --
+  -- Score bars 9-16: eighths, then sixteenths.
+  turnBars :: [Pattern Note]
+  turnBars = [
+    "fs5@2 d5@2 e5@2 cs6@2 d6@2 fs6@2 a6@2 a5@2",
+    "b5@2 g5@2 a5@2 fs5@2 d5@2 d6@2 d6@3 cs6@1",
+    "d6@1 cs6@1 d6@1 d5@1 cs5@1 a5@1 e5@1 fs5@1 d5@1 d6@1 cs6@1 b5@1 cs6@1 fs6@1 a6@1 b6@1",
+    "g6@1 fs6@1 e6@1 g6@1 fs6@1 e6@1 d6@1 cs6@1 b5@1 a5@1 g5@1 fs5@1 e5@1 g5@1 fs5@1 e5@1",
+    "d5@1 e5@1 fs5@1 g5@1 a5@1 e5@1 a5@1 g5@1 fs5@1 b5@1 a5@1 g5@1 a5@1 g5@1 fs5@1 e5@1",
+    "d5@1 b4@1 b5@1 cs6@1 d6@1 cs6@1 b5@1 a5@1 g5@1 fs5@1 e5@1 b5@1 a5@1 b5@1 a5@1 g5@1",
+    "fs5@2 fs6@2 e6@4 ~@2 d6@2 fs6@4",
+    "b6@4 a6@4 b6@4 cs7@4"]
+  --
+  -- Score bars 17-24: the fast variation, thinned to two-note groups at the end.
+  variationBars :: [Pattern Note]
+  variationBars = [
+    "d7@2 d6@2 cs6@4 ~@2 b5@2 d6@4",
+    "d6@6 d6@2 d6@2 g6@2 e6@2 a6@2",
+    "a6@1 fs6@1 a6@1 fs6@1 a5@1 b5@1 e6@1 fs6@1 fs6@1 d6@1 fs6@1 fs5@1 b5@1 a5@1 fs5@1 a5@1",
+    "g5@1 b5@1 g5@1 fs5@1 e5@1 d5@1 g5@1 a5@1 g5@1 b5@1 b5@1 cs6@1 b5@1 cs6@1 fs6@1 a6@1",
+    "fs6@1 d6@1 fs6@1 e6@1 cs6@1 d6@1 e6@1 d6@1 d6@1 b5@1 d6@1 d5@1 g5@1 fs5@1 d6@1 d6@1",
+    "b5@1 d6@1 b5@1 a5@1 g5@1 fs5@1 b5@1 cs6@1 b5@1 d6@1 d6@1 cs6@1 d6@1 e6@1 d6@1 cs6@1",
+    "d6@2 ~@2 cs6@2 ~@2 b5@2 ~@2 d6@2 ~@2",
+    "d5@2 ~@2 d5@2 ~@2 d5@2 ~@2 e5@2 ~@2"]
+  --
+  -- Leading rests put violin II two bars behind violin I and violin III four.
+  delayed :: Int -> [Pattern Note] -> Pattern Note
+  delayed n bars = cat (replicate n "~@16" ++ bars)
+  --
+  -- Final bar pasted from all four parts: one note, then three beats of rest.
+  finalRoot, finalA, finalFs, finalD :: Pattern Note
+  finalRoot = "d4@4 ~@12"
+  finalA = "a5@4 ~@12"
+  finalFs = "fs6@4 ~@12"
+  finalD = "d6@4 ~@12"
+  --
+  -- Bowed cello ground, narrow enough to stay under the canon.
+  cello :: Pattern Note -> ControlPattern
+  cello p = note p # s "hedge_fiddle" # pF "bow" 0.015 # pF "body" 1100
+    # attack 0.3 # release 1.1 # lpf 700 # lpq 0.18
+    # pan (-0.2) # room 0.5 # size 0.65 # amp 0.5
+  --
+  -- One chord per source bar; slow filter drift keeps the loop from sitting still.
+  pad :: Pattern Note -> ControlPattern
+  pad p = note p # s "hedge_pad" # attack 1.6 # sustain 4 # release 2
+    # lpf (range 620 1500 $ slow 16 sine) # lpq 0.15
+    # room 0.66 # size 0.8 # amp 0.24
+  --
+  -- Canon entries an octave below the written violins, bowed and legato.
+  bow :: Pattern Note -> ControlPattern
+  bow p = note (p - 12) # s "hedge_fiddle" # pF "bow" 0.02 # pF "body" 1800
+    # attack 0.1 # sustain 0.35 # release 0.6
+    # room 0.58 # size 0.72 # pan 0.2 # amp 0.4
+  --
+  -- Plucked shadow two octaves down: the same notes at a softer attack.
+  shadow :: Pattern Note -> ControlPattern
+  shadow p = note (p - 24) # s "hedge_koto" # pF "decay" 1.4
+    # pF "damp" 0.3 # pF "bend" 0.2 # pF "bright" 3200
+    # hpf 380 # lpf 3600 # pan (-0.25) # room 0.5 # size 0.66 # amp 0.3
+  --
+  -- Distant answer: same line one octave down, longer tail, wider room.
+  bell :: Pattern Note -> ControlPattern
+  bell p = note (p - 12) # s "hedge_koto" # pF "decay" 2.6
+    # pF "damp" 0.15 # pF "bright" 4200
+    # hpf 900 # pan 0.35 # room 0.74 # size 0.85 # amp 0.24
+  --
+  air :: ControlPattern
+  air = slow 8 $ s "hedge_noise" # sustain 12 # hpf 650 # lpf 2600
+    # room 0.68 # size 0.82 # amp 0.1
+  --
+  finalPad :: Pattern Note
+  finalPad = chordAt "d4" "maj9"
+
+
+-- 1 · Ground — the two-bar ostinato and its chords. Everything else enters
+--     over this loop; no transposition, no ornaments.
+d1 $ cello ground
+d2 $ pad harmony
+
+
+-- Landing: the ground can hold alone.
+
+-- 2 · Entries — violin I at source bar 3, violin II two bars later, violin III
+--     two bars after that. The later entries are the same pasted bars with
+--     leading rests, as in the source.
+clutchIn 3 16 $ bow (cat entryBars)
+clutchIn 4 16 $ bow (delayed 2 entryBars) # pan (-0.25)
+clutchIn 5 16 $ bow (delayed 4 entryBars) # pan 0.35
+
+
+-- Landing: the round is audible; hold before the figuration.
+
+-- 3 · Turn — source bars 9-16. The three entries restart their bars on the
+--     downbeat; the plucked shadow begins six bars in, and air opens under it.
+multi clutchIn 20 [
+  (3, bow (cat turnBars)),
+  (4, bow (delayed 2 turnBars) # pan (-0.25)),
+  (5, bow (delayed 4 turnBars) # pan 0.35),
+  (6, shadow (delayed 6 turnBars)),
+  (7, air)]
+
+
+-- Landing: three offset lines and the shadow carry the same material.
+
+-- 4 · Suspension — thin to one bowed line over the ground, with the pad filter
+--     closing and the air lower. The other entries fade out rather than cut.
+multi xfadeIn 16 [
+  (2, pad harmony # lpf 480 # amp 0.18),
+  (3, bow (cat (drop 4 turnBars)) # lpf 900 # amp 0.28),
+  (4, silence),
+  (5, silence),
+  (6, silence),
+  (7, air # amp 0.14)]
+
+
+-- Landing: sparse enough to hear the ground moving under one line.
+
+-- 5 · Variation — source bars 17-24, fast and higher. The bell takes the last
+--     eight bars while the bowed voices and shadow keep their offsets.
+multi clutchIn 20 [
+  (3, bow (cat variationBars) # amp 0.34),
+  (4, bow (delayed 2 variationBars) # pan (-0.25) # amp 0.3),
+  (5, bow (delayed 4 variationBars) # pan 0.35 # amp 0.28),
+  (6, shadow (delayed 6 variationBars) # amp 0.26),
+  (8, bell (delayed 8 variationBars))]
+
+
+-- Landing: the variation holds; the bell can be left alone here.
+
+-- 6 · Coda — the source's last bar in all four parts, spread across the seats.
+multi xfadeIn 12 [
+  (1, cello finalRoot),
+  (2, pad finalPad # amp 0.18),
+  (3, bell finalA),
+  (4, bell finalFs # pan (-0.25)),
+  (5, bell finalD # pan 0.35)]
+fadeSilence 12 [6,7,8]
+
+
+-- 7 · Ring — let the final chord decay, then stop.
+hush

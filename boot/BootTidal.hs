@@ -111,9 +111,10 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     --
     -- Convenience fades: crossfade one or more streams to silence.
     fadeSilence :: Time -> [ID] -> IO ()
-    fadeSilence n = mapM_ (\d -> xfadeIn d n silence)
+    fadeSilence n = multi xfadeIn n . fmap ( , silence)
+    -- deprecated: use `multi`
     fadeMulti :: Time -> [(ID, ControlPattern)] -> IO ()
-    fadeMulti t = mapM_ (\(d, p) -> xfadeIn d t p)
+    fadeMulti = multi xfadeIn
     multi
       :: (Foldable t, Monad m)
       => (a -> b -> c -> m d) -> b -> t (a, c) -> m ()

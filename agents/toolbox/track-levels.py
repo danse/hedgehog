@@ -700,8 +700,17 @@ def split_dollars(expr):
 
 
 def chain_fragments(expr):
+    """Flatten nested `#` chains, left to right, so later controls win.
+
+    Alias expansion leaves `bow p # pan x` as a chain wrapped around the
+    alias's own `#` chain. Reading only the outer chain loses the alias's amp;
+    flattening both levels keeps the same precedence Tidal applies.
+    """
     if node_kind(expr) == "chain" and expr[1] == "#":
-        return expr[2:]
+        out = []
+        for frag in expr[2:]:
+            out.extend(chain_fragments(frag))
+        return out
     return [expr]
 
 
