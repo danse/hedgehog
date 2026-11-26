@@ -12,8 +12,9 @@ import Sound.Tidal.Chords
 -- Stream IDs, for the shared fade helpers and cycleD.
 import Sound.Tidal.ID (ID(..))
 
--- Concurrency, for gentle tempo changes (glideBpm) and the cycleD sweep.
+-- Timing and concurrency for gentle tempo changes and the solo sweep.
 import Control.Concurrent (forkIO, readMVar, threadDelay)
+import Control.Exception (finally)
 import Control.Monad (forM_)
 import Data.List (sortOn)
 import qualified Data.Map.Strict as Map
@@ -62,22 +63,20 @@ let glideBpm :: Double -> Double -> IO ()
 -- and moves to the next, so one pass splits the texture into its voices.
 -- Active streams are the ones `list` shows; we read Tidal's stream map
 -- directly to get their IDs, because `list` only prints them. The helper
--- prints the voice ID just before soloing it. The sweep runs in the
--- background, so the interpreter stays free, and calling cycleD again runs
--- another pass.
+-- prints the voice ID just before soloing it. It runs in the REPL, so Emacs'
+-- `C-c C-i` interrupts a pass; `finally` unsolos the voice on the way out.
 :{
 let cycleD :: Double -> IO ()
     cycleD secs = do
+      putStrLn "cycleD: solo sweep; interrupt with C-c C-i (current voice unsoloes)"
+      hFlush stdout
       pmap <- readMVar (sPMapMV tidalInst)
       let ids = map ID $ sortOn (\k -> readMaybe k :: Maybe Int) (Map.keys pmap)
-      _ <- forkIO $
-        forM_ ids $ \i -> do
-          putStrLn (fromID i)
-          hFlush stdout
-          solo i
-          threadDelay (round (secs * 1000000))
-          unsolo i
-      pure ()
+      forM_ ids $ \i -> (do
+        putStrLn (fromID i)
+        hFlush stdout
+        solo i
+        threadDelay (round (secs * 1000000))) `finally` unsolo i
 :}
 
 -- --- shared track helpers ---------------------------------------------------

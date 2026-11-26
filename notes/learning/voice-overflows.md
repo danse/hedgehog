@@ -34,7 +34,8 @@ the stream map but already faded to silence.
 
 `cycleD <secs>` from `boot/BootTidal.hs` is the ear check: it solos each active
 stream in turn and prints its ID, so a suspected overflow can be confirmed
-without guessing.
+without guessing. It runs in the REPL; printout says to interrupt with
+`C-c C-i`, which unsoloes the current voice before returning to the prompt.
 
 ## Handling the overflow
 

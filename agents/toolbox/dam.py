@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Browse the spine labels stored as dam decks in notes/ontology/spines/.
+"""Browse the dam tag decks under notes/ontology/.
 
 The decks are the canonical copy: tags are the words in each filename and
 each blank-line-separated card is one track path. Track headers are not
-duplicated.
+duplicated. `--scheme` selects the deck set; the default is `spines`.
 """
 import argparse
 import re
@@ -11,25 +11,36 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPINES = ROOT / "notes" / "ontology" / "spines"
-
-VOCAB_RE = re.compile(r"^\|\s*`([a-z][a-z-]*)`\s*\|\s*([^|]+?)\s*\|")
+ONTOLOGY = ROOT / "notes" / "ontology"
+SCHEMES = ("spines", "dimensions")
+VOCAB_RE = re.compile(r"^\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|")
 CARD_RE = re.compile(r"\n\s*\n")
 
 
-def load():
+def deck_dir(scheme):
+    return ONTOLOGY / scheme
+
+
+def load(scheme="spines"):
+    directory = deck_dir(scheme)
     vocab = {}
-    readme = (SPINES / "README.md").read_text(encoding="utf-8")
-    for line in readme.splitlines():
-        m = VOCAB_RE.match(line)
-        if m:
-            vocab[m.group(1)] = m.group(2).strip()
+    readme = directory / "README.md"
+    if readme.exists():
+        for line in readme.read_text(encoding="utf-8").splitlines():
+            m = VOCAB_RE.match(line)
+            if m:
+                vocab[m.group(1)] = m.group(2).strip()
 
     rows = []
-    for path in sorted(SPINES.iterdir()):
+    for path in sorted(directory.iterdir()):
         if path.name == "README.md" or not path.is_file():
             continue
         tags = tuple(path.name.split())
+        if scheme == "dimensions":
+            # Root labels come from the deck filenames; there is no table to
+            # keep in sync, and mode still lives only in the track headers.
+            for tag in tags:
+                vocab.setdefault(tag, "Root area; mode stays in the track header.")
         for card in CARD_RE.split(path.read_text(encoding="utf-8")):
             track = next((line.strip() for line in card.splitlines()
                           if line.strip()), "")
@@ -53,15 +64,23 @@ def show_counts(vocab, rows):
         print("%-14s %2d  %s" % (label, counts.get(label, 0), meaning))
 
 
-def check(vocab, rows):
+def check(vocab, rows, scheme):
     indexed = [track for track, _ in rows]
     actual = {str(path.relative_to(ROOT))
               for path in (ROOT / "tracks").glob("*/*.tidal")
               if not path.name.startswith(".")}  # ignore Emacs lock files
+    if scheme == "spines":
+        # One spine card per track.
+        duplicate = sorted(t for t, n in Counter(indexed).items() if n > 1)
+    else:
+        # Modulated tracks legitimately carry several roots; only the same
+        # track twice under one root is a duplicate card.
+        pairs = [(track, tag) for track, tags in rows for tag in tags]
+        duplicate = sorted({t for (t, _), n in Counter(pairs).items() if n > 1})
     problems = {
         "missing": sorted(actual - set(indexed)),
         "stale": sorted(set(indexed) - actual),
-        "duplicate": sorted(t for t, n in Counter(indexed).items() if n > 1),
+        "duplicate": duplicate,
         "unknown tag": sorted({t for _, tags in rows for t in tags}
                               - set(vocab)),
         "unused tag": sorted(t for t in vocab
@@ -69,8 +88,9 @@ def check(vocab, rows):
     }
     for name, items in problems.items():
         print("%-12s %s" % (name + ":", ", ".join(items) or "-"))
+    directory = deck_dir(scheme)
     print("checked %d tracks in %d decks" % (len(rows),
-          len([p for p in SPINES.iterdir()
+          len([p for p in directory.iterdir()
                if p.is_file() and p.name != "README.md"])))
     return any(problems.values())
 
@@ -79,6 +99,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("labels", nargs="*", metavar="LABEL",
                     help="show tracks carrying all these labels")
+    ap.add_argument("--scheme", choices=SCHEMES, default="spines",
+                    help="tag deck to browse (default: spines)")
     ap.add_argument("--track", metavar="NAME",
                     help="show labels for one track (stem or path)")
     ap.add_argument("--tags", action="store_true", dest="list_tags",
@@ -87,9 +109,9 @@ def main():
                     help="verify coverage and tag consistency")
     args = ap.parse_args()
 
-    vocab, rows = load()
+    vocab, rows = load(args.scheme)
     if args.check:
-        raise SystemExit(1 if check(vocab, rows) else 0)
+        raise SystemExit(1 if check(vocab, rows, args.scheme) else 0)
     if args.list_tags:
         show_counts(vocab, rows)
         return

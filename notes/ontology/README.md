@@ -15,4 +15,5 @@ A landing is a double-blank hold point inside a track, not a session tag.
 
 These are lightweight ontologies, not taxonomies: tags overlap, none is primary,
 and meanings stay stable. Headers own exact tempo, key and seat data; tags never
-duplicate it. `agents/toolbox/spines.py` reads `spines/`; dam tools read any deck.
+duplicate it. `agents/toolbox/dam.py` reads either scheme with `--scheme`
+(default `spines`); dam tools read any deck.

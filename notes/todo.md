@@ -6,12 +6,6 @@ Remove when done
 - **Hydra: minute-scale (long-horizon) audio smoothing/state** — `a.fft` bins are short-time *frequency* bands (low bin = bass), not minute-long events. For visuals that evolve over tens of seconds/minutes, add explicit time-domain smoothing/integration in JS (e.g. very slow EMA/accumulator of band energy, larger windows than current `Smooth`/loop usage) and expose it to sketches. Consider configurable time constants per sketch/movement.
 - **Emacs/Tidal sender: factor into a reusable component** — `hedgehog-send-region`/eval helpers in `emacs/init.el` are growing into a small heuristic statement splitter for Tidal/GHCi (`let` blocks, indented continuations, adjacent `dN` actions, `:{ :}` handling). Extract to `emacs/lisp/` (or integrate into the project’s `tidal.el`) as a focused module with clear semantics; avoid a full Haskell parser. Consider whether improvements belong upstream in `tidal.el`.
 - **`swing16` mangles off-grid onsets** — `swingBy (1/5) n` shifts by a fixed fraction of the slice, so it only works on 8th/16th grids: a note just before the half-slice (slice position 0.3–0.5) fires twice, one just before the slice end (0.8–1) is dropped (`hh*20` keeps 19 of 20 onsets; triplets gain a hit). On-grid material is fine — the extra events are non-onset continuations that never sound, but they would pollute event highlighting. No track swings off-grid material today; if one does, use a position-aware shift rather than `swingBy` (not `delay`/`delaytime`, which are the echo effect).
-- **`hedgehog-develop` skill: carry the live handover lessons** — development
-  edits and audits should keep the discipline learned live: fade leftover seats
-  with `fadeSilence`/`multi xfadeIn` before the next intro, avoid `clearAll` and
-  `clutchIn ... silence`, and don't thin event density to smooth a join.
-  `AGENTS.md` already holds the generalized `-- from ...` fallback annotation,
-  so don't duplicate that here.
 - **Skill edits need `/reload` in a running session** — changes to
   `agents/skills/*/SKILL.md` are on disk, but a session started before the edit
   can keep the old body until `/reload`. Remember too that `skills` paths
@@ -30,10 +24,10 @@ Remove when done
 - **Emacs tags** — `stitch` and other `let`-local pattern names are not in TAGS;
   evaluate the setup paragraph, or find a tags/LSP setup that indexes locals.
   Check `visit-tags-table`/`tags-table-list` after the ontology move too.
-- **`cycleD` should be Ctrl-C-cancellable** — make it interruptible from Emacs
-  so a live coder can abort it without restarting the REPL.
-- **`spines.py` for all tag schemes** — it still hardcodes
-  `ontology/spines/` and that README's vocabulary. Generalise it to browse
-  `spines/` and `dimensions/` (e.g. a `--scheme` flag, with a shared or
-  per-scheme vocabulary), so one offline tool covers both tag decks.
+- **Push `dam.py`'s queries upstream to Haskell `dam`** — the local reader now
+  does per-scheme browsing, tag intersection, per-track lookup, a labelled
+  vocabulary and `--check` coverage/consistency. Upstream
+  (`github.com/danse/dam`) has `dam-read`/`dam-set-sizes`/`dam-factor` but not
+  those queries; add them there, then make this script a thin wrapper or retire
+  it.
 - enable tidal event highlighting?

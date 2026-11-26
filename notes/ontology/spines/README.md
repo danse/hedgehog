@@ -3,7 +3,7 @@
 Spine labels for browsing the set, stored in dam's plain-text format: the
 words in each filename are the tags, and each blank-line-separated card is one
 track path. This directory is the canonical copy inside Hedgehog, so a clone of
-the set keeps its labels. `agents/toolbox/spines.py` is just a reader; labels
+the set keeps its labels. `agents/toolbox/dam.py` is just a reader; labels
 are deliberately not duplicated into track headers.
 
 They are a lightweight, flexible ontology of **live-coding affordances**, not a
@@ -15,11 +15,12 @@ tempo/key/seat data stays in headers.
 Browse:
 
 ```sh
-agents/toolbox/spines.py                  # every label and its tracks
-agents/toolbox/spines.py groove loop      # tracks carrying both labels
-agents/toolbox/spines.py --track loden    # labels for one track
-agents/toolbox/spines.py --tags           # vocabulary with usage counts
-agents/toolbox/spines.py --check          # coverage and consistency
+agents/toolbox/dam.py                  # every label and its tracks
+agents/toolbox/dam.py groove loop      # tracks carrying both labels
+agents/toolbox/dam.py --track loden    # labels for one track
+agents/toolbox/dam.py --tags           # vocabulary with usage counts
+agents/toolbox/dam.py --check          # coverage and consistency
+agents/toolbox/dam.py --scheme dimensions key:A  # root tags, other deck
 
 dam-read 'notes/ontology/spines/*bed*'    # dam's own reader
 dam-read 'notes/ontology/spines/groove loop'
