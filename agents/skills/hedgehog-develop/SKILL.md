@@ -31,6 +31,9 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   `transcription` is an outside source.
 - Session guides are ordered narratives (`notes/sessions/ladder.md`), not tag
   decks; a landing is a double-blank hold point in a track, not a session tag.
+- In a setup `let`, join the logical parts with bare `--` lines, not blank
+  lines: the whole block stays one sender group and one eval. Double blanks
+  between sections still mark landings.
 - Dam stores/transforms plain text in-repo; it lacks query/reverse/check.
   `tag` has filters/graph tools but uses cwd-relative hardlinks, so use it only
   as a local export from the decks.

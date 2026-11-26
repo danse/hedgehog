@@ -1,0 +1,243 @@
+-- Tether — French house / one loop, four rooms
+-- 122 BPM · D minor. Four-bar loop, one chord per bar:
+-- Dm9 | Gm9 | Bbmaj9 | C6/9 — i–iv–VI–VII. Written here; no outside source.
+-- The hook is a vowel chop; the pump lives on the chord bed and the stabs,
+-- never on the kick. One filter break halves the loop, the band returns, and
+-- section 8 rotates the same four chords into a B bed — a second room, not a
+-- second peak. Section 9 brings the home loop back; section 10 lifts it.
+-- Bar counts below are a shape, not a timer — hold a section until
+-- it says it is done. ~296 bars, about 9:42 at 122 BPM.
+--
+-- Eval the setup block first, then the sections in order. Section 4 is the
+-- peak, 5 the break, 8 bed B, 9 homecoming, 10 the lift. The final fadeSilence
+-- is the ending; let the last chord ring before `hush`. Double blank = landing.
+--
+-- dN is a seat: 1 kick, 2 hats, 3 bass, 4 pad, 5 clap, 6 stabs, 7 open hat,
+-- 8 rim, 9 hook, 10 air. Entries use clutchIn; replacements and exits use
+-- xfadeIn / fadeSilence, so the numbers keep their meaning all night.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: house:0 kick, house:3 closed hat, house:4 open hat; cp:0 clap;
+-- rs rim; jvbass ~ fs2, juno:8 ~ c5, juno:5 ~ c5, diphone:26 ~ gs4, wind:1 air.
+-- One cycle = one bar (~1.97 s at 122 BPM).
+
+glideBpm 122 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. Everything used once stays inline at its section. Keep this
+-- whole block one paragraph: C-RET evaluates it together.
+-- ---------------------------------------------------------------------------
+let
+  loopRoot :: Pattern Note
+  loopRoot = "<d3 g3 bf2 c3>"
+  loopQuality :: Pattern String
+  loopQuality = "<min9 min9 maj9 sixNine>"
+  chordLoop :: Pattern Note
+  chordLoop = chordAt loopRoot loopQuality
+  --
+  -- Rootless 3-5-7-9 above each chord, written high so the comp cuts through
+  -- the pad.
+  stabChords :: Pattern Note
+  stabChords = "<[f4,a4,c5,e5] [bf4,d5,f5,a5] [d5,f5,a5,c6] [e5,g5,a5,d6]>"
+  --
+  -- Same four chords inverted: stepwise inner voices instead of parallel
+  -- fourths, so the comp moves rather than repeating one shape.
+  stabVoices :: Pattern Note
+  stabVoices = "<[a4,c5,e5,f5] [bf4,d5,f5,a5] [d5,f5,a5,c6] [e5,g5,a5,d6]>"
+  --
+  bassRoots :: Pattern Note
+  bassRoots = "<d2 g2 bf1 c2>"
+  --
+  -- One vowel-chop phrase per bar; the gaps are where the stabs answer.
+  hookNotes :: Pattern Note
+  hookNotes = cat [
+    "~ ~ d5 ~ f5 ~ a5 ~ ~ c6 ~ a5 ~ f5 ~ ~",
+    "~ d5 ~ ~ f5 ~ ~ ~ a5 ~ c6 ~ ~ a5 ~ ~",
+    "~ ~ ~ f5 ~ a5 ~ c6 ~ d6 ~ c6 ~ a5 ~ ~",
+    "~ a5 ~ ~ f5 ~ d5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  kickOn :: Pattern String -> ControlPattern
+  kickOn p = s p # amp 0.95 # room 0.04 # size 0.1
+  kick :: ControlPattern
+  kick = kickOn "house:0*4"
+  --
+  hats :: ControlPattern
+  hats = swing16 $ s "house:3*16"
+    # amp "0.46 0.22 0.34 0.22 0.44 0.22 0.32 0.22 0.46 0.22 0.34 0.22 0.44 0.22 0.34 0.26"
+    # hpf 700 # room 0.06 # size 0.16
+  bassAt :: Pattern Note -> ControlPattern
+  bassAt p = speedAt "fs2" p # s "jvbass" # n 0
+    # sustain 0.28 # release 0.14 # lpf 620 # lpq 0.22
+    # shape 0.18 # room 0.08 # size 0.2 # amp 0.9
+  bass :: ControlPattern
+  bass = bassAt bassRoots
+  --
+  -- One chord per bar. The 4-step gain ducks each beat under the kick.
+  padAt :: Pattern Note -> ControlPattern
+  padAt p = speedAt "c5" p # s "juno:8"
+    # sustain 1.5 # release 0.8 # hpf 140 # lpf 1800
+    # gain "0.65 1 1 1" # room 0.5 # size 0.66 # amp 0.24
+  pad :: ControlPattern
+  pad = padAt chordLoop
+  --
+  clap :: ControlPattern
+  clap = s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34
+  --
+  -- The disco comp: offbeat eighths, ducked on every beat.
+  stabsAt :: Pattern Bool -> Pattern Note -> ControlPattern
+  stabsAt rhythm p = struct rhythm $ speedAt "c5" p # s "juno:5"
+    # sustain 0.16 # release 0.12 # lpf 2600 # lpq 0.3
+    # gain "0.65 1 0.65 1 0.65 1 0.65 1"
+    # room 0.3 # size 0.5 # pan 0.4 # amp 0.42
+  stabs :: ControlPattern
+  stabs = stabsAt "~ t ~ t ~ t ~ t" stabChords
+  --
+  openHat :: ControlPattern
+  openHat = s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+    # amp 0.3 # hpf 400 # room 0.12 # size 0.24 # pan 0.56
+  rim :: ControlPattern
+  rim = s "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ rs ~ ~"
+    # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
+  --
+  hookAt :: Pattern Note -> ControlPattern
+  hookAt p = speedAt "gs4" p # s "diphone:26"
+    # begin 0.18 # end 0.62 # sustain 0.08 # release 0.14
+    # hpf 300 # lpf 5200 # gain "0.7 1 1 1"
+    # room 0.34 # size 0.52 # pan 0.62 # amp 0.5
+  hook :: ControlPattern
+  hook = hookAt hookNotes
+  --
+  air :: ControlPattern
+  air = slow 4 $ s "wind:1" # speed 0.35 # hpf 300 # lpf 1200
+    # room 0.4 # size 0.6 # amp 0.32
+
+
+-- 1 · Needle — 32 bars. The band arrives under blankets: the kick is a thud,
+--     the hats are thin, the sub is low-passed, the pad opens last.
+xfadeIn 1 4 $ kick # lpf 260
+xfadeIn 2 12 $ hats # lpf 5200
+xfadeIn 3 20 $ bass # lpf 380
+xfadeIn 4 28 $ pad # lpf 900
+
+
+-- Landing: the ground can hold on its own.
+
+-- 2 · Room — 32 bars. Backbeat, comp and open hat. The kick loses its blanket;
+--     nothing leaves.
+xfadeIn 1 8 $ kick # lpf 520
+xfadeIn 5 8 $ clap
+xfadeIn 6 16 $ stabs
+xfadeIn 7 24 $ openHat
+
+
+-- Landing: the loop is audible as a band now.
+
+-- 3 · Hook — 32 bars. The rim answers on the "a" of 4, the vowel chop enters
+--     behind a filter, and air opens underneath.
+d8 $ rim
+clutchIn 9 24 $ hook # lpf 1200
+xfadeIn 10 28 $ air
+
+
+-- Landing: all ten seats are present; hold before the first peak.
+
+-- 4 · Peak one — 24 bars. No new voices: the filter opens on the pad, stabs
+--     and hook, and the comp phrase gains an extra hit.
+multi xfadeIn 8 [
+  (1, kick # amp 1.02 # lpf 9000),
+  (4, pad # lpf 3200 # amp 0.27),
+  (6, stabsAt "~ t ~ t ~ ~ t t" stabChords # lpf 5200 # amp 0.46),
+  (9, hook # lpf 7200 # amp 0.56)]
+
+
+-- Landing: the bright band can sit here by itself.
+
+-- 5 · Filter break — 8 bars. The kit fades out; the remaining loop halves and
+--     its filters sweep. Evaluate the return on the last bar.
+fadeSilence 8 [1,2,5,7,8]
+multi xfadeIn 8 [
+  (3, slow 2 $ bass # lpf 200 # amp 0.8),
+  (4, slow 2 $ pad # lpf (range 300 1400 $ slow 2 sine) # amp 0.2),
+  (9, slow 2 $ hook # lpf (range 400 2600 $ slow 2 sine) # amp 0.34)]
+
+
+-- Landing: the half-speed loop is a complete texture.
+
+-- 6 · Return — 24 bars. The kit comes back on the bar in one gesture; the
+--     harmonic seats open with it.
+multi clutchIn 16 [
+  (1, kick),
+  (2, hats),
+  (5, clap),
+  (7, openHat),
+  (8, rim)]
+multi xfadeIn 16 [
+  (3, bass),
+  (4, pad # lpf 2400),
+  (9, hook # lpf 5600)]
+
+
+-- Landing: same band, same loop, back at full speed.
+
+-- 7 · Turn — 32 bars. No modulation: the stabs change phrase and voicing, the
+--     hook answers a minor third up while the pad steps forward.
+xfadeIn 6 8 $ stabsAt "~ t ~ ~ t ~ ~ t" stabVoices # lpf 4200 # amp 0.44
+xfadeIn 9 12 $ hookAt (hookNotes |+ 3) # lpf 6000
+xfadeIn 4 16 $ pad # lpf 2600 # amp 0.26
+
+
+-- Landing: the turned phrases can carry the loop alone.
+
+-- 8 · Bed B — 24 bars. The kit stays exactly as it was; the four chords rotate
+--     to Bb | C | Dm | Gm. Bass and stabs follow the new order, and the hook
+--     comes back down to the original phrase. No new voices, no peak.
+multi xfadeIn 12 [
+  (3, bassAt "<bf1 c2 d2 g2>" # lpf 700),
+  (4, padAt (chordAt "<bf2 c3 d3 g3>" "<maj9 sixNine min9 min9>") # lpf 2400),
+  (6, stabsAt "~ t ~ t ~ ~ t t" "<[d5,f5,a5,c6] [e5,g5,a5,d6] [f4,a4,c5,e5] [bf4,d5,f5,a5]>" # lpf 4200),
+  (9, hookAt hookNotes # lpf 6200)]
+
+
+-- Landing: the B bed holds on its own.
+
+-- 9 · Homecoming — 24 bars. The four chords rotate back to Dm | Gm | Bb | C.
+--     The bed-B stab phrase rides the original voicings; bass, pad and hook
+--     return to the home loop at the same registers. No new voices, no peak.
+multi xfadeIn 12 [
+  (3, bass # lpf 700),
+  (4, pad # lpf 2400),
+  (6, stabsAt "~ t ~ t ~ ~ t t" stabVoices # lpf 4200),
+  (9, hook # lpf 6200)]
+
+
+-- Landing: the home loop holds on its own.
+
+-- 10 · Lift — 32 bars. Slow filter sweep over the three harmonic seats; the
+--     kit stays exactly as it was.
+multi xfadeIn 16 [
+  (4, pad # lpf (range 1200 7000 $ slow 16 sine) # amp 0.28),
+  (6, stabsAt "~ t ~ t ~ t ~ t" stabVoices # lpf (range 2400 9000 $ slow 16 sine) # amp 0.48),
+  (9, hookAt (hookNotes |+ 3) # lpf (range 3600 10000 $ slow 16 sine) # amp 0.6)]
+
+
+-- Landing: the sweep can end here and the loop still reads.
+
+-- 11 · Outro — 16 bars. The kit leaves; pad, bass and air return to the
+--      opening registers.
+xfadeIn 4 6 $ pad # lpf 1400 # amp 0.22
+xfadeIn 3 6 $ bass # lpf 500 # amp 0.7
+xfadeIn 10 8 $ air # amp 0.36
+fadeSilence 12 [1,2,5,6,7,8,9]
+
+
+-- Landing: three seats, nothing else.
+
+-- 12 · End — 16 bars. One long fade, then the room is empty.
+multi xfadeIn 12 [
+  (3, bass # lpf 320 # amp 0.5),
+  (4, pad # lpf 900 # amp 0.18),
+  (10, air # amp 0.24)]
+
+fadeSilence 24 [1,2,3,4,5,6,7,8,9,10]
+
+hush
