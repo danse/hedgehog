@@ -17,10 +17,14 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   `1.0` for synths, `amp × gain^4 × source`, density, fades and capped tail,
   per-stream max then sum. It is coarse triage, not a loudness meter. Fix the
   hottest streams by intra-track equalisation; leave dense textures alone.
-- Spines are flat browsing labels, not a taxonomy: 1–3 tags per track, no
-  primary label. Canonical copy is `notes/spines/` dam decks; browse/query with
-  `agents/toolbox/spines.py`; never duplicate labels into headers. `score` is
-  written here, `transcription` is an outside source.
+- Under `notes/ontology/`: spines are live-coding affordances and dimensions
+  are parametric root tags (`key:A`; modulating tracks carry each root).
+  These are lightweight ontologies, not taxonomies: tags overlap, none is
+  primary, meanings stay stable. Headers own exact tempo/key/seats.
+  Browse spines with `agents/toolbox/spines.py`; never duplicate labels into
+  headers. `score` is written here, `transcription` is an outside source.
+- Session guides are ordered narratives (`notes/sessions/ladder.md`), not tag
+  decks; a landing is a double-blank hold point in a track, not a session tag.
 - Dam stores/transforms plain text in-repo; it lacks query/reverse/check.
   `tag` has filters/graph tools but uses cwd-relative hardlinks, so use it only
   as a local export from the decks.

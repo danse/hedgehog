@@ -32,16 +32,22 @@ library checkout.
 - `dN` numbers follow the order streams first enter: `d1` is the opening sound,
   and each new layer takes the next free number. Keep that order when adding
   sections.
-- At a tempo change, note the tempo it leaves in a trailing comment, e.g.
-  `glideBpm 104 40 -- from 100` (as in `daywork.tidal` and `loden.tidal`). The
-  opening `glideBpm` that sets the track's home tempo is not a change and needs
-  no annotation.
+- A trailing `-- from ...` records the value a change replaces, so a live A/B
+  carries its own fallback. Tempo keeps the short form, e.g.
+  `glideBpm 104 40 -- from 100` (as in `daywork.tidal` and `loden.tidal`);
+  other controls name the parameter, e.g. `-- from amp 0.26`. The opening
+  `glideBpm` that sets the track's home tempo is not a change and needs no
+  annotation.
 - Keep a pattern inline at its section if it is used only once; name it in the
   setup `let` block only when another section reuses it. A bare audition track
   may have no `let` block at all.
 - Shared gotchas (`size <= 0.9`, `amp` vs `gain`, `s`/`f`, `#` order) live in
   `notes/learning/gotchas.md`. Track headers carry only track-specific notes
   and a pointer to that file; don't repeat the shared rules in each header.
+- Evocative track-role words (`scrape`, `wood`) are defined centrally in
+  `notes/learning/glossary.md`; headers use them without re-explaining.
+- Key tags are root-only; mode stays in headers. A track that modulates carries
+  each root deck (`campina`: `key:A` + `key:D`, `strobe`: `key:E` + `key:F#`).
 - A double blank line between paragraphs marks a **landing**: the texture is
   complete there and can hold on its own. The live coder can dwell on it and
   listen, or detach from the track there — e.g. to mix another intro in. A

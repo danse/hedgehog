@@ -1,10 +1,16 @@
 # Spines — dam decks
 
-Flat spine labels for browsing the set, stored in dam's plain-text format:
-the words in each filename are the tags, and each blank-line-separated card is
-one track path. This directory is the canonical copy inside Hedgehog, so a
-clone of the set keeps its labels. `agents/toolbox/spines.py` is just a reader;
-labels are deliberately not duplicated into track headers.
+Spine labels for browsing the set, stored in dam's plain-text format: the
+words in each filename are the tags, and each blank-line-separated card is one
+track path. This directory is the canonical copy inside Hedgehog, so a clone of
+the set keeps its labels. `agents/toolbox/spines.py` is just a reader; labels
+are deliberately not duplicated into track headers.
+
+They are a lightweight, flexible ontology of **live-coding affordances**, not a
+taxonomy: labels overlap, none is primary, and the vocabulary can grow. Their
+meanings are stable, though — without that, browsing would only be relative to
+whoever filed the tracks. Listening clues follow from those affordances; exact
+tempo/key/seat data stays in headers.
 
 Browse:
 
@@ -15,9 +21,9 @@ agents/toolbox/spines.py --track loden    # labels for one track
 agents/toolbox/spines.py --tags           # vocabulary with usage counts
 agents/toolbox/spines.py --check          # coverage and consistency
 
-dam-read 'notes/spines/*bed*'             # dam's own reader
-dam-read 'notes/spines/groove loop'
-(cd notes/spines && dam-set-sizes)        # counts by set of tags
+dam-read 'notes/ontology/spines/*bed*'    # dam's own reader
+dam-read 'notes/ontology/spines/groove loop'
+(cd notes/ontology/spines && dam-set-sizes)  # counts by set of tags
 ```
 
 To change a label, move its card to a differently named file. There is no

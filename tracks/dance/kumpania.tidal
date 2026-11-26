@@ -9,6 +9,7 @@
 -- its violin gives way to brass. Double blank = landing.
 -- Gotchas: notes/learning/gotchas.md. Bases: jvbass:0 ~ fs2, trump:1 from
 -- b4, casio:2 noise, house:0/3/4; hedge_* synths are set with pF.
+-- Terms: notes/learning/glossary.md.
 
 glideBpm 104 60
 
@@ -119,9 +120,8 @@ clutchIn 10 16 $ brass brassNotes
 
 -- Landing: ten seats, the seven in motion.
 
--- 6 · Turn. Lift a fourth to D harmonic minor; drums stay put. This
--- is an awkward transition and may take time to catch rhythm again,
--- but then the development is more interesting
+-- 6 · Turn. Lift a fourth to D harmonic minor; drums stay put. The
+--    awkward bar is the point — wait for the seven to catch.
 multi clutchIn 16 [
   (4, bass (bassNotes |+ 5)),              -- bass
   (7, lead (leadNotes |+ 5)),              -- melodica

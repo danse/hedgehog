@@ -71,6 +71,7 @@ clutchIn 10 8 $ speedAt "c4" hook
 d9 $ s "rs rs rs rs ~ rs ~ rs ~ ~ rs ~ ~ ~ rs ~"
   # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.34
 
+
 -- 5. Peak one — 16 bars. Hats drop one beat every eight bars.
 xfadeIn 1 2 $ s kick
   # amp "1.05 0.98 1.02 0.99" # room 0.04 # size 0.1
@@ -84,6 +85,7 @@ xfadeIn 9 4 $ speedAt "c4" hook
   # s "moog" # n 2
   # sustain 0.28 # release 0.2 # lpf 3000 # lpq 0.35
   # room 0.32 # size 0.5 # amp 0.46 # pan 0.6
+
 
 -- 6. Pocket — 12 bars. Bass and pad hold; stitch stretches, air enters.
 fadeSilence 12 [1,2,5,6,7,9,10]

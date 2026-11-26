@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browse the flat spine labels stored as dam decks in notes/spines/.
+"""Browse the spine labels stored as dam decks in notes/ontology/spines/.
 
 The decks are the canonical copy: tags are the words in each filename and
 each blank-line-separated card is one track path. Track headers are not
@@ -11,7 +11,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPINES = ROOT / "notes" / "spines"
+SPINES = ROOT / "notes" / "ontology" / "spines"
 
 VOCAB_RE = re.compile(r"^\|\s*`([a-z][a-z-]*)`\s*\|\s*([^|]+?)\s*\|")
 CARD_RE = re.compile(r"\n\s*\n")
@@ -56,7 +56,8 @@ def show_counts(vocab, rows):
 def check(vocab, rows):
     indexed = [track for track, _ in rows]
     actual = {str(path.relative_to(ROOT))
-              for path in (ROOT / "tracks").glob("*/*.tidal")}
+              for path in (ROOT / "tracks").glob("*/*.tidal")
+              if not path.name.startswith(".")}  # ignore Emacs lock files
     problems = {
         "missing": sorted(actual - set(indexed)),
         "stale": sorted(set(indexed) - actual),

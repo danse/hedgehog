@@ -226,7 +226,7 @@ let
 glideBpm 96 16
 -- clear anything left from the previous piece, or this won't grow
 -- gracefully from abutment
-fadeSilence 16 [1,2,3,4,5,6,7,8,9,10]
+fadeSilence 64 [1,2,3,4,5,6,7,8,9,10]
 
 d1 switchOn -- the first switches
 d2 $ bootDawn # amp 0.2 -- a boot on concrete
@@ -276,7 +276,6 @@ fadeMulti 24 [(1, rideSoft), (2, stack [bootWork, brushSoft])]
 -- 3. Lift — The hoist tries to lift the crate and stalls. Chain, motor, a
 -- bounce. The bass takes the work song low and slow.
 -- ~40 cycles (~109 s at 88 BPM).
-
 glideBpm 88 30 -- from 96
 d2 $ stack [bootWork, liftStall]
 -- the gate falls away; the hoist is the new pulse
@@ -285,9 +284,8 @@ xfadeIn 3 32 bassLift
 
 
 -- here we get clumsy on the high pings
-p9 = stack [liftChain, crateScrape]
 -- chain and crate
-xfadeIn 7 16 $ p9 # amp 0.5
+xfadeIn 7 16 $ stack [liftChain, crateScrape] # amp 0.5
 -- the motor surges
 xfadeIn 1 16 motor
 -- the high shadow of the hook
@@ -307,7 +305,6 @@ xfadeIn 3 16 motifBass
 -- 4. Sweeper — The little machine goes round and round, missing the same
 -- corner. Brushes, grit, a pigeon following the broom; the sax hums the round.
 -- ~40 cycles (~104 s at 92 BPM).
-
 glideBpm 92 30 -- from 88
 d2 $ stack [bootWork, brushWork]
 d8 $ stack [sweeperMiss, sweepBrush]
@@ -331,8 +328,8 @@ xfadeIn 10 32 trumpetSpark
 -- ~36 cycles (~86 s at 100 BPM).
 
 -- rhythm change. The sweeper parks; the room fills with small objects
-fadeSilence 12 [2,5,7,9,10]
 glideBpm 100 16 -- from 92
+fadeSilence 12 [2,5,7,9,10]
 fadeMulti 16 [
   (1, stack [cupClink, bottleHoot]),
   (2, brush),
