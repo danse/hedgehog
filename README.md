@@ -74,7 +74,7 @@ Each area documents itself:
 - `visuals/` — see `visuals/README.md`
 - `notes/` — set plan, TODO, learning notes in `notes/learning/`; tag decks in
   `notes/ontology/` (`spines/`, `dimensions/`); ordered session guide in
-  `notes/sessions/`
+  `notes/sets/`
 - `samples/` — see `samples/README.md`
 
 `boot/` holds the Tidal/SuperDirt boot files, with the project SynthDefs in

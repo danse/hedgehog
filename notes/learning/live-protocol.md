@@ -35,7 +35,7 @@ For live coders and their assistants. Read `AGENTS.md`,
 - Spines = live-coding affordances; `notes/ontology/spines/`.
 - Dimensions = parametric root tags (`key:A`); `notes/ontology/dimensions/`.
   A modulating track carries each root (`strobe`: `key:E` + `key:F#`).
-- Session guides are ordered narratives (`notes/sessions/ladder.md`), not tags.
+- Session guides are ordered narratives (`notes/sets/ladder.md`), not tags.
   A landing is a double-blank hold point in a track, not a session tag.
 - Headers own exact tempo/key/seats; tags never duplicate them.
 

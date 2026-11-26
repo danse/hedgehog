@@ -30,14 +30,19 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   is deprecated and kept for historical interest. Pass `notes/ontology/spines`
   or `notes/ontology/dimensions` directly; never duplicate labels into headers.
   `score` is written here, `transcription` is an outside source.
-- Session guides are ordered narratives (`notes/sessions/ladder.md`), not tag
+- Keep `spines/` and `dimensions/` deck-only: a `README.md` inside one parses
+  as a card. Vocabulary and writing clues live in `notes/ontology/README.md`.
+- Track files are `snake_case` (`baroque_carnival.tidal`); ontology cards use
+  the bare stem. Genre folders and BPM stay out of tag decks.
+- Session guides are ordered narratives (`notes/sets/ladder.md`), not tag
   decks; a landing is a double-blank hold point in a track, not a session tag.
 - In a setup `let`, join the logical parts with bare `--` lines, not blank
   lines: the whole block stays one sender group and one eval. Double blanks
   between sections still mark landings.
-- Dam stores/transforms plain text in-repo; it lacks query/reverse/check.
-  `tag` has filters/graph tools but uses cwd-relative hardlinks, so use it only
-  as a local export from the decks.
+- Dam stores/transforms plain text in-repo. Upstream `main` lacks query/check;
+  the `agents` branch adds `dam-query` (advisory checks), but reverse is still
+  absent. `tag` has filters/graph tools but uses cwd-relative hardlinks, so use
+  it only as a local export from the decks.
 - Knowledge placement: stable workflow in skills, session plans and unvetted
   preferences in `notes/`; headers stay track-specific and point to
   `notes/learning/gotchas.md`. Prefer one canonical source plus a thin viewer.
