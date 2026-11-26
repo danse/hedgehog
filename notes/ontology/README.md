@@ -2,9 +2,9 @@
 
 Dam decks grouping the set's flat labels. Each subdirectory is a set of tags;
 the words in a filename are the tags and each blank-line-separated card is a
-unique track name. Decks are hand-edited plain text; tooling only reads and
-reports, and checks are advisory, not a gate. This is the canonical copy inside
-Hedgehog, so a clone of the set keeps its labels.
+unique `snake_case` track name (`baroque_carnival`). Decks are hand-edited plain
+text; tooling only reads and reports, and checks are advisory, not a gate. This
+is the canonical copy inside Hedgehog, so a clone of the set keeps its labels.
 
 - `spines/` — live-coding affordances: `score`, `loop`, `long-form`, `bed`, …
 - `dimensions/` — parametric root tags: `key:A`, `key:F`, `key:F#`, …

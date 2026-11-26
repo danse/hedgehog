@@ -193,7 +193,7 @@ def main():
     out.append(emit(9, 'pedal', 'innerAt', split='high'))
     out.append('')
     out.append('fadeSilence 8 [1,2,3,4,5,6,7,8,9,10]\n')
-    path = ROOT / 'tracks' / 'techno' / 'pas-de-deux.tidal'
+    path = ROOT / 'tracks' / 'techno' / 'pas_de_deux.tidal'
     open(path, 'w').write('\n'.join(out))
     print('wrote', path)
 

@@ -65,7 +65,8 @@ Indented statements and continuation lines are handled.
 Each area documents itself:
 
 - `tracks/` — one folder per genre (`ambient/`, `techno/`, `dance/`), one
-  `.tidal` file per track; `scripts/edit.sh` opens Emacs here
+  `snake_case` `.tidal` file per track (`baroque_carnival.tidal`);
+  `scripts/edit.sh` opens Emacs here
 - `scripts/` — see `scripts/README.md`
 - `agents/` — agent-facing material: `agents/making_of/` (score sources and
   generators), `agents/toolbox/` (helper scripts) and `agents/skills/` (OpenCode

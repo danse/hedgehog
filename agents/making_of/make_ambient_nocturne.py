@@ -69,7 +69,7 @@ HEAD = '''-- Nocturne — ambient after Chopin's Nocturne Op. 9 No. 2
 glideBpm 78 30
 
 -- Clear every seat this track does not use. Other ambient tracks leave a
--- looping hedge_noise riser on d8 (neon-alloy) or an air bed on d1 (campina);
+-- looping hedge_noise riser on d8 (neon_alloy) or an air bed on d1 (campina);
 -- a leftover there keeps rising straight through our hard section changes,
 -- since this track only writes d2-d5. Eval these with the voices below.
 d1 silence

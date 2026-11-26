@@ -212,7 +212,7 @@ clipped samples across all four section-6 bars.
 
 ### New tracks and the agent interface
 
-- Added: oculus, campina, loden, nocturne, pas-de-deux; mezzanine and
+- Added: oculus, campina, loden, nocturne, pas_de_deux; mezzanine and
   seba extended. Session tally: cantilever 27, daywork 26, tenfold 21.
 - agents/ now has making_of/ and toolbox/ READMEs; AGENTS.md is a
   live-set style guide (dN = entry order, shared gotchas, untracked

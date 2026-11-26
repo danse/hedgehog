@@ -90,8 +90,8 @@ An agent can do this subtraction from the two files in minutes. Useful phrasings
 
 - "What overflows if I land klang over yard?"
 - "Knowing where I was before, I'm stuck in an overflow at the middle of
-  neon-alloy — which numbers?"
-- "Which salem seats survive a landing on neon-alloy?"
+  neon_alloy — which numbers?"
+- "Which salem seats survive a landing on neon_alloy?"
 
 Overflow is a relation, not a property of one file. The exact numbers need the
 outgoing side: the previous track and section from the session context, or a
@@ -99,9 +99,9 @@ fresh `list`/`cycleD` output. In an ongoing session, "knowing where I was
 before" is enough — the agent already has the earlier track in view and can do
 the subtraction without being told again.
 
-From neon-alloy's file alone we can still say: the chorus (§3) writes 1–7 and
+From neon_alloy's file alone we can still say: the chorus (§3) writes 1–7 and
 does not touch d8; the break (§4) claims d8. So a chorus landing over yard
 leaves yard's d8 (sax/breath) overflowing, while one over quema leaves d8 plus
-d9 and d10, which neon-alloy never writes at all. The agent can propose the
+d9 and d10, which neon_alloy never writes at all. The agent can propose the
 minimal fade line; whether the leftovers are worth keeping is still a decision
 for your ears.
