@@ -18,16 +18,20 @@ Remove when done
 - **Blog material for this week** — the spine/dimension/session exchange and the
   A/B fallback convention could make a short post on live coding and software
   engineering.
-- **`Variants` score names don't scale** — the `loden` record selectors give
-  clean live calls but create a second vocabulary per track. Prefer local pattern
-  functions and composition; revisit only if a shared naming layer emerges.
+- **`Variants` belongs to grid schemes, not general score names** — the `loden`
+  `plain`/`utopia` record gives clean live calls for alternate grids, but as a
+  second score vocabulary per track it doesn't scale. Prefer local pattern
+  functions and composition for written lines; evaluate `Variants` on a
+  selection of tracks with grid-like structures (engines and the
+  like), and revisit only if a shared naming layer emerges.
 - **Emacs tags** — `stitch` and other `let`-local pattern names are not in TAGS;
   evaluate the setup paragraph, or find a tags/LSP setup that indexes locals.
   Check `visit-tags-table`/`tags-table-list` after the ontology move too.
-- **Push `dam.py`'s queries upstream to Haskell `dam`** — the local reader now
-  does per-scheme browsing, tag intersection, per-track lookup, a labelled
-  vocabulary and `--check` coverage/consistency. Upstream
-  (`github.com/danse/dam`) has `dam-read`/`dam-set-sizes`/`dam-factor` but not
-  those queries; add them there, then make this script a thin wrapper or retire
-  it.
+- **Replace deprecated `dam.py` with upstream `dam-query`** — the validated
+  queries now exist in `../dam` on the `agents` branch as `dam-query`
+  (`--tags`, `--key`, tag intersection, advisory `--check`). The local script
+  is kept only for historical interest: it records the interface that shaped
+  the decks, but assumes the old `tracks/...tidal` paths. Don't extend it. Once
+  `dam-query` is merged or installed, remove the local reader and update the
+  skill/toolbox references; decks stay hand-edited meanwhile.
 - enable tidal event highlighting?

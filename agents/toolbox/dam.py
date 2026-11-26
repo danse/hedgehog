@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Browse the dam tag decks under notes/ontology/.
+"""DEPRECATED — kept for historical interest only.
 
-The decks are the canonical copy: tags are the words in each filename and
-each blank-line-separated card is one track path. Track headers are not
-duplicated. `--scheme` selects the deck set; the default is `spines`.
+This was the local ontology browser. It records the query interface we
+validated while developing the decks, but it assumes cards hold
+`tracks/...tidal` paths; the decks now carry bare track names. The tag-folder
+READMEs it read vocabulary from have been folded into `notes/ontology/README.md`
+too, so it is not a working browser. Its queries live upstream in `../dam`'s
+`dam-query` (agents branch). Do not extend or rely on this script; new query
+work belongs there.
 """
 import argparse
 import re

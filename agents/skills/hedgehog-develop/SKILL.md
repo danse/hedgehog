@@ -26,9 +26,10 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   are parametric root tags (`key:A`; modulating tracks carry each root).
   These are lightweight ontologies, not taxonomies: tags overlap, none is
   primary, meanings stay stable. Headers own exact tempo/key/seats.
-  Browse tag decks with `agents/toolbox/dam.py` (`--scheme dimensions` for
-  root tags); never duplicate labels into headers. `score` is written here,
-  `transcription` is an outside source.
+  Browse tag decks with upstream `dam-query`; the local `agents/toolbox/dam.py`
+  is deprecated and kept for historical interest. Pass `notes/ontology/spines`
+  or `notes/ontology/dimensions` directly; never duplicate labels into headers.
+  `score` is written here, `transcription` is an outside source.
 - Session guides are ordered narratives (`notes/sessions/ladder.md`), not tag
   decks; a landing is a double-blank hold point in a track, not a session tag.
 - In a setup `let`, join the logical parts with bare `--` lines, not blank
@@ -42,5 +43,5 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   `notes/learning/gotchas.md`. Prefer one canonical source plus a thin viewer.
 - Public repo: commit only on explicit request; keep drafts unvetted and
   untracked until listened to; preserve score credits and user edits.
-- Verify: `dam.py --check` for labels and `scripts/check-tidal.sh <file>` for
-  edited sources; report results.
+- Verify: `dam-query --check` (advisory) for labels and
+  `scripts/check-tidal.sh <file>` for edited sources; report results.

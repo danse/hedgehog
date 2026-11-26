@@ -1,0 +1,205 @@
+-- Baroque Carnival — a written network
+-- 120 BPM · D minor. No outside source: every line is written here. One cycle
+-- is one bar, and the four written rates run on unequal periods: 3, 5, 7 and
+-- 11 cycles. The lines interlock at 1/5, 2/7 and 2/3 offsets; subset
+-- conjunctions fall at 15, 35, 55, 77, 105, 165 and 231 cycles. The full
+-- 3x5x7x11 alignment (1155) is past the end, so no landing is the whole
+-- network at once. No drone or pad: the written lines carry the piece, and
+-- every seat can stand alone in solo.
+-- ~255 cycles, about 8:30 at 120 BPM.
+--
+-- Eval the setup block first, then the sections in order. Double blank =
+-- landing; the holds here are deliberately long. `hush` is left separate for
+-- the true end.
+--
+-- dN is first entry: 1 continuo, 2 subject, 3 answer, 4 counter, 5 toccata,
+-- 6 trill, 7 bell, 8 tabor. Each section sets its seats outright on the bar.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: sundance:3 ~ cs3; pluck, casio, tabla:19/9; hedge_* synths are
+-- set with pF. Keep size <= 0.9 and trim with amp, not gain.
+
+glideBpm 120 30
+
+-- ---------------------------------------------------------------------------
+-- Written score: one cell, four long rates. Keep this whole block one
+-- paragraph: C-RET evaluates it together. Bare `--` lines join the parts.
+-- ---------------------------------------------------------------------------
+let
+  -- The turn: +3, -1, -2. One cycle, four notes on the cell's own grid.
+  turn :: Pattern Note
+  turn = "d5 ~ f5 ~ e5 ~ d5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  --
+  turnUp :: Pattern Note
+  turnUp = "a5 ~ g5 ~ f5 ~ e5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  --
+  turnHome :: Pattern Note
+  turnHome = "d5 ~ cs5 ~ d5 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
+  --
+  -- 3-cycle subject; the longer rates are time-stretched versions of it.
+  subject :: Pattern Note
+  subject = cat [turn, turnUp, turnHome]
+  --
+  answerPlain :: Pattern Note
+  answerPlain = slow (5/3) subject
+  --
+  counterPlain :: Pattern Note
+  counterPlain = rev (slow (7/3) subject)
+  --
+  answer :: Pattern Note
+  answer = off (1/5) (|+ 7) answerPlain
+  --
+  counter :: Pattern Note
+  counter = off (2/7) (|+ 12) counterPlain
+  --
+  -- Fast figurations: the same cell at 4x and 2x, rotated over 3 and 5 cycles.
+  figPlain :: Pattern Note
+  figPlain = fast 4 turn
+  --
+  trillPlain :: Pattern Note
+  trillPlain = fast 2 turnUp
+  --
+  toccata :: Pattern Note
+  toccata = iter 3 figPlain
+  --
+  trill :: Pattern Note
+  trill = iter 5 trillPlain
+  --
+  bellPlain :: Pattern Note
+  bellPlain = slow 2 counterPlain
+  --
+  -- 11-cycle ground; two notes per bar, cadencing on cs2 into the next d2.
+  continuo :: Pattern Note
+  continuo = cat [
+    "d2 ~ ~ ~ a2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ ~ ~ f2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "g2 ~ ~ ~ d2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "bf1 ~ ~ ~ f2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "c2 ~ ~ ~ g2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ ~ ~ a2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "bf1 ~ ~ ~ d2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "a1 ~ ~ ~ e2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "g2 ~ ~ ~ d2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "a1 ~ ~ ~ cs2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~",
+    "d2 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"]
+  --
+  -- 11-cycle tabor; offbeat taps, never a steady pulse.
+  tabor :: ControlPattern
+  tabor = s (cat [
+    "tabla:19 ~ ~ ~ tabla:9 ~ ~ ~ ~ ~ tabla:9 ~ ~ ~ ~ ~",
+    "~ ~ tabla:9 ~ ~ ~ ~ ~ tabla:19 ~ ~ ~ ~ ~ ~ ~",
+    "tabla:9 ~ ~ ~ ~ ~ tabla:9 ~ ~ ~ ~ ~ tabla:19 ~ ~ ~",
+    "~ ~ ~ tabla:19 ~ ~ ~ ~ ~ ~ tabla:9 ~ ~ ~ ~ ~",
+    "tabla:9 ~ ~ ~ tabla:9 ~ ~ ~ ~ ~ ~ ~ tabla:19 ~ ~ ~",
+    "~ ~ ~ ~ tabla:19 ~ ~ ~ ~ ~ ~ ~ ~ tabla:9 ~ ~",
+    "tabla:19 ~ ~ ~ ~ ~ tabla:9 ~ ~ ~ ~ ~ ~ tabla:9 ~ ~",
+    "~ ~ tabla:9 ~ ~ ~ ~ ~ ~ ~ tabla:19 ~ ~ ~ ~ ~",
+    "tabla:9 ~ ~ ~ ~ ~ tabla:19 ~ ~ ~ ~ ~ ~ tabla:9 ~ ~",
+    "~ ~ ~ tabla:9 ~ ~ ~ ~ tabla:19 ~ ~ ~ ~ ~ ~ ~",
+    "tabla:19 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"])
+    # hpf 500 # lpf 6000 # room 0.35 # size 0.5 # amp 0.22
+  --
+  celloVoice :: Pattern Note -> ControlPattern
+  celloVoice p = note p # s "hedge_fiddle" # pF "bow" 0.016 # pF "body" 950
+    # attack 0.1 # sustain 1.2 # release 0.6 # lpf 620 # lpq 0.16
+    # pan (-0.16) # room 0.52 # size 0.66 # amp 0.44
+  --
+  subjectVoice :: Pattern Note -> ControlPattern
+  subjectVoice p = note p # s "hedge_melodica" # legato 0.8
+    # pF "reed" 0.5 # pF "bright" 1800 # attack 0.05 # release 0.35
+    # pan (-0.2) # room 0.5 # size 0.62 # amp 0.5
+  --
+  hornVoice :: Pattern Note -> ControlPattern
+  hornVoice p = note p # s "hedge_horn" # legato 0.9 # attack 0.08 # release 0.4
+    # hpf 220 # lpf 4600 # pan 0.22 # room 0.5 # size 0.6 # amp 0.34
+  --
+  fiddleVoice :: Pattern Note -> ControlPattern
+  fiddleVoice p = note p # s "hedge_fiddle" # pF "bow" 0.018 # pF "body" 1700
+    # attack 0.12 # sustain 0.4 # release 0.55 # lpf 3200
+    # pan 0.3 # room 0.55 # size 0.68 # amp 0.32
+  --
+  pluckVoice :: Pattern Note -> ControlPattern
+  pluckVoice p = note p # s "pluck" # sustain 0.18 # release 0.16
+    # hpf 600 # lpf 5200 # delay 0.28 # delaytime (3/16) # delayfb 0.28
+    # pan (-0.25) # room 0.45 # size 0.6 # amp 0.3
+  --
+  casioVoice :: Pattern Note -> ControlPattern
+  casioVoice p = note p # s "casio" # legato 0.5
+    # lpf (range 1600 4200 $ slow 12 sine)
+    # delay 0.22 # delaytime (1/4) # delayfb 0.22
+    # pan 0.28 # room 0.5 # size 0.62 # amp 0.24
+  --
+  bellVoice :: Pattern Note -> ControlPattern
+  bellVoice p = speedAt "cs3" p # s "sundance:3"
+    # sustain 1.2 # release 1.6 # hpf 1200 # room 0.72 # size 0.8 # amp 0.2
+
+
+-- 1 · Seed — 15 cycles. The 11-cycle ground and the 3-cycle turn enter alone;
+--     no other rate is audible yet.
+clutchIn 1 12 $ celloVoice continuo
+clutchIn 2 12 $ subjectVoice subject
+
+
+-- Landing: 3x5 cycles. The turn has stated five times.
+
+-- 2 · Fugue — 20 cycles. The 5-cycle answer and the 7-cycle counter enter off
+--     the cell's grid; the tabor marks 11.
+multi clutchIn 16 [
+  (3, hornVoice answer),
+  (4, fiddleVoice counter),
+  (8, tabor)]
+
+
+-- Landing: 5x7 cycles.
+
+-- 3 · Toccata — 20 cycles. The cell folds out four times faster and rotates
+--     over three cycles; the tabor completes its 11-cycle phrase here (5x11).
+clutchIn 5 16 $ pluckVoice toccata
+
+
+-- Landing: 5x11 cycles.
+
+-- 4 · Bells — 22 cycles. Trill runs the answer at twice the cell rate; the
+--     bell holds the counter at half its rate. The 7x11 conjunction lands.
+multi clutchIn 20 [
+  (6, casioVoice trill),
+  (7, bellVoice bellPlain)]
+
+
+-- Landing: 7x11 cycles.
+
+-- 5 · Episode — 28 cycles. Every rate holds, with a slow lift on the bell;
+--     the 3x5x7 conjunction lands before any voice leaves.
+clutchIn 7 24 $ bellVoice bellPlain # amp 0.24
+
+
+-- Landing: 3x5x7 cycles.
+
+-- 6 · Network — 60 cycles. The long hold: all eight lines cycle at their own
+--     rates, with a slow drift in the fast figurations. The far landing is
+--     3x5x11.
+multi clutchIn 32 [
+  (5, pluckVoice toccata # lpf (range 3200 6200 $ slow 60 sine)),
+  (7, bellVoice bellPlain # amp 0.22)]
+
+
+-- Landing: 3x5x11 cycles.
+
+-- 7 · Return — 66 cycles. Every line restates its plain form; the last
+--     conjunction before the coda is 3x7x11, well short of the full 1155.
+multi clutchIn 32 [
+  (2, subjectVoice subject),
+  (3, hornVoice answerPlain),
+  (4, fiddleVoice counterPlain),
+  (5, pluckVoice figPlain),
+  (6, casioVoice trillPlain),
+  (7, bellVoice bellPlain)]
+
+
+-- Landing: 3x7x11 cycles.
+
+-- 8 · Coda — 24 cycles. The written lines leave; ground and bell ring on.
+multi clutchIn 32 $ (, silence) <$> [2,3,4,5,6,8]
+clutchIn 8 32 $ bellVoice bellPlain # amp 0.16
+
+-- hush -- left separate: only when the tail should actually die

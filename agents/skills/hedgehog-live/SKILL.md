@@ -22,8 +22,8 @@ header first.
   `ID` has `Num` but not `Enum`: write `[6,7,8]`, never `[6..8]`.
   `clearAll` and any `clutchIn ... silence` cut tails — avoid them. Don't thin
   event density to smooth a join; that tends to sound clumsy.
-- Browse tag schemes with `agents/toolbox/dam.py`; `--scheme` selects
-  `spines` or `dimensions` (dam decks in `notes/ontology/`).
+- Browse tag schemes with upstream `dam-query`; pass `notes/ontology/spines`
+  or `notes/ontology/dimensions` directly. The local `dam.py` is deprecated.
 - Editing live: ears decide mix/noise/commit; offer A/B and wait. Preserve
   uncommitted edits; keep old versions as comments only when asked. `amp` is
   linear level, `gain` a trim, `level a p` clears the trim; `size <= 0.9`.
