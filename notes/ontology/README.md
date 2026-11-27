@@ -72,10 +72,22 @@ tempo/key/seat data stays in headers.
 | `single-breath` | One uninterrupted span, or a cue-only bed with no fixed arrangement. |
 | `long-form` | An extended sectioned arc with landings and detach points. |
 | `network` | Several equal written lines interlock on long, non-matching cycles; no single carrier, landings where subsets realign. |
+| `matrix` | A grid of movements x voices; required scores form the band, optional scores are offered live and launched by named voice calls. |
 
 For `network`, derive unequal long periods from one cell with `slow (p/q)`,
 `off` and `iter`; land at subset LCMs rather than the full LCM, which usually
 sits past the end. Avoid a drone or pad so no seat becomes a single carrier.
+
+For `matrix`, make each row a `mkMovement` with a short descriptive label,
+voice names and `Silent`/`Score`/`Optional` cells; avoid letter names (`a`, `b`,
+…) so live calls read by meaning. Define named accessors with `mkVoice`; the
+matrix chooses *what*, while `p`, `clutchIn`, `xfadeIn`, `attacks` and `multi`
+choose *how*. Pass the same ID to the transition as the seat given to `mkVoice`:
+it is both the cell lookup and the destination stream, so a voice keeps one dN
+across rows. `mPlay` announces the row and returns a pair for each named seat:
+a score brings its pattern; an optional, silent or omitted seat brings `silence`,
+so entering a row clears what it does not score. It chooses no fade. The
+executable interface is in `notes/matrix-api.tidal`.
 
 `score` is for lines written in this project; `transcription` is reserved for
 literal readings of outside sources.

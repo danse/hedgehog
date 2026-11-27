@@ -124,7 +124,13 @@ let -- Sample calibration: map a written Tidal note to the playback rate of a
     clearAll :: Time -> IO ()
     clearAll t = clear t
       ([1,2,3,4,5,6,7,8,9,10,11,12] :: [ID])
+    --
 :}
+
+-- Matrix (grid) affordances live in their own script fragment, so BootTidal.hs
+-- stays readable. It is sourced after the shared helpers above; paths resolve
+-- from the project root in both the live sender and check-tidal.
+:script boot/matrix.hs
 
 -- You can also add your own aliases in this file. For example:
 -- fastsquizzed pat = fast 2 $ pat # squiz 1.5

@@ -46,6 +46,9 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
 - Knowledge placement: stable workflow in skills, session plans and unvetted
   preferences in `notes/`; headers stay track-specific and point to
   `notes/learning/gotchas.md`. Prefer one canonical source plus a thin viewer.
+- Matrix API: interface in `notes/matrix-api.tidal`, implementation in
+  `boot/matrix.hs`. Voice calls return patterns; transitions stay at the call
+  site.
 - Public repo: commit only on explicit request; keep drafts unvetted and
   untracked until listened to; preserve score credits and user edits.
 - Verify: `dam-query --check` (advisory) for labels and

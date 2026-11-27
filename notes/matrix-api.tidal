@@ -1,0 +1,85 @@
+-- Matrix API — executable interface whiteboard
+--
+-- This is not a track. It is the working interface document for
+-- `boot/matrix.hs`. Typecheck it with:
+--   scripts/check-tidal.sh notes/matrix-api.tidal
+--
+-- Rule: the matrix chooses *what*, the transition chooses *how*. A named voice
+-- call returns a ControlPattern, so the live coder puts it under a straight
+-- attack (`p`/`attacks`), a clutch (`clutchIn`) or a fade (`xfadeIn`).
+-- The ID in that call is the same seat passed to `mkVoice`: it is both the cell
+-- lookup key and the destination stream, so a voice owns one dN across rows.
+--
+-- The old `mPlay`/`mSwap` actions buried fades under play and are gone.
+-- `mPlay` announces the row and returns a pair for every named seat: a Score
+-- brings its pattern; an Optional, Silent or omitted seat brings `silence`.
+-- The caller still chooses the transition.
+--
+-- Movement names are short and descriptive. `Movements` bundles them by label
+-- for tooling; the local bindings are what you call live.
+--
+-- Shape:
+--   Movement   = Silent | Score ControlPattern | Optional ControlPattern
+--   MovementRow = label + voice names + seat -> Movement
+--   Movements  = labels -> MovementRow
+
+let
+  -- Synth builders are ordinary voice functions. The matrix stores their
+  -- fully mixed ControlPatterns; it does not know about note sources.
+  subVoice p = slow 2 $ speedAt "c3" p # s "moog:1" # lpf 380 # amp 0.3
+  kotoVoice p = slow 2 $ note p # s "hedge_koto" # decay 2.2 # amp 0.32
+  bellVoice p = slow 2 $ note p # s "supervibe" # decay 0.8 # amp 0.28
+  --
+  -- Named accessors are pure. `koto opening` is a pattern; it does not choose a
+  -- fade. A silent cell returns silence and traces
+  -- `voice koto silent in movement hollow` when the pattern is demanded.
+  sub  = mkVoice 1 "sub"
+  koto = mkVoice 12 "koto"
+  bell = mkVoice 5 "bell"
+  --
+  labels = [(1, "sub"), (5, "bell"), (12, "koto")]
+  --
+  -- opening: required sub, optional koto and bell.
+  opening = mkMovement "opening" labels
+        [ (1, Score (subVoice "d2"))
+        , (5, Optional (bellVoice "a5"))
+        , (12, Optional (kotoVoice "d5"))
+        ]
+  --
+  -- hollow: required sub, but koto and bell are explicitly silent.
+  hollow = mkMovement "hollow" labels
+        [ (1, Score (subVoice "bf1"))
+        , (5, Silent)
+        , (12, Silent)
+        ]
+  --
+  grid = mkMovements [opening, hollow]
+
+-- Introspection stays separate from transition.
+mShow opening
+mOptionals opening
+
+-- Straight attack, one voice: p ID pattern.
+p 12 (koto opening)
+
+-- Straight attack, grouped: attacks [(ID, pattern)].
+attacks [(12, koto opening)]
+
+-- Clutch, one voice and a group. The fade is visible at the call site.
+clutchIn 12 8 (koto opening)
+multi clutchIn 16 [(1, sub hollow), (12, koto hollow)]
+
+-- Crossfade, one voice and a group.
+xfadeIn 12 8 (koto opening)
+multi xfadeIn 12 [(5, bell hollow), (12, koto hollow)]
+
+-- Silent cells report on demand. No hidden transition, just silence.
+-- prints: voice koto silent in movement hollow
+p 12 (koto hollow)
+
+-- mPlay announces the row and hands every named seat to an explicit
+-- transition. Optional, Silent and omitted seats become `silence`, so entering
+-- hollow clears the koto and bell that opening offered. mPlay chooses no fade;
+-- a live `koto opening` can bring an optional back after it was muted.
+mPlay opening >>= attacks
+mPlay hollow >>= multi clutchIn 16
