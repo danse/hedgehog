@@ -159,7 +159,7 @@ let
 -- setbpm jumps the clock; glideBpm steps the tempo 10x/s over 16 s,
 -- starting from the tempo current at call time. Leave each section
 -- long enough to finish.
-glideBpm 90 16
+glideBpm 90 60
 -- clear the previous piece's working streams
 fadeSilence 64 [1,2,3,4,5,6,7,8,9,10]
 
@@ -211,7 +211,8 @@ fadeMulti 24 [
 -- 4. Abutment — the old block is underpinned; new mass is keyed in behind it.
 -- ~40 cycles (~102 s at 94 BPM).
 
-glideBpm 94 16 -- from 90
+-- eval offbeat
+glideBpm 94 30 -- from 90
 d2 $ bassAbut # amp 0.5
 d6 brush
 d7 $ stack [ride, rideBell]
@@ -231,7 +232,6 @@ xfadeIn 3 32 $ stack [air, gravel]
 
 -- 5. Transfer — props eased out; the load moves into the abutment. It holds.
 -- ~36 cycles (~94 s at 92 BPM).
-
 glideBpm 92 30 -- from 94
 d2 $ bassTrans # amp 0.5
 d6 brush
@@ -252,7 +252,6 @@ xfadeIn 3 24 $ stack [air, windBed]
 
 -- 6. Occupancy — the span is rebuilt; people return; the abutment disappears
 -- under the approach. ~40 cycles (~107 s at 90 BPM).
-
 glideBpm 90 16 -- from 92
 d2 bassOcc
 d6 brush
@@ -272,7 +271,6 @@ fadeMulti 24 [
 
 -- 7. Steady — evening; the structure rests; the load is held. Open coda.
 -- ~40+ cycles (~112 s+ at 86 BPM; open-ended).
-
 glideBpm 86 30 -- from 90
 -- strip the rhythm and the high projection
 fadeSilence 16 [5,6,7,8,9,10]

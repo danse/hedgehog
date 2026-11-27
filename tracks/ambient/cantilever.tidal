@@ -178,7 +178,6 @@ d1 bassWalk
 
 -- 2. Span — the beam extends. Ride, comping, and a 3-against-4 woodblock.
 -- ~40 cycles (~104 s at 92 BPM).
-
 xfadeIn 2 12 brush
 xfadeIn 5 24 ride
 xfadeIn 3 24 . swing8 . struct "t ~ ~ t ~ ~ t ~" . pianoComp $ slow 3 hSpan
@@ -193,7 +192,6 @@ xfadeIn 1 32 bassWalk4
 
 -- 3. Load — the span takes weight. The full ensemble, still lazy.
 -- ~40 cycles (~104 s at 92 BPM).
-
 d8 kickSoft
 xfadeIn 3 16 compLoad
 xfadeIn 6 24 colourLoad
@@ -203,9 +201,9 @@ d9 . degrade $ reedCall
 -- add a little ride bell for lift
 d5 $ stack [ride, rideBell]
 
+
 -- 4. Overhang — the far end hangs. Tempo nudges up; the structure sings.
 -- ~40 cycles (~98 s at 98 BPM).
-
 glideBpm 98 16 -- from 92
 d1 bassLoad
 d2 brush
@@ -228,7 +226,6 @@ d6 $ pianoHi hOver # amp 2
 
 -- 5. Creak — the structure complains. Tempo drops; the room takes over.
 -- ~32 cycles (~89 s at 86 BPM).
-
 glideBpm 86 16 -- from 98
 -- the kit and the trumpet fall away; a cymbal rub remains
 fadeSilence 8 [2,8,10]
@@ -253,7 +250,7 @@ xfadeIn 7 24 $ degradeBy 0.7 metalSpark
 -- ~24 cycles (~60 s at 96 BPM).
 
 -- this adds rhythm but have to wait for the whole fade in
-glideBpm 96 16 -- from 86
+glideBpm 96 90 -- from 86
 fadeMulti 24 [
   (1, bassSnap),
   (2, brushSnap),
@@ -273,7 +270,7 @@ xfadeIn 1 32 bassSettle
 -- ~40 cycles (~104 s at 92 BPM).
 
 -- change of rhythm
-glideBpm 92 16 -- from 96
+glideBpm 92 30 -- from 96
 fadeSilence 8 [7,10]
 d8 kickSoft
 d2 brush
@@ -288,7 +285,7 @@ d9 reedCall -- the reed returns for one phrase
 -- 8. Afterimage — open coda. The room keeps the shape after the sound.
 -- ~40+ cycles at 92 BPM; open-ended.
 
-glideBpm 92 16
+glideBpm 92 30
 -- strip the rhythm and most of the harmony
 fadeSilence 16 [1,2,3,5,8,9]
 -- leave a high piano shadow, filtered trumpet, metal and air

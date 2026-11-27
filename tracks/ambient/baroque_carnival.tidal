@@ -116,7 +116,7 @@ let
   fiddleVoice :: Pattern Note -> ControlPattern
   fiddleVoice p = note p # s "hedge_fiddle" # pF "bow" 0.018 # pF "body" 1700
     # attack 0.12 # sustain 0.4 # release 0.55 # lpf 3200
-    # pan 0.3 # room 0.55 # size 0.68 # amp 0.32
+    # pan 0.3 # room 0.55 # size 0.68 # amp 0.2
   --
   pluckVoice :: Pattern Note -> ControlPattern
   pluckVoice p = note p # s "pluck" # sustain 0.18 # release 0.16

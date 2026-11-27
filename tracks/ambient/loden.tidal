@@ -37,7 +37,7 @@ let
       "ef4 ~ ~ ~ ~ ~ bf3 ~ c4 ~ ~ ~ bf3 ~ g4 ~"])
     # s "supersaw" # voice 0.35 # resonance 0.18 # lfo 1.6
     # pitch1 0.6 # sustain 2.6 # decay 0.12
-    # lpf 2800 # room 0.85 # size 0.9 # amp 0.3
+    # lpf 2800 # room 0.85 # size 0.9 # amp 0.2
   -- the call/response gatings are reused across several sections
   sawAsk = when odd (const silence) sawLead
   sawAnswer = when even (const silence) sawLead

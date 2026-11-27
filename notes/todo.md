@@ -27,6 +27,11 @@ Remove when done
 - **Emacs tags** — `stitch` and other `let`-local pattern names are not in TAGS;
   evaluate the setup paragraph, or find a tags/LSP setup that indexes locals.
   Check `visit-tags-table`/`tags-table-list` after the ontology move too.
+- **`C-c C-i` on `cycleD` → "C-c TAB is undefined"** — Emacs reads `C-i` as
+  `TAB`, so interrupting a running `cycleD` with `C-c C-i` sends `C-c TAB`,
+  which has no binding and leaves the loop going. Find a reliable interrupt
+  (rebind `C-c C-i`, or a distinct key) so a live coder can abort `cycleD`
+  without restarting the REPL.
 - **Replace deprecated `dam.py` with upstream `dam-query`** — the validated
   queries now exist in `../dam` on the `agents` branch as `dam-query`
   (`--tags`, `--key`, tag intersection, advisory `--check`). The local script
@@ -34,4 +39,10 @@ Remove when done
   the decks, but assumes the old `tracks/...tidal` paths. Don't extend it. Once
   `dam-query` is merged or installed, remove the local reader and update the
   skill/toolbox references; decks stay hand-edited meanwhile.
+- **`dam-query` can't intersect tags across schemes** — `TAG [TAG...]` only
+  matches labels in one deck's filename, so `key:E groove` over `dimensions/` +
+  `spines/` finds nothing. Cross-scheme browsing needs `--key NAME`, or a new
+  query mode that joins rows by key across decks. Note the limitation in
+  `notes/ontology/README.md` until then.
 - enable tidal event highlighting?
+- group affine clutchIns in kumpania
