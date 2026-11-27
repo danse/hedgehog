@@ -1,0 +1,205 @@
+-- Meridian — trance / one loop, one lift
+-- 134 BPM · D minor. Dm9 | Bbmaj9 | Fmaj9 | C6/9, one chord per bar; written
+-- here, no outside source. Sections 1-8 stay in D minor. Section 9 turns the
+-- D chord major (Dmaj9 | Bbmaj9 | Fmaj9 | C6/9): the tonic third brightens,
+-- the bass does not move. Section 11 resolves that chord back to Dm9.
+-- ~312 cycles, about 9:20 at 134 BPM. One cycle = one bar (~1.79 s).
+--
+-- Eval the setup block first, then the sections in order. Section 6 is the
+-- break, 7 the return, 9 the lift, 10 the hold. 11 is the resolve; let the last
+-- chord ring before `hush`. Double blank = landing: the texture can hold there.
+--
+-- dN is a seat in the band: 1 kick, 2 closed hats, 3 bass, 4 pad, 5 clap,
+-- 6 stabs, 7 open hat, 8 rim, 9 lead, 10 air. Entries use clutchIn;
+-- replacements and exits use xfadeIn / fadeSilence, so the numbers keep their
+-- meaning all night.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- Sample bases: house:0 kick, house:3 closed hat, house:4 open hat; cp:0 clap;
+-- rs rim; jvbass:0 ~ fs2, juno:5/8 ~ c5, pluck:8 ~ d5 (speedAt tunes them);
+-- wind:1 air. Keep size <= 0.9 and trim with amp, not gain.
+
+glideBpm 134 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices. Everything used once stays inline at its section. Keep this
+-- whole block one paragraph: C-RET evaluates it together.
+-- ---------------------------------------------------------------------------
+let
+  -- Four-bar loop, root position. The pad plays these as written; the stabs
+  -- are rootless 3-5-7-9 voicings above them.
+  loopRoot :: Pattern Note
+  loopRoot = "<d3 bf2 f2 c3>"
+  --
+  loopMinor :: Pattern String
+  loopMinor = "<min9 maj9 maj9 sixNine>"
+  --
+  -- The lift keeps every other chord and changes only the tonic's third.
+  loopLift :: Pattern String
+  loopLift = "<maj9 maj9 maj9 sixNine>"
+  --
+  loop :: Pattern Note
+  loop = chordAt loopRoot loopMinor
+  --
+  loopUp :: Pattern Note
+  loopUp = chordAt loopRoot loopLift
+  --
+  homeChord :: Pattern Note
+  homeChord = chordAt "d3" "min9"
+  --
+  -- Offbeat eighths; the octave on the fourth hit of each bar gives the line
+  -- somewhere to go without changing the bass sample.
+  bassRoots :: Pattern Note
+  bassRoots = "<[~ d2 ~ d2 ~ d2 ~ d3] [~ bf1 ~ bf1 ~ bf1 ~ bf2] [~ f2 ~ f2 ~ f2 ~ f3] [~ c2 ~ c2 ~ c2 ~ c3]>"
+  --
+  -- Dm9: F A C E. Only the first voicing changes at the lift: F -> F#.
+  stabsMinor :: Pattern Note
+  stabsMinor = "<[f4,a4,c5,e5] [d4,f4,a4,c5] [a4,c5,e5,g5] [e4,g4,a4,d5]>"
+  --
+  stabsLift :: Pattern Note
+  stabsLift = "<[fs4,a4,c5,e5] [d4,f4,a4,c5] [a4,c5,e5,g5] [e4,g4,a4,d5]>"
+  --
+  -- One 16th-note arpeggio per bar, with the strong beats left open for the
+  -- kick. The lift version changes D minor's F/C to F#/C# only where they sit
+  -- over the D chord; the other three bars are already major.
+  leadMinor :: Pattern Note
+  leadMinor = "<[d5 ~ f5 ~ a5 ~ c6 ~ a5 ~ f5 ~ d5 ~ ~ ~ ~] [~ d5 ~ f5 ~ a5 ~ c5 ~ f5 ~ a5 ~ ~ ~ ~ ~] [a4 ~ c5 ~ e5 ~ g5 ~ a5 ~ e5 ~ c5 ~ ~ ~ ~] [e5 ~ g5 ~ a5 ~ c6 ~ a5 ~ g5 ~ e5 ~ ~ ~ ~]>"
+  --
+  leadLift :: Pattern Note
+  leadLift = "<[d5 ~ fs5 ~ a5 ~ cs6 ~ a5 ~ fs5 ~ d5 ~ ~ ~ ~] [~ d5 ~ fs5 ~ a5 ~ c5 ~ fs5 ~ a5 ~ ~ ~ ~ ~] [a4 ~ c5 ~ e5 ~ g5 ~ a5 ~ e5 ~ c5 ~ ~ ~ ~] [e5 ~ g5 ~ a5 ~ c6 ~ a5 ~ g5 ~ e5 ~ ~ ~ ~]>"
+  --
+  kick :: Pattern String
+  kick = "<house:0*4 house:0*4 [house:0 house:0 house:0 [house:0 house:0]] [house:0 house:0 house:0 ~]>"
+  --
+  hats :: ControlPattern
+  hats = s "house:3*16"
+    # amp "0.5 0.22 0.34 0.22 0.48 0.22 0.3 0.22 0.5 0.22 0.34 0.22 0.46 0.22 0.32 0.24"
+    # hpf 720 # room 0.06 # size 0.16
+  --
+  bass :: Pattern Note -> ControlPattern
+  bass p = speedAt "fs2" p # s "jvbass" # n 0
+    # sustain 0.24 # release 0.12 # lpf 660 # lpq 0.24
+    # shape 0.18 # room 0.08 # size 0.2 # amp 0.9
+  --
+  -- The pad takes the whole loop one chord per bar. The 4-step gain ducks
+  -- each bar under the kick; the long release lets the chords overlap.
+  pad :: Pattern Note -> ControlPattern
+  pad p = speedAt "c5" p # s "juno:8"
+    # sustain 1.6 # release 0.9 # hpf 150 # lpf 2200
+    # gain "0.6 1 1 1" # room 0.5 # size 0.68 # amp 0.24
+  --
+  clap :: ControlPattern
+  clap = s "~ ~ cp:0 ~ ~ ~ cp:0 ~" # amp 0.55 # room 0.22 # size 0.34
+  --
+  stab :: Pattern Note -> ControlPattern
+  stab p = struct "~ t ~ t ~ t ~ t"
+    $ speedAt "c5" p # s "juno:5"
+    # sustain 0.16 # release 0.12 # lpf 2800 # lpq 0.3
+    # gain "0.6 1 0.7 1 0.6 1 0.72 1"
+    # room 0.3 # size 0.5 # pan 0.38 # amp 0.42
+  --
+  openHat :: ControlPattern
+  openHat = s "~ house:4 ~ house:4 ~ house:4 ~ house:4"
+    # amp 0.3 # hpf 420 # room 0.12 # size 0.24 # pan 0.56
+  --
+  rim :: ControlPattern
+  rim = s "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ rs ~ ~ ~ rs ~"
+    # amp 0.22 # hpf 500 # room 0.1 # size 0.2 # pan 0.32
+  --
+  lead :: Pattern Note -> ControlPattern
+  lead p = speedAt "d5" p # s "pluck" # n 8
+    # sustain 0.12 # release 0.2 # hpf 320 # lpf 5200
+    # gain "0.8 1 1 1" # room 0.4 # size 0.6 # pan 0.6 # amp 0.34
+  --
+  air :: ControlPattern
+  air = slow 4 $ s "wind:1" # speed 0.32 # hpf 320 # lpf 1400
+    # room 0.4 # size 0.62 # amp 0.28
+
+
+-- 1 · Doors — 24 cycles. The band arrives under blankets: thud, thin hats,
+--     low sub, then the pad. Nothing leaves; the loop is stated before it moves.
+clutchIn 1 16 $ s kick # amp 0.82 # lpf 260 # room 0.04 # size 0.1
+clutchIn 2 20 $ hats # lpf 4800
+clutchIn 3 20 $ bass bassRoots # lpf 360
+clutchIn 4 24 $ pad loop # lpf 900 # amp 0.18
+
+-- 2 · Pulse — 24 cycles. The kick opens and the hats run straight; the sub
+--     lifts its filter and the pad begins a slow sweep. Still no backbeat.
+clutchIn 1 8 $ s kick # amp 0.92 # lpf 520
+clutchIn 2 8 $ hats
+xfadeIn 3 8 $ bass bassRoots # lpf 620
+xfadeIn 4 12 $ pad loop # lpf (range 900 2600 $ slow 24 sine)
+
+-- 3 · Backbeat — 24 cycles. The clap enters on 2 and 4; the kick and sub get
+--     a little more level. The loop is now a band rather than a bed.
+clutchIn 5 12 $ clap
+xfadeIn 1 8 $ s kick # amp 0.96 # lpf 600
+xfadeIn 3 8 $ bass bassRoots # lpf 700
+
+-- 4 · Comp — 32 cycles. Juno stabs on the offbeats and the open hat under
+--     them. The pad sweep reaches the top of its band.
+clutchIn 6 16 $ stab stabsMinor
+clutchIn 7 20 $ openHat
+xfadeIn 4 16 $ pad loop # lpf (range 1200 3600 $ slow 32 sine)
+
+
+-- Landing: the four-piece band can hold here.
+
+-- 5 · Signal — 24 cycles. Rim and arpeggio enter; the comp changes shape
+--     around them rather than getting louder.
+clutchIn 8 12 $ rim
+clutchIn 9 16 $ lead leadMinor
+xfadeIn 6 8 $ stab stabsMinor # amp 0.38
+
+-- 6 · Meridian — 24 cycles. The break: hats, bass, clap, comp, open hat, rim
+--     and lead leave; a muffled kick and the pad hold the pulse. Air enters.
+xfadeIn 1 8 $ s kick # amp 0.52 # lpf 180
+multi xfadeIn 8 [(2, silence), (3, silence), (5, silence), (6, silence),
+                 (7, silence), (8, silence), (9, silence)]
+xfadeIn 4 8 $ pad loop # lpf 700 # amp 0.2 # room 0.6 # size 0.78
+clutchIn 10 12 $ air # amp 0.34
+
+-- 7 · Return — 32 cycles. The engine comes back in one gesture: kick, hats,
+--     sub and clap together; stabs and open hat a beat behind. The pad opens.
+multi clutchIn 8 [(1, s kick # amp 0.96 # lpf 560), (2, hats),
+                  (3, bass bassRoots # lpf 700), (5, clap)]
+clutchIn 6 12 $ stab stabsMinor
+clutchIn 7 16 $ openHat
+xfadeIn 4 8 $ pad loop # lpf (range 1400 4200 $ slow 16 sine)
+xfadeIn 10 12 $ air # amp 0.2
+
+
+-- Landing: the full minor band can hold here before the lift.
+
+-- 8 · Rise — 32 cycles. No new seats except the rim returning; the lead and
+--     comp get more room, and the air carries a narrow rising band.
+clutchIn 8 8 $ rim
+xfadeIn 9 8 $ lead leadMinor # amp 0.4 # lpf 6200
+xfadeIn 6 8 $ stab stabsMinor # amp 0.46 # lpf 3200
+xfadeIn 10 12 $ air # amp 0.42 # hpf 500
+
+-- 9 · Lift — 32 cycles. The tonic chord turns major; the bass and the four-bar
+--     shape do not move. Pad, comp and lead take the new third together.
+xfadeIn 5 4 $ clap # amp 0.62
+xfadeIn 4 8 $ pad loopUp # lpf 4800 # amp 0.28
+xfadeIn 6 8 $ stab stabsLift # amp 0.5
+xfadeIn 9 8 $ lead leadLift # amp 0.46
+
+-- 10 · Apex — 32 cycles. Hold the lift; no new seats. The kick and pad breathe
+--      on long filters while the arpeggio keeps the same 16th grid.
+xfadeIn 1 4 $ s kick # amp 1 # lpf 640
+xfadeIn 7 8 $ openHat # amp 0.36
+xfadeIn 4 16 $ pad loopUp # lpf (range 2600 5600 $ slow 8 sine) # amp 0.3
+
+
+-- Landing: the lifted band can hold here; detach from it if the set wants.
+
+-- 11 · Home — 24 cycles. The D chord resolves to Dm9; the drums leave in one
+--      fade, leaving the pad, a low comp and air. Let the last chord ring.
+xfadeIn 4 12 $ pad homeChord # lpf 1400 # amp 0.24 # room 0.6 # size 0.78
+xfadeIn 6 12 $ stab stabsMinor # amp 0.3 # lpf 1800
+xfadeIn 10 16 $ air # amp 0.3
+fadeSilence 12 [1,2,3,5,7,8,9]
+
+-- End — let the chord and the air ring out, then `hush`.
+fadeSilence 16 [4,6,10]
