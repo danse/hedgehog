@@ -238,8 +238,6 @@ mPlay count >>= multi clutchIn 16
 clutchIn 9 8 $ chip count
 
 
--- Landing: the riddle can hold before the hats split it.
-
 -- scatter — hats split the clatter; stabs and flare wait.
 mPlay scatter >>= multi clutchIn 16
 attacks [(5, stab scatter)]
@@ -248,8 +246,6 @@ attacks [(5, stab scatter)]
 mPlay clatter >>= multi clutchIn 16
 xfadeIn 4 8 $ hat clatter
 
-
--- Landing: the full clatter band can hold here.
 
 -- answer — kick drops; stab and hiss carry the question.
 mPlay answer >>= multi clutchIn 16
@@ -264,8 +260,6 @@ xfadeIn 3 8 (bass glare)
 mPlay mirror >>= multi xfadeIn 16
 clutchIn 5 8 (stab mirror)
 
-
--- Landing: the mirrored band can hold.
 
 -- tangle — everything except hiss; chip and flare are on the table.
 mPlay tangle >>= multi clutchIn 16

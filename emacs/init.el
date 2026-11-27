@@ -293,6 +293,9 @@ as part of the name (for example `substruct'')."
   (local-set-key (kbd "C-c C-h") #'hedgehog-hush)
   (local-set-key (kbd "C-c C-k") #'hedgehog-hush)
   (local-set-key (kbd "C-c C-i") #'tidal-interrupt-haskell)
+  ;; `C-i' arrives as TAB on a terminal and <tab> in a GUI frame.
+  (local-set-key (kbd "C-c TAB") #'tidal-interrupt-haskell)
+  (local-set-key (kbd "C-c <tab>") #'tidal-interrupt-haskell)
   (local-set-key (kbd "C-c C-v") #'tidal-see-output)
   (local-set-key (kbd "C-c C-q") #'tidal-quit-haskell))
 

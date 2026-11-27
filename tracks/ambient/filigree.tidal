@@ -109,23 +109,17 @@ clutchIn 1 24 $ droneVoice roots
 clutchIn 2 32 $ padVoice loop
 
 
--- Landing: the four chords can hold alone.
-
 -- 2 · Cell. Subject states the turn; the answer follows a cell-note behind,
 -- a fifth up.
 clutchIn 3 16 $ subjectVoice subjectPlain
 clutchIn 4 16 $ answerVoice answerPlain
 
 
--- Landing: the canon holds.
-
 -- 3 · Toccata. The cell folds out at four times the rate; its reversed
 -- shadow interleaves against it.
 clutchIn 5 16 $ figVoice figPlain
 clutchIn 6 16 $ shadowVoice shadowPlain
 
-
--- Landing: the filigree holds. Good spot for interpreter snippets
 
 -- 4 · Modulation. The +3 / -1 contour becomes the key ladder: one lift per
 -- loop pass. Open the pad as it starts to turn and let the air in.
@@ -137,8 +131,6 @@ multi clutchIn 24 [
   (8, air)]
 
 
--- Landing: the ladder is audible; hold while it climbs.
-
 -- 5 · Fugue. The countersubject enters two notes behind the subject, an
 -- octave up, and the slow bell states the same cell at a third rate.
 multi clutchIn 24 [
@@ -146,8 +138,6 @@ multi clutchIn 24 [
   (7, bellVoice $ slow 4 counter),
   (8, air # lpf 3600 # amp 0.14)]
 
-
--- Landing: three rates of the same cell overlap.
 
 -- 6 · Episode. Thin to drone, pad and toccata; the shadow drops back and the
 -- pad filter drifts down under the ladder.
@@ -157,8 +147,6 @@ multi clutchIn 20 [
   (6, shadowVoice shadow # amp 0.12),
   (7, silence)]
 
-
--- Landing: the sparse texture holds.
 
 -- 7 · Return. Ladder home; every voice restates the plain cell at its own
 -- rate. This is the full texture.
@@ -171,8 +159,6 @@ multi clutchIn 24 [
   (7, bellVoice (slow 4 counterPlain)),
   (8, air # amp 0.08)]
 
-
--- Landing: home key, all eight seats.
 
 -- 8 · Coda. Take the melodic voices out and let the drone and bell ring.
 multi clutchIn 32 [

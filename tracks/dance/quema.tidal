@@ -160,7 +160,6 @@ clutchIn 6 16 conga
 clutchIn 7 16 $ leadVoice leadPat
 
 
--- Landing: the band is complete.
 -- Interpreter snippet — hold here and try a longer, dirtier scrape:
 -- d2 $ guiro # rate 0.8 # lpf 4800
 
@@ -177,7 +176,6 @@ clutchIn 9 16 rim
 clutchIn 10 16 maracas
 
 
--- Landing: all ten seats.
 -- Interpreter snippet — give the open hat more room:
 -- clutchIn 8 4 $ openHat # amp 0.4
 
@@ -197,8 +195,6 @@ multi clutchIn 16 [
   (8, openHat)]                          -- open hat
 
 
--- Landing: full band.
-
 -- 12b · Push. Palmas, congas, open hat and maracas rise before the turn. Hold
 -- this landing at least eight cycles so the rise settles before §13.
 multi clutchIn 8 [
@@ -207,8 +203,6 @@ multi clutchIn 8 [
   (8, openHat # amp 0.36),               -- open hat up
   (10, maracas # amp "0.3 0.16 0.26 0.16 0.3 0.16 0.26 0.16")]  -- maracas up
 
-
--- Landing: the push holds.
 
 -- 13 · Turn. One tone up, scrape doubled, rim sharper.
 multi xfadeIn 16 [
@@ -219,8 +213,6 @@ multi xfadeIn 16 [
   (7, leadVoice (leadPat |+ 2) # amp 1.3),  -- tune +2
   (9, rim # amp 0.5)]                    -- rim
 
-
--- Landing: the lifted loop holds.
 
 -- 14 · Outro. Back to A minor, thinning to the dance core: bombo, scrape,
 -- bass, palmas, congas and lead.

@@ -72,7 +72,8 @@ Finally `hush` and let the room/hall tail ring.
 1. `hush`
 2. `setbpm 72`
 3. Re-eval the setup block in `hedgehog.tidal`, then one movement block.
-4. If the REPL is wedged: `C-c C-i` (interrupt), then `C-c C-s` (restart).
+4. If the REPL is wedged: `C-c C-i` / `C-c TAB` (interrupt), then `C-c C-s`
+   (restart).
 
 ## Recording notes
 

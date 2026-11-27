@@ -123,8 +123,6 @@ d1 $ cello ground
 d2 $ pad harmony
 
 
--- Landing: the ground can hold alone.
-
 -- 2 · Entries — violin I at source bar 3, violin II two bars later, violin III
 --     two bars after that. The later entries are the same pasted bars with
 --     leading rests, as in the source.
@@ -132,8 +130,6 @@ clutchIn 3 16 $ bow (cat entryBars)
 clutchIn 4 16 $ bow (delayed 2 entryBars) # pan (-0.25)
 clutchIn 5 16 $ bow (delayed 4 entryBars) # pan 0.35
 
-
--- Landing: the round is audible; hold before the figuration.
 
 -- 3 · Turn — source bars 9-16. The three entries restart their bars on the
 --     downbeat; the plucked shadow begins six bars in, and air opens under it.
@@ -144,8 +140,6 @@ multi clutchIn 20 [
   (6, shadow (delayed 6 turnBars)),
   (7, air)]
 
-
--- Landing: three offset lines and the shadow carry the same material.
 
 -- 4 · Suspension — thin to one bowed line over the ground, with the pad filter
 --     closing and the air lower. The other entries fade out rather than cut.
@@ -158,8 +152,6 @@ multi xfadeIn 16 [
   (7, air # amp 0.14)]
 
 
--- Landing: sparse enough to hear the ground moving under one line.
-
 -- 5 · Variation — source bars 17-24, fast and higher. The bell takes the last
 --     eight bars while the bowed voices and shadow keep their offsets.
 multi clutchIn 20 [
@@ -169,8 +161,6 @@ multi clutchIn 20 [
   (6, shadow (delayed 6 variationBars) # amp 0.26),
   (8, bell (delayed 8 variationBars))]
 
-
--- Landing: the variation holds; the bell can be left alone here.
 
 -- 6 · Coda — the source's last bar in all four parts, spread across the seats.
 multi xfadeIn 12 [

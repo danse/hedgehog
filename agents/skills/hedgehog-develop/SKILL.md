@@ -38,6 +38,8 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   a `lechuga` is a repeatable work session (explorative, no audience yet,
   allowed heavy/lengthy, ending in a live-built flower named per session).
   They are not tag decks; a landing is a double-blank hold point in a track.
+  Do not label landings with `-- Landing:` comments — the double blank is the
+  only marker, so paragraph jumps stay clean in Emacs.
 - In a setup `let`, join the logical parts with bare `--` lines, not blank
   lines: the whole block stays one sender group and one eval. Double blanks
   between sections still mark landings.
@@ -51,6 +53,8 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
 - Matrix API: interface in `notes/matrix-api.tidal`, implementation in
   `boot/matrix.hs`. Voice calls return patterns; transitions stay at the call
   site.
+- Outside ideas: the `contributors` skill indexes outside Tidal tune clones in
+  `..`; credit anything actually borrowed in the track header.
 - Public repo: commit only on explicit request; keep drafts unvetted and
   untracked until listened to; preserve score credits and user edits.
 - Verify: `dam-query --check` (advisory) for labels and

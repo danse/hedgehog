@@ -44,6 +44,16 @@ dam-read 'notes/ontology/spines/groove loop'
 (cd notes/ontology/spines && dam-set-sizes)  # counts by set of tags
 ```
 
+If `dam-query` is not on `PATH`, rebuild it from the local `../dam` checkout
+(the `agents` branch). From the Hedgehog root:
+
+```sh
+ghc -package containers -package directory -package filepath -package parsec \
+  -i../dam -o /tmp/opencode/dam-query ../dam/dam-query.hs
+```
+
+Then use `/tmp/opencode/dam-query` in the examples above.
+
 ## Editing decks
 
 To change a label, move its card to a differently named file. There is no

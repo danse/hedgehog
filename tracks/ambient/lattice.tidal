@@ -256,8 +256,6 @@ let
 mPlay opening >>= multi clutchIn 16
 
 
--- Landing: the bed can hold here before the clock arrives.
-
 -- ticks — air leaves; clock and koto enter. Bell and dust are optional.
 mPlay ticks >>= multi clutchIn 16
 clutchIn 5 8 $ bells ticks
@@ -266,8 +264,6 @@ clutchIn 5 8 $ bells ticks
 mPlay chimes >>= multi clutchIn 16
 xfadeIn 4 8 $ koto chimes
 
-
--- Landing: the full bell band can hold here.
 
 -- reedline — clock and bells fade; reed enters. Air and high koto are offered.
 mPlay reedline >>= multi clutchIn 16
@@ -283,8 +279,6 @@ mPlay answer >>= multi clutchIn 16
 clutchIn 5 8 $ bells answer
 xfadeIn 7 8 $ air answer
 
-
--- Landing: the quiet reed band can hold before the last lattice.
 
 -- reweave — clock and high koto return. Wide bells and dust are offered.
 mPlay reweave >>= multi clutchIn 16

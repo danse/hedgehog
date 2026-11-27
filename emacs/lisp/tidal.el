@@ -291,6 +291,9 @@ Two functions will be created, `tidal-run-NAME' and `tidal-stop-NAME'"
   (keymap-set map "C-c C-r" #'tidal-run-region)
   (keymap-set map "C-c C-l" #'tidal-load-buffer)
   (keymap-set map "C-c C-i" #'tidal-interrupt-haskell)
+  ;; Terminals send TAB for C-i; GUI frames can send <tab>. Bind all three.
+  (keymap-set map "C-c TAB" #'tidal-interrupt-haskell)
+  (keymap-set map "C-c <tab>" #'tidal-interrupt-haskell)
   (keymap-set map "C-c C-m" #'tidal-run-main)
   (keymap-set map "C-c C-h" #'tidal-hush)
   (keymap-set map "C-c C-1" #'tidal-run-d1)
@@ -325,6 +328,9 @@ Two functions will be created, `tidal-run-NAME' and `tidal-stop-NAME'"
   (keymap-local-set "C-c C-r" #'tidal-run-region)
   (keymap-local-set "C-c C-l" #'tidal-load-buffer)
   (keymap-local-set "C-c C-i" #'tidal-interrupt-haskell)
+  ;; `C-i' is TAB on a terminal; a GUI frame can send <tab> instead.
+  (keymap-local-set "C-c TAB" #'tidal-interrupt-haskell)
+  (keymap-local-set "C-c <tab>" #'tidal-interrupt-haskell)
   (keymap-local-set "C-c C-m" #'tidal-run-main)
   (keymap-local-set "C-c C-h" #'tidal-hush)
   (keymap-local-set "C-c C-1" #'tidal-run-d1)

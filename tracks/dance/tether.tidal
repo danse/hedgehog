@@ -120,8 +120,6 @@ xfadeIn 3 20 $ bass # lpf 380
 xfadeIn 4 28 $ pad # lpf 900
 
 
--- Landing: the ground can hold on its own.
-
 -- 2 · Room — 32 bars. Backbeat, comp and open hat. The kick loses its blanket;
 --     nothing leaves.
 xfadeIn 1 8 $ kick # lpf 520
@@ -130,16 +128,12 @@ xfadeIn 6 16 $ stabs
 xfadeIn 7 24 $ openHat
 
 
--- Landing: the loop is audible as a band now.
-
 -- 3 · Hook — 32 bars. The rim answers on the "a" of 4, the vowel chop enters
 --     behind a filter, and air opens underneath.
 d8 $ rim
 clutchIn 9 24 $ hook # lpf 1200
 xfadeIn 10 28 $ air
 
-
--- Landing: all ten seats are present; hold before the first peak.
 
 -- 4 · Peak one — 24 bars. No new voices: the filter opens on the pad, stabs
 --     and hook, and the comp phrase gains an extra hit.
@@ -150,8 +144,6 @@ multi xfadeIn 8 [
   (9, hook # lpf 7200 # amp 0.56)]
 
 
--- Landing: the bright band can sit here by itself.
-
 -- 5 · Filter break — 8 bars. The kit fades out; the remaining loop halves and
 --     its filters sweep. Evaluate the return on the last bar.
 fadeSilence 8 [1,2,5,7,8]
@@ -160,8 +152,6 @@ multi xfadeIn 8 [
   (4, slow 2 $ pad # lpf (range 300 1400 $ slow 2 sine) # amp 0.2),
   (9, slow 2 $ hook # lpf (range 400 2600 $ slow 2 sine) # amp 0.34)]
 
-
--- Landing: the half-speed loop is a complete texture.
 
 -- 6 · Return — 24 bars. The kit comes back on the bar in one gesture; the
 --     harmonic seats open with it.
@@ -177,16 +167,12 @@ multi xfadeIn 16 [
   (9, hook # lpf 5600)]
 
 
--- Landing: same band, same loop, back at full speed.
-
 -- 7 · Turn — 32 bars. No modulation: the stabs change phrase and voicing, the
 --     hook answers a minor third up while the pad steps forward.
 xfadeIn 6 8 $ stabsAt "~ t ~ ~ t ~ ~ t" stabVoices # lpf 4200 # amp 0.44
 xfadeIn 9 12 $ hookAt (hookNotes |+ 3) # lpf 6000
 xfadeIn 4 16 $ pad # lpf 2600 # amp 0.26
 
-
--- Landing: the turned phrases can carry the loop alone.
 
 -- 8 · Bed B — 24 bars. The kit stays exactly as it was; the four chords rotate
 --     to Bb | C | Dm | Gm. Bass and stabs follow the new order, and the hook
@@ -198,8 +184,6 @@ multi xfadeIn 12 [
   (9, hookAt hookNotes # lpf 6200)]
 
 
--- Landing: the B bed holds on its own.
-
 -- 9 · Homecoming — 24 bars. The four chords rotate back to Dm | Gm | Bb | C.
 --     The bed-B stab phrase rides the original voicings; bass, pad and hook
 --     return to the home loop at the same registers. No new voices, no peak.
@@ -210,8 +194,6 @@ multi xfadeIn 12 [
   (9, hook # lpf 6200)]
 
 
--- Landing: the home loop holds on its own.
-
 -- 10 · Lift — 32 bars. Slow filter sweep over the three harmonic seats; the
 --     kit stays exactly as it was.
 multi xfadeIn 16 [
@@ -220,8 +202,6 @@ multi xfadeIn 16 [
   (9, hookAt (hookNotes |+ 3) # lpf (range 3600 10000 $ slow 16 sine) # amp 0.6)]
 
 
--- Landing: the sweep can end here and the loop still reads.
-
 -- 11 · Outro — 16 bars. The kit leaves; pad, bass and air return to the
 --      opening registers.
 xfadeIn 4 6 $ pad # lpf 1400 # amp 0.22
@@ -229,8 +209,6 @@ xfadeIn 3 6 $ bass # lpf 500 # amp 0.7
 xfadeIn 10 8 $ air # amp 0.36
 fadeSilence 12 [1,2,5,6,7,8,9]
 
-
--- Landing: three seats, nothing else.
 
 -- 12 · End — 16 bars. One long fade, then the room is empty.
 multi xfadeIn 12 [

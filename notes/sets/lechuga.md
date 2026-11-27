@@ -24,3 +24,18 @@ than inheriting a previous route or name. Keep this a seed, not a chronicle.
 - Surprises late in a track are worth keeping — they are what the flower
   remembers.
 - Leave the last stretch for the flower; don't spend the whole hour on the arc.
+
+## TODO
+
+- **Equalisation gaps: quema → `baroque_carnival` → `strobe`** — the
+  `clearAll 128` handover dropped hard: `track-levels.py compare` puts baroque
+  at ~0.56× quema's RMS/cycle, and §1 Seed is only two quiet voices.
+  Baroque → strobe is different: whole-track RMS/cycle is equal (1.254 vs
+  1.253), so the impedance is at the *entry sections* (baroque's coda = ground
+  + bell; strobe's §1 Doors = four filtered voices), not in track level.
+  Verify both by ear in a lechuga run. A tool-side check won't help offline:
+  put a one-line **level note at the very top of the header** instead — words
+  first, numbers only if they earn their place: `-- level: loud (10 seats)`;
+  baroque: `-- level: mid (seed = 2 voices)`; strobe:
+  `-- level: mid (doors = 4 voices)`. Headers need a diet — one short line,
+  not a paragraph. Record in `hedgehog-develop`.

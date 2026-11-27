@@ -120,8 +120,6 @@ clutchIn 9 16 $ cimbalom cimbalomNotes
 clutchIn 10 16 $ brass brassNotes
 
 
--- Landing: ten seats, the seven in motion.
-
 -- 6 · Turn. Lift a fourth to D harmonic minor; drums stay put. The
 --    awkward bar is the point — wait for the seven to catch.
 multi clutchIn 16 [
@@ -142,8 +140,6 @@ multi xfadeIn 16 [
   (9, cimbalom (cimbalomNotes |+ 5)),
   (10, brass (brassNotes |+ 5) # amp 0.55)]
 
-
--- Landing: the lifted loop holds.
 
 -- 9 · Peak. Shaker to sixteenths; tapan, melodica and brass come forward.
 multi xfadeIn 8 [

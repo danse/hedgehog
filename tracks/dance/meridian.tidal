@@ -143,8 +143,6 @@ clutchIn 7 20 $ openHat
 xfadeIn 4 16 $ pad loop # lpf (range 1200 3600 $ slow 32 sine)
 
 
--- Landing: the four-piece band can hold here.
-
 -- 5 · Signal — 24 cycles. Rim and arpeggio enter; the comp changes shape
 --     around them rather than getting louder.
 clutchIn 8 12 $ rim
@@ -170,8 +168,6 @@ xfadeIn 4 8 $ pad loop # lpf (range 1400 4200 $ slow 16 sine)
 xfadeIn 10 12 $ air # amp 0.2
 
 
--- Landing: the full minor band can hold here before the lift.
-
 -- 8 · Rise — 32 cycles. No new seats except the rim returning; the lead and
 --     comp get more room, and the air carries a narrow rising band.
 clutchIn 8 8 $ rim
@@ -192,8 +188,6 @@ xfadeIn 1 4 $ s kick # amp 1 # lpf 640
 xfadeIn 7 8 $ openHat # amp 0.36
 xfadeIn 4 16 $ pad loopUp # lpf (range 2600 5600 $ slow 8 sine) # amp 0.3
 
-
--- Landing: the lifted band can hold here; detach from it if the set wants.
 
 -- 11 · Home — 24 cycles. The D chord resolves to Dm9; the drums leave in one
 --      fade, leaving the pad, a low comp and air. Let the last chord ring.

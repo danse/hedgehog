@@ -51,8 +51,6 @@ clutchIn 2 16 $ s "hh:0*16" # amp "1 0.5 0.75 0.5" # hpf 6000 # room 0.1 # size 
 clutchIn 3 16 $ s "~ cp ~ cp" # n 0 # amp 0.5 # room 0.2 # size 0.3
 
 
--- Landing: the engine holds.
-
 -- 2. Acid lead from the middle line. d4.
 clutchIn 4 8 $ acid inner
 -- 3. Low line under the kick. d5.
@@ -60,8 +58,6 @@ clutchIn 5 8 $ lowVoice low
 -- 4. Top line over the acid. d6.
 clutchIn 6 8 $ topVoice upper
 
-
--- Landing: all six streams; the counterpoint reads over the grid.
 
 -- Tempo seams. The MIDI marks 152 at bar 2 and 132 at bar 3, but a global
 -- glide speeds the whole loop, not one score bar. Call one at a time here.

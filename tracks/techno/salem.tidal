@@ -168,7 +168,6 @@ multi clutchIn 8 [
   (5, horn cScore),
   (6, midVoice bScore),
   (7, topVoice aScore)]
--- Landing: the clean loop holds.
 
 
 -- 2. Drift. Open the top two voices; the beat stays put.
@@ -184,5 +183,4 @@ clutchIn 2 4 subPat
 clutchIn 4 4 $ bass dScore # lpf 520
 
 
--- Landing: full, smooth loop.
 multi clutchIn 64 $ (, silence) <$> [1,2,3,4,5,6,7]
