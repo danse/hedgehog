@@ -80,7 +80,6 @@ xfadeIn 5 8 $ chords # lpf 400
 
 
 -- 2. Verse — groove settles, hook teases
-
 d2 $ stack [hats, hatsOpen]
 d6 $ degradeBy 0.2 $ shimmer
 -- tease the hook

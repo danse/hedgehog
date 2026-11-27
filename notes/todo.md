@@ -45,4 +45,5 @@ Remove when done
   query mode that joins rows by key across decks. Note the limitation in
   `notes/ontology/README.md` until then.
 - enable tidal event highlighting?
-- group affine clutchIns in kumpania
+- remove comments around landings. Many landings have a one-line comment about the landing, making paragraph jumps with emacs uncomfortable. For instance there is a landing and then `-- Landing: ...` and then a blank line. Remove the one-line comments so that landings are represented simply by the double newline. Their meaning is implicit. Add this to the dev skill
+- is meridian in the ontology?

@@ -97,14 +97,16 @@ let
     # room 0.6 # size 0.8 # amp 0.16
 
 -- 1 · Air. Campina's field, now moving.
-clutchIn 1 16 air
-clutchIn 2 16 tapan
-clutchIn 3 16 tabla
+multi clutchIn 16 [
+  (1, air),
+  (2, tapan),
+  (3, tabla)]
 
 -- 2 · Groove. Bass, shaker and scrape lock the three accents.
-clutchIn 4 16 $ bass bassNotes
-clutchIn 5 16 shaker
-clutchIn 6 16 guiro
+multi clutchIn 16 [
+  (4, bass bassNotes),
+  (5, shaker),
+  (6, guiro)]
 
 
 -- 3 · Tune. Quema's melodica part in seven, over the bowed bed.

@@ -126,22 +126,14 @@ let
 d1 kick
 
 d2 hats
-
 d3 sub -- subtle
-
 d4 keysPad
 
-
 d5 snare
-
 d6 organ
-
 d7 openHat
-
 d8 rim
-
 d9 vocal
-
 d10 air
 
 
@@ -228,13 +220,13 @@ d3 $ fast 4 $ subAt bassRoots # sustain 0.1 # release 0.1 # amp 2
 
 -- alt "drive" — the same 2-step with a kick on 4 as well; the fourth bar
 -- stutters on the "a" of 4 into whatever comes next. Same sample, same amp.
-d1 $ kickDrive
+d1 kickDrive
 
 -- alt "melody" — the same seat, an octave up, playing a four-bar line instead
 -- of the chord: G Bb D / C Bb A / G Eb D / C A G. The harmony is implied by
 -- the sub and the line, so drop d6 while this plays. The gaps are deliberate —
 -- the line answers the 2-step instead of filling it.
-d4 $ keysMelody
+d4 keysMelody
 
 
 -- 6. Outro — 16 bars. Back to the pad; the band thins to sub, keys and air

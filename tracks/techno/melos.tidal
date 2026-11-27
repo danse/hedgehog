@@ -35,7 +35,7 @@ let
   acid :: Pattern Note -> ControlPattern
   acid p = speedAt "b4" p # s "jungbass:3" # legato 0.9
     # lpf (fmap (\v -> 220 + 100 * v) (unNote <$> p))
-    # lpq 0.6 # amp "0.6 0.35 0.5 0.4" # room 0.08 # size 0.2
+    # lpq 0.6 # amp "0.3 0.17 0.25 0.2" # room 0.08 # size 0.2
   lowVoice :: Pattern Note -> ControlPattern
   lowVoice p = note p # s "hedge_horn" # legato 0.95
     # attack 0.03 # release 0.15 # lpf 1200
@@ -55,10 +55,8 @@ clutchIn 3 16 $ s "~ cp ~ cp" # n 0 # amp 0.5 # room 0.2 # size 0.3
 
 -- 2. Acid lead from the middle line. d4.
 clutchIn 4 8 $ acid inner
-
 -- 3. Low line under the kick. d5.
 clutchIn 5 8 $ lowVoice low
-
 -- 4. Top line over the acid. d6.
 clutchIn 6 8 $ topVoice upper
 
@@ -67,7 +65,7 @@ clutchIn 6 8 $ topVoice upper
 
 -- Tempo seams. The MIDI marks 152 at bar 2 and 132 at bar 3, but a global
 -- glide speeds the whole loop, not one score bar. Call one at a time here.
-glideBpm 152 2
+glideBpm 152 2 -- from 144
 
 glideBpm 132 2
 

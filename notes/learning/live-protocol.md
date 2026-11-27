@@ -13,7 +13,9 @@ For live coders and their assistants. Read `AGENTS.md`,
 - Match tempo/key/density at a landing; contrast only when asked.
 - Overflow is `seats(out) \ seats(in)`, including rewritten IDs.
 - Fade only leftovers with `fadeSilence` or `multi xfadeIn`.
-- Avoid `clearAll` and `clutchIn ... silence`; don't thin density to smooth a join.
+- Avoid `clearAll` and `clutchIn ... silence`; don't thin density to smooth a
+  join. Exception: a `plan_lechuga` work session, where a hard cut can be the
+  point.
 
 ## Lines
 - `C-c C-c` evals the current line; `C-RET` evals the paragraph. Single-line
@@ -35,8 +37,10 @@ For live coders and their assistants. Read `AGENTS.md`,
 - Spines = live-coding affordances; `notes/ontology/spines/`.
 - Dimensions = parametric root tags (`key:A`); `notes/ontology/dimensions/`.
   A modulating track carries each root (`strobe`: `key:E` + `key:F#`).
-- Session guides are ordered narratives (`notes/sets/ladder.md`), not tags.
-  A landing is a double-blank hold point in a track, not a session tag.
+- Set guides are ordered narratives (`notes/sets/`), not tags: `ladder` is a
+  listener-facing goal; `plan_lechuga` is a work session — explorative, no
+  audience yet, allowed heavy/lengthy. A landing is a double-blank hold point
+  in a track, not a session tag.
 - Headers own exact tempo/key/seats; tags never duplicate them.
 
 ## Safety

@@ -34,8 +34,10 @@ block counts. Read `AGENTS.md`, gotchas and the target header.
   as a card. Vocabulary and writing clues live in `notes/ontology/README.md`.
 - Track files are `snake_case` (`baroque_carnival.tidal`); ontology cards use
   the bare stem. Genre folders and BPM stay out of tag decks.
-- Session guides are ordered narratives (`notes/sets/ladder.md`), not tag
-  decks; a landing is a double-blank hold point in a track, not a session tag.
+- Set guides are ordered narratives (`notes/sets/`): `ladder` is listener-facing,
+  `plan_lechuga` is a work session (explorative, no audience yet, allowed
+  heavy/lengthy). They are not tag decks; a landing is a double-blank hold
+  point in a track.
 - In a setup `let`, join the logical parts with bare `--` lines, not blank
   lines: the whole block stays one sender group and one eval. Double blanks
   between sections still mark landings.

@@ -160,13 +160,14 @@ let
 
 -- 1. Entry. The beat is plain from the start; the written rests make the
 --    stagger. Evaluate each clutch line, or the whole paragraph, as one block.
-clutchIn 1 8 kickPat
-clutchIn 2 8 subPat
-clutchIn 3 8 hatPat
-clutchIn 4 8 $ bass dScore
-clutchIn 5 8 $ horn cScore
-clutchIn 6 8 $ midVoice bScore
-clutchIn 7 8 $ topVoice aScore
+multi clutchIn 8 [
+  (1, kickPat),
+  (2, subPat),
+  (3, hatPat),
+  (4, bass dScore),
+  (5, horn cScore),
+  (6, midVoice bScore),
+  (7, topVoice aScore)]
 -- Landing: the clean loop holds.
 
 

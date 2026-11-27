@@ -159,6 +159,7 @@ multi xfadeIn 8 [(2, silence), (3, silence), (5, silence), (6, silence),
 xfadeIn 4 8 $ pad loop # lpf 700 # amp 0.2 # room 0.6 # size 0.78
 clutchIn 10 12 $ air # amp 0.34
 
+
 -- 7 · Return — 32 cycles. The engine comes back in one gesture: kick, hats,
 --     sub and clap together; stabs and open hat a beat behind. The pad opens.
 multi clutchIn 8 [(1, s kick # amp 0.96 # lpf 560), (2, hats),
@@ -174,7 +175,7 @@ xfadeIn 10 12 $ air # amp 0.2
 -- 8 · Rise — 32 cycles. No new seats except the rim returning; the lead and
 --     comp get more room, and the air carries a narrow rising band.
 clutchIn 8 8 $ rim
-xfadeIn 9 8 $ lead leadMinor # amp 0.4 # lpf 6200
+xfadeIn 9 8 $ lead leadMinor # amp 0.7 # lpf 6200
 xfadeIn 6 8 $ stab stabsMinor # amp 0.46 # lpf 3200
 xfadeIn 10 12 $ air # amp 0.42 # hpf 500
 
