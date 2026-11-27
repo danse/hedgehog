@@ -21,7 +21,8 @@
 -- Sample bases: moog:1 C3 and juno:8 C5, so speedAt tunes from those.
 -- hedge_clock, hedge_koto, supervibe, hedge_melodica and supernoise keep their
 -- own pitch bases. fig/shadow borrow filigree's pluck/casio pair at four times
--- the cell rate. Keep size <= 0.9 and trim with amp, not gain.
+-- the cell rate, dry-fronted so they read over the pad. Keep size <= 0.9 and
+-- trim with amp, not gain.
 
 glideBpm 96 30
 
@@ -84,21 +85,22 @@ let
   --
   -- Figuration pair, after filigree: one three-note turn at four times the
   -- rate, rotated once per cycle; shadow runs the reversed turn against it.
-  -- Both are high, short and panned apart so they read as a rhythmic trace.
+  -- Both are mixed dry and forward so they read over the pad; fig sits ahead
+  -- of shadow.
   figCell :: Pattern Note
   figCell = "d5 f5 a5"
   --
   figPat = iter 3 $ fast 4 figCell
   shadowPat = iter 3 $ fast 4 (rev figCell)
   --
-  figVoice p = note p # s "pluck" # sustain 0.18 # release 0.12
-    # hpf 900 # lpf 5600 # delay 0.28 # delaytime (3/16) # delayfb 0.26
-    # pan (-0.34) # room 0.42 # size 0.58 # amp 0.3
+  figVoice p = note p # s "pluck" # sustain 0.26 # release 0.18
+    # hpf 700 # lpf 6400 # delay 0.18 # delaytime (3/16) # delayfb 0.18
+    # pan (-0.2) # room 0.24 # size 0.36 # amp 0.46
   --
-  shadowVoice p = note p # s "casio" # legato 0.45
-    # hpf 700 # lpf (range 2200 4800 $ slow 12 sine)
-    # delay 0.22 # delaytime (1/4) # delayfb 0.22
-    # pan 0.36 # room 0.5 # size 0.64 # amp 0.24
+  shadowVoice p = note p # s "casio" # legato 0.6
+    # hpf 600 # lpf (range 2800 6200 $ slow 12 sine)
+    # delay 0.16 # delaytime (1/4) # delayfb 0.16
+    # pan 0.24 # room 0.3 # size 0.42 # amp 0.34
   --
   -- Variants. The second score of each pair is the widened one, used where
   -- the grid opens. Only the cells change; the voice builders do not.
@@ -258,40 +260,40 @@ mPlay opening >>= multi clutchIn 16
 
 -- ticks — air leaves; clock and koto enter. Bell and dust are optional.
 mPlay ticks >>= multi clutchIn 16
-clutchIn 5 8 (bells ticks)
+clutchIn 5 8 $ bells ticks
 
 -- chimes — dust leaves; bells take the foreground. Koto can stay or go.
 mPlay chimes >>= multi clutchIn 16
-xfadeIn 4 8 (koto chimes)
+xfadeIn 4 8 $ koto chimes
 
 
 -- Landing: the full bell band can hold here.
 
 -- reedline — clock and bells fade; reed enters. Air and high koto are offered.
 mPlay reedline >>= multi clutchIn 16
-xfadeIn 7 8 (air reedline)
-xfadeIn 4 8 (koto reedline)
+xfadeIn 7 8 $ air reedline
+xfadeIn 4 8 $ koto reedline
 
 -- wide — clock returns and the bells widen. Dust is a straight attack.
 mPlay wide >>= multi clutchIn 16
-attacks [(8, dust wide)]
+d8 $ dust wide
 
 -- answer — clock and bells leave; the reed answers. Bell and air wait.
 mPlay answer >>= multi clutchIn 16
-clutchIn 5 8 (bells answer)
-xfadeIn 7 8 (air answer)
+clutchIn 5 8 $ bells answer
+xfadeIn 7 8 $ air answer
 
 
 -- Landing: the quiet reed band can hold before the last lattice.
 
 -- reweave — clock and high koto return. Wide bells and dust are offered.
 mPlay reweave >>= multi clutchIn 16
-xfadeIn 5 8 (bells reweave)
-clutchIn 8 8 (dust reweave)
+xfadeIn 5 8 $ bells reweave
+clutchIn 8 8 $ dust reweave
 
 -- dissolve — mPlay fades clock, bells, reed and koto; air and dust remain.
 mPlay dissolve >>= multi xfadeIn 16
-xfadeIn 4 8 (koto dissolve)
+xfadeIn 4 8 $ koto dissolve
 
 -- End — let the bed ring, then fade the bed and any live fig/shadow.
 fadeSilence 24 [1,2,7,8,9,10]
