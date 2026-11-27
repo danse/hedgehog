@@ -1,0 +1,310 @@
+-- Camel — flower of the lechuga
+-- 140 BPM · A minor → B minor (§8) → D major (§18). Riddle's helpers, quema's
+-- loop: Am7 | G7 | Fmaj7 | E7 → Bm7 | A7 | Gmaj7 | F#7 → Dmaj7 | A7 | Bm7 |
+-- Gmaj7. The seed brings the colours
+-- in as optionals; `band` is the compacted state — break, soul, hiss scored.
+-- Shared helpers (mkMovement, mPlay, mkVoice, Score, Optional, speedAt) live in
+-- boot/BootTidal.hs. Gotchas: notes/learning/gotchas.md.
+-- Borrowed: amen from strobe; metal and chip from riddle.
+--
+-- dN is a seat: 1 kick, 2 break, 3 bass, 4 hat, 5 soul, 6 metal, 7 lead,
+-- 8 pad, 9 chip, 10 hiss. Double blank = landing. `mPlay` mutes optionals, so
+-- each colour arrives on its own line with the named accessor.
+
+glideBpm 140 30
+
+-- ---------------------------------------------------------------------------
+-- Setup. Eval this whole paragraph with C-RET.
+-- ---------------------------------------------------------------------------
+let
+  labels = [(1, "kick"),
+            (2, "brk"),
+            (3, "bass"),
+            (4, "hat"),
+            (5, "soul"),
+            (6, "metal"),
+            (7, "lead"),
+            (8, "pad"),
+            (9, "chip"),
+            (10, "hiss")]
+  --
+  ck = s "feel:0 ~ ~ ~ feel:0 ~ ~ ~" # amp 0.9 # room 0.04 # size 0.1
+  cb = slow 2 $ speedAt "fs2"
+    "<[a2,c3,e3,g3] [g2,b2,d3,f3] [f2,a2,c3,e3] [e2,gs2,b2,d3]>"
+    # s "jvbass" # amp 0.5
+  ch = slow 4 $ note
+    "<[a3,c4,e4,g4] [g3,b3,d4,f4] [f3,a3,c4,e4] [e3,gs3,b3,d4]>"
+    # s "hedge_pad" # amp 0.18 # room 0.6 # size 0.8
+  --
+  brkPat = slow 3 $ s "breaks152" # n 0 # speed (140/152)
+    # lpf 3200 # hpf 300 # amp 0.55
+  soulPat = struct "~ t ~ t ~ t ~" $ speedAt "e6"
+    "<[e4,g4,b4,d5] [d4,f4,a4,c5] [c4,e4,g4,b4] [b3,ds3,fs3,a4]>"
+    # s "trump" # n 2 # sustain 0.2 # release 0.12
+    # room 0.3 # size 0.5 # amp 0.4
+  hissPat = slow 2 $ s "cr:0" # speed 0.65 # sustain 1.8 # release 0.6
+    # hpf 1600 # room 0.55 # size 0.72 # amp 0.18
+  hatPat = swing16 $ s "glitch:3*16" # amp 0.13 # hpf 3000 # lpf 10000
+    # pan 0.25 # room 0.08 # size 0.18
+  leadPat = degradeBy 0.2 $ n
+    "<[a4,c5,e5,g5] [g4,b4,d5,f5] [f4,a4,c5,e5] [e4,gs4,b4,d5]>"
+    # s "hoover" # legato 0.7 # lpf 2600 # delay 0.24 # delaytime (3/16)
+    # delayfb 0.2 # room 0.28 # size 0.42 # amp 0.34
+  --
+  -- One name per seat: the string in labels and the string in mkVoice must
+  -- match. Declare every accessor here, so the two cannot drift apart.
+  brk = mkVoice 2 "brk"
+  soul = mkVoice 5 "soul"
+  hiss = mkVoice 10 "hiss"
+  hat = mkVoice 4 "hat"
+  lead = mkVoice 7 "lead"
+  metal = mkVoice 6 "metal"
+  chip = mkVoice 9 "chip"
+  --
+  camel = mkMovement "camel" labels
+    [ (1, Score ck)
+    , (3, Score cb)
+    , (8, Score ch)
+    , (2, Optional brkPat)
+    , (5, Optional soulPat)
+    , (10, Optional hissPat)
+    ]
+  -- The compacted band: everything arrived so far is scored, hat and lead
+  -- wait as optionals. Defined live by re-evaluating the setup; no re-entry.
+  band = mkMovement "band" labels
+    [ (1, Score ck)
+    , (2, Score brkPat)
+    , (3, Score cb)
+    , (5, Score soulPat)
+    , (8, Score ch)
+    , (10, Score hissPat)
+    , (4, Optional hatPat)
+    , (7, Optional leadPat)
+    ]
+  --
+  -- Lift: the loop goes up a whole tone — Bm7 | A7 | Gmaj7 | F#7. The band keeps
+  -- its seats; only bass, soul and pad move. Metal and chip arrive as optionals.
+  cbLift = slow 2 $ speedAt "gs2"
+    "<[b2,d3,fs3,a3] [a2,cs3,e3,g3] [g2,b2,d3,fs3] [fs2,as2,cs3,e3]>"
+    # s "jvbass" # amp 0.52
+  soulLift = struct "~ t ~ t ~ t ~" $ speedAt "fs6"
+    "<[fs4,a4,cs5,e5] [e4,g4,b4,d5] [d4,fs4,a4,cs5] [cs4,e4,gs4,b4]>"
+    # s "trump" # n 2 # sustain 0.2 # release 0.12
+    # room 0.3 # size 0.5 # amp 0.4
+  chLift = slow 4 $ note
+    "<[b3,d4,fs4,a4] [a3,cs4,e4,g4] [g3,b3,d4,fs4] [fs3,as3,cs4,e4]>"
+    # s "hedge_pad" # amp 0.19 # room 0.6 # size 0.8
+  metalPat = degradeBy 0.3 $ swing8
+    $ s "industrial:2 ~ industrial:6 ~ ~ industrial:2 ~"
+    # speed (range 0.8 1.15 $ slow 4 rand)
+    # hpf 500 # lpf 7000 # pan (range (-0.35) 0.35 $ slow 8 rand)
+    # room 0.3 # size 0.45 # amp 0.34
+  chipPat = degradeBy 0.25 $ swing16 $ s "can*16" # n (irand 14)
+    # speed (range 0.9 1.45 $ slow 8 rand)
+    # hpf 800 # lpf 9000 # pan (-0.25) # room 0.14 # size 0.24 # amp 0.34
+  lift = mkMovement "lift" labels
+    [ (1, Score ck)
+    , (2, Score brkPat)
+    , (3, Score cbLift)
+    , (4, Score hatPat)
+    , (5, Score soulLift)
+    , (7, Score leadPat)
+    , (8, Score chLift)
+    , (10, Score hissPat)
+    , (6, Optional metalPat)
+    , (9, Optional chipPat)
+    ]
+  --
+  -- Unwind: the drama stays — soul and Requiem hiss — while the harmonic
+  -- engine fades out. One chord held, no bass, no break: the colour remains.
+  soulUnwind = slow 2 $ soulLift
+  chUnwind = slow 4 $ note "[b3,d4,fs4,a4]"
+    # s "hedge_pad" # amp 0.2 # room 0.7 # size 0.85
+  -- Optionals arrive as ghosts: the break remembered, not restarted; the
+  -- clockwork and the digital dust far back in the mix.
+  brkGhost = slow 4 $ brkPat # lpf 1800 # amp 0.18
+  metalGhost = slow 2 $ metalPat # amp 0.16
+  chipGhost = slow 2 $ chipPat # amp 0.14
+  unwind = mkMovement "unwind" labels
+    [ (5, Score soulUnwind)
+    , (8, Score chUnwind)
+    , (10, Score hissPat)
+    , (2, Optional brkGhost)
+    , (6, Optional metalGhost)
+    , (9, Optional chipGhost)
+    ]
+  --
+  -- Mirror: the soul variation is the core — the four chords arrive backwards
+  -- over the held pad and hiss. The ghosts stay optional, so the colours can
+  -- still answer from far back.
+  soulMirror = slow 4 $ speedAt "fs6"
+    "<[cs4,e4,gs4,b4] [d4,fs4,a4,cs5] [e4,g4,b4,d5] [fs4,a4,cs5,e5]>"
+    # s "trump" # n 2 # sustain 0.2 # release 0.12
+    # room 0.3 # size 0.5 # amp 0.4
+  mirror = mkMovement "mirror" labels
+    [ (5, Score soulMirror)
+    , (8, Score chUnwind)
+    , (10, Score hissPat)
+    , (2, Optional brkGhost)
+    , (6, Optional metalGhost)
+    , (9, Optional chipGhost)
+    ]
+  --
+  -- Antena: the line almost lost — a thin voice receiving slowly. The hiss
+  -- loses its high-pass and becomes a dirty river; the mirror keeps turning.
+  -- The voice is optional so its arrival is the event, not the row change.
+  antenaPat = slow 8 $ n "<e5 g5 b5 d6>" # s "hoover" # legato 0.9
+    # lpf (range 700 3600 $ slow 16 saw) # delay 0.4 # delaytime (3/8)
+    # delayfb 0.32 # room 0.6 # size 0.7 # amp 0.16
+  riverPat = slow 2 $ s "cr:0" # speed 0.4 # sustain 2.4 # release 1
+    # lpf 900 # room 0.65 # size 0.8 # amp 0.14
+  antena = mkMovement "antena" labels
+    [ (5, Score soulMirror)
+    , (8, Score chUnwind)
+    , (10, Score riverPat)
+    , (7, Optional antenaPat)
+    , (2, Optional brkGhost)
+    , (6, Optional metalGhost)
+    , (9, Optional chipGhost)
+    ]
+  --
+  -- Breath: the wind voice stops driving and becomes a ghost. The antena and
+  -- river carry the movement; the trumpet can return as a long-tone memory.
+  soulBreath = slow 4 $ speedAt "fs6"
+    "<[cs4,e4,gs4,b4] [d4,fs4,a4,cs5] [e4,g4,b4,d5] [fs4,a4,cs5,e5]>"
+    # s "trump" # n 2 # legato 0.9 # attack 0.3 # sustain 1.6 # release 0.8
+    # lpf 2200 # room 0.5 # size 0.6 # amp 0.22
+  breath = mkMovement "breath" labels
+    [ (7, Score antenaPat)
+    , (8, Score chUnwind)
+    , (10, Score riverPat)
+    , (5, Optional soulBreath)
+    , (2, Optional brkGhost)
+    , (6, Optional metalGhost)
+    , (9, Optional chipGhost)
+    ]
+  --
+  -- Dawn: the return at the same tempo — D major, dense score. Positivity is
+  -- register and density, not speed. The break comes back as an engine, the
+  -- antena is promoted to a scored lead, the river stays as air.
+  cbDawn = slow 2 $ speedAt "a2"
+    "<[d3,fs3,a3,c4] [a2,cs3,e3,g3] [b2,d3,fs3,a3] [g2,b2,d3,fs3]>"
+    # s "jvbass" # amp 0.55
+  soulDawn = struct "~ t ~ t ~ t ~" $ speedAt "e6"
+    "<[fs4,a4,cs5,e5] [e4,g4,a4,cs5] [d4,fs4,a4,b4] [b3,d4,fs4,g4]>"
+    # s "trump" # n 2 # sustain 0.2 # release 0.12
+    # room 0.3 # size 0.5 # amp 0.42
+  chDawn = slow 4 $ note
+    "<[d4,fs4,a4,cs5] [a3,cs4,e4,g4] [b3,d4,fs4,a4] [g3,b3,d4,fs4]>"
+    # s "hedge_pad" # amp 0.2 # room 0.6 # size 0.8
+  dawn = mkMovement "dawn" labels
+    [ (1, Score ck)
+    , (2, Score brkPat)
+    , (3, Score cbDawn)
+    , (4, Score hatPat)
+    , (5, Score soulDawn)
+    , (6, Score metalPat)
+    , (7, Score antenaPat)
+    , (8, Score chDawn)
+    , (10, Score riverPat)
+    , (9, Optional chipPat)
+    ]
+  --
+  -- Loosen: the groove stays — kick, bass, hat, pad, river — while the old
+  -- colours return as optionals. Nostalgia is offered, not played; energy is a
+  -- glimpse brought in on its own line, never a new wall of sound. The lead
+  -- steps back to optional.
+  loosen = mkMovement "loosen" labels
+    [ (1, Score ck)
+    , (3, Score cbDawn)
+    , (4, Score hatPat)
+    , (8, Score chDawn)
+    , (10, Score riverPat)
+    , (2, Optional brkGhost)
+    , (5, Optional soulDawn)
+    , (6, Optional metalGhost)
+    , (7, Optional antenaPat)
+    , (9, Optional chipGhost)
+    ]
+  --
+  -- Surge: a brief peak, not a new section. The full D-major groove returns
+  -- and the old colours arrive on short events — one clutch, the whip camel
+  -- earned at glare; everything else fades so it stays a glimpse.
+  surge = mkMovement "surge" labels
+    [ (1, Score ck)
+    , (2, Score brkPat)
+    , (3, Score cbDawn)
+    , (4, Score hatPat)
+    , (8, Score chDawn)
+    , (10, Score riverPat)
+    , (5, Optional soulDawn)
+    , (6, Optional metalPat)
+    , (7, Optional antenaPat)
+    , (9, Optional chipPat)
+    ]
+
+-- 1 · Seed — kick, bass and pad. Hold until the row has said its say.
+mPlay camel >>= multi clutchIn 16
+
+
+-- 5 · Band — No `mPlay`: the colours are already sounding; this just
+--     gives the state one name to steer from.
+
+clutchIn 4 16 $ hat band -- 6 · Hat — the clockwork tick takes seat 4.
+clutchIn 7 16 $ lead band -- 7 · Lead — the hoover answers over the hat.
+
+
+-- 8 · Lift — the loop goes up a whole tone. One row transition carries the
+--     band; nothing is cut. Note the fast clutchIn of a rich texture
+mPlay lift >>= multi clutchIn 16
+
+
+-- 11 · Unwind — the soul stabs and Requiem hiss remain; the band
+--     fades out around them. xfadeIn, not clutchIn: the strip is the
+--     point, not a whip. Optional ghosts — the colours return far
+--     back, one at a time. No engine comes back: the break is a
+--     memory here, not a pulse.
+mPlay unwind >>= multi xfadeIn 16
+
+
+-- Mirror — the soul answers itself in reverse. The beat almost stops.
+-- The ghosts are still available
+mPlay mirror >>= multi clutchIn 16
+
+
+-- Antena — the hiss becomes a river; the mirror keeps turning underneath.
+mPlay antena >>= multi xfadeIn 16
+
+
+xfadeIn 7 32 $ lead antena -- Receive — the voice arrives on its own, slowly. No whip.
+
+
+-- Breath — the trumpet steps back; the antena and river carry on.
+mPlay breath >>= multi xfadeIn 16
+
+
+-- Memory — the wind voice returns as a long tone, far back.
+xfadeIn 5 8 $ soul breath
+
+
+-- Dawn — D major, dense: the interlude ends and we jump back to
+-- dance carrying with us a slightly nostalgic vibe
+mPlay dawn >>= multi xfadeIn 16
+
+
+-- Loosen — the groove thins; the old colours wait to be invited
+-- back. Glimpses in the optionals
+mPlay loosen >>= multi xfadeIn 16
+
+
+-- Surge — a brief peak: the full groove returns on one row
+-- transition. A whip is the soul stab optional, short and bright. Other
+-- optionals are answers — the old colours follow, fading so the snap
+-- stays singular.
+mPlay surge >>= multi xfadeIn 16
+
+
+-- Handover — back to the thin groove; the next dance track can take
+--     seats 5, 6, 7 and 9 from here.
+mPlay loosen >>= multi xfadeIn 16
+

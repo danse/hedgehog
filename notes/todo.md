@@ -44,6 +44,29 @@ Remove when done
   `spines/` finds nothing. Cross-scheme browsing needs `--key NAME`, or a new
   query mode that joins rows by key across decks. Note the limitation in
   `notes/ontology/README.md` until then.
+- **Equalisation gaps: quema → `baroque_carnival` → `strobe`** — the
+  `clearAll 128` handover dropped hard: `track-levels.py compare` puts baroque
+  at ~0.56× quema's RMS/cycle, and §1 Seed is only two quiet voices.
+  Baroque → strobe is different: whole-track RMS/cycle is equal (1.254 vs
+  1.253), so the impedance is at the *entry sections* (baroque's coda = ground
+  + bell; strobe's §1 Doors = four filtered voices), not in track level.
+  Verify both by ear. A tool-side check won't help offline: put a one-line
+  **level note at the very top of the header** instead — words first, numbers
+  only if they earn their place: `-- level: loud (10 seats)`; baroque:
+  `-- level: mid (seed = 2 voices)`; strobe: `-- level: mid (doors = 4 voices)`.
+  Headers need a diet — one short line, not a paragraph. Record in
+  `hedgehog-develop`.
+- **A `contributors` skill** — not credits for scores/samples, but a curated
+  index of other live coders and their Tidal repos/tracks: who works in which
+  style, which `.tidal` sets are worth reading, and what we borrowed from each.
+  Candidates found: `pselle/livecode` (sets/songs/curiosities),
+  `cleary/livecode` (sets/study/weekly/collab), `ghalestrilo/pieces` (EPs + sets),
+  `kindohm/365tidalpatterns`, `vism2889/1000tidalpatterns`,
+  `shatteredaesthetic/patterncycles`, `8v01d/TidalCycles`, plus
+  `tidalcycles/awesome-tidalcycles` as the index. Also **mirways** — source of
+  the *latigazo eléctrico* (electric whip), the crack of overlapping fades;
+  repo unconfirmed. Keep it offline-readable and credit borrowed patterns in
+  track headers.
 - enable tidal event highlighting?
 - remove comments around landings. Many landings have a one-line comment about the landing, making paragraph jumps with emacs uncomfortable. For instance there is a landing and then `-- Landing: ...` and then a blank line. Remove the one-line comments so that landings are represented simply by the double newline. Their meaning is implicit. Add this to the dev skill
 - is meridian in the ontology?

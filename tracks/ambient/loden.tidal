@@ -232,7 +232,7 @@ multi clutchIn 16 [
   (1, bed # lpf 2200),
   (4, tremolo),
   (5, lowStrings # lpf 620)]
-
+  
 
 -- 5 · First answer — an invitation, not a reply: saw asks on odd bars,
 -- whistle answers on even.

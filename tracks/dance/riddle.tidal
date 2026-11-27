@@ -235,7 +235,7 @@ let
 
 -- count — till, kick, seven-step bass and cymbal air. Chip is offered.
 mPlay count >>= multi clutchIn 16
-clutchIn 9 8 (chip count)
+clutchIn 9 8 $ chip count
 
 
 -- Landing: the riddle can hold before the hats split it.
@@ -246,7 +246,7 @@ attacks [(5, stab scatter)]
 
 -- clatter — metal answers the hats; bass shifts to the second riff.
 mPlay clatter >>= multi clutchIn 16
-xfadeIn 4 8 (hat clatter)
+xfadeIn 4 8 $ hat clatter
 
 
 -- Landing: the full clatter band can hold here.
@@ -261,7 +261,7 @@ mPlay glare >>= multi clutchIn 16
 xfadeIn 3 8 (bass glare)
 
 -- mirror — the riff turns backwards over metal and hats.
-mPlay mirror >>= multi clutchIn 16
+mPlay mirror >>= multi xfadeIn 16
 clutchIn 5 8 (stab mirror)
 
 
