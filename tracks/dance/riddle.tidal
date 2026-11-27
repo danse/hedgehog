@@ -1,0 +1,280 @@
+-- Riddle — uptempo matrix / a noisy seven-step question
+-- 140 BPM · B minor (B C# D E F# G A). One cycle is a seven-step bar: 3+2+2,
+-- the only nod to Money's metre. The clatter is built here from the loaded
+-- `coins` and `click:3` banks; no borrowed audio and no quoted riff. Eight
+-- movements, ten seats. Each row is a `mkMovement` cell map: Score cells are
+-- the default band, Optional cells are voices on the table, and entering a row
+-- mutes what it does not score. The matrix chooses what; the live call chooses
+-- how.
+--
+-- Eval the setup block first. `mPlay count >>= multi clutchIn 16` enters a row
+-- and lists its optionals. `mOptionals glare` shows what is waiting. A voice
+-- call such as `chip tangle` is a pattern you put under `p`, `clutchIn`,
+-- `xfadeIn`, `attacks` or `multi`.
+-- Double blank = landing. ~6:00 at 140 BPM if each row is held for four cycles.
+--
+-- dN is a seat: 1 till, 2 kick, 3 bass, 4 hat, 5 stab, 6 metal, 7 lead, 8 hiss,
+-- 9 chip, 10 flare. Rows have short names in the setup; the `Movements` bundle
+-- is for tooling, the local rows are what you call. No fixed order: visit rows
+-- by ear.
+--
+-- Gotchas: shared rules in notes/learning/gotchas.md.
+-- track-levels.py cannot see matrix cells yet; mix this one by ear.
+-- Sample bases: jvbass:0 ~ fs2 and pluck:8 ~ d5, so speedAt tunes from those;
+-- hoover takes `n` as pitch. The noise banks keep their own pitch bases.
+-- Keep size <= 0.9 and trim with amp, not gain.
+
+glideBpm 140 30
+
+-- ---------------------------------------------------------------------------
+-- Reused voices, patterns and movement rows. Keep this whole block one
+-- paragraph: C-RET evaluates it together.
+-- ---------------------------------------------------------------------------
+let
+  -- Seat names, shared by every row so mShow/mOptionals can talk in voices.
+  labels = [(1, "till"), (2, "kick"), (3, "bass"), (4, "hat"),
+            (5, "stab"), (6, "metal"), (7, "lead"), (8, "hiss"),
+            (9, "chip"), (10, "flare")]
+  --
+  -- Seven-step riffs, original to this track. Each bar is 3+2+2.
+  riffA :: Pattern Note
+  riffA = cat [
+      "[b2 ~ b2 d3 e3 ~ fs3]",
+      "[g2 ~ g2 b2 d3 ~ e3]",
+      "[e2 ~ e2 g2 a2 ~ b2]",
+      "[a2 ~ a2 c3 e3 ~ fs3]"]
+  --
+  riffB :: Pattern Note
+  riffB = cat [
+      "[b2 d3 ~ e3 ~ fs3 ~]",
+      "[g2 b2 ~ d3 ~ e3 ~]",
+      "[e2 g2 ~ a2 ~ b2 ~]",
+      "[a2 c3 ~ e3 ~ fs3 ~]"]
+  --
+  riffMirror :: Pattern Note
+  riffMirror = cat [
+      "[fs3 ~ e3 d3 ~ b2 ~]",
+      "[e3 ~ d3 b2 ~ g2 ~]",
+      "[b2 ~ a2 g2 ~ e2 ~]",
+      "[fs3 ~ e3 c3 ~ a2 ~]"]
+  --
+  shapeA :: Pattern Note
+  shapeA = "<[b3,d4,fs4,a4] [g3,b3,d4,fs4] [e3,g3,b3,d4] [a3,cs4,e4,g4]>"
+  --
+  shapeB :: Pattern Note
+  shapeB = "<[fs4,a4,b4,d5] [d4,fs4,a4,b4] [b3,d4,e4,g4] [e4,g4,a4,b4]>"
+  --
+  leadPat :: Pattern Note
+  leadPat = cat [
+      "[b4 ~ d5 ~ e5 ~ fs5]",
+      "[g4 ~ b4 ~ d5 ~ e4]",
+      "[e4 ~ g4 ~ a4 ~ b4]",
+      "[a4 ~ c5 ~ e5 ~ fs5]"]
+  --
+  -- Voices. Everything is a ControlPattern; the matrix stores finished sounds.
+  -- The till stacks the one-shot coins bank under a longer click tail: a
+  -- cash-register shimmer without a sampled loop.
+  tillPat :: ControlPattern
+  tillPat = swing16 $ stack
+    [ s "coins*16" # n 0 # speed (range 1 1.35 $ slow 8 rand)
+        # hpf 800 # lpf 9000
+        # amp "0.32 0.13 0.2 0.13 0.26 0.13 0.2 0.14 0.32 0.13 0.2 0.13 0.26 0.13 0.2 0.14"
+        # pan (range (-0.28) 0.28 $ slow 4 rand)
+        # room 0.18 # size 0.34
+    , s "click:3*8" # speed (range 0.9 1.2 $ slow 4 rand)
+        # hpf 1400 # lpf 11000 # amp 0.12 # room 0.24 # size 0.42
+    ]
+  --
+  kickPat :: ControlPattern
+  kickPat = s "clubkick:0*4" # n 0 # lpf 320
+    # room 0.04 # size 0.12 # amp 0.95
+  --
+  bassVoice p = speedAt "fs2" p # s "jvbass" # n 0
+    # sustain 0.18 # release 0.1 # lpf 720 # lpq 0.24
+    # shape 0.2 # room 0.1 # size 0.22 # amp 0.82
+  --
+  hatPat :: ControlPattern
+  hatPat = swing16 $ stack
+    [ s "glitch:3*16" # amp "0.2 0.1 0.16 0.1 0.2 0.1 0.16 0.12 0.2 0.1 0.16 0.1 0.2 0.1 0.16 0.12"
+        # hpf 2400 # lpf 12000 # pan 0.28 # room 0.08 # size 0.2
+    , s "noise2:1*16" # amp 0.06 # hpf 3600
+        # pan (-0.3) # room 0.1 # size 0.18
+    ]
+  --
+  stabVoice p = struct "~ t ~ t ~ t ~" $ s "pluck" # n 8
+    # speedAt "d5" p # sustain 0.24 # release 0.18
+    # lpf 3600 # lpq 0.3 # room 0.2 # size 0.32
+    # pan 0.25 # amp 0.55
+  --
+  metalPat :: ControlPattern
+  metalPat = degradeBy 0.3 $ swing8
+    $ s "industrial:2 ~ industrial:6 ~ ~ industrial:2 ~"
+    # speed (range 0.8 1.15 $ slow 4 rand)
+    # hpf 500 # lpf 7000 # pan (range (-0.35) 0.35 $ slow 8 rand)
+    # room 0.3 # size 0.45 # amp 0.34
+  --
+  leadVoice p = degradeBy 0.25 $ n p # s "hoover" # legato 0.7
+    # hpf 500 # lpf 2600 # delay 0.24 # delaytime (3/16) # delayfb 0.2
+    # pan 0.32 # room 0.28 # size 0.42 # amp 0.38
+  --
+  hissPat :: ControlPattern
+  hissPat = slow 2 $ s "cr:0" # speed 0.65 # sustain 1.8 # release 0.6
+    # hpf 1600 # lpf 9000 # room 0.55 # size 0.72 # amp 0.18
+  --
+  -- The three dynamic optionals (chip, stab, flare) are mixed forward and dry:
+  -- each needs a recognisable attack when it enters against the scored bed.
+  chipPat :: ControlPattern
+  chipPat = degradeBy 0.25 $ swing16 $ s "can*16" # n (irand 14)
+    # speed (range 0.9 1.45 $ slow 8 rand)
+    # hpf 800 # lpf 9000 # pan (-0.25) # room 0.14 # size 0.24 # amp 0.34
+  --
+  flarePat :: ControlPattern
+  flarePat = degradeBy 0.2 $ slow 2 $ s "procshort:1"
+    # speed (range 1.1 1.6 $ slow 4 rand)
+    # hpf 1200 # lpf 10000 # delay 0.22 # delaytime (1/8) # delayfb 0.22
+    # pan 0.28 # room 0.2 # size 0.32 # amp 0.4
+  --
+  -- Named accessors. Each is a pure pattern lookup; no fade is hidden here.
+  till  = mkVoice 1 "till"
+  kick  = mkVoice 2 "kick"
+  bass  = mkVoice 3 "bass"
+  hat   = mkVoice 4 "hat"
+  stab  = mkVoice 5 "stab"
+  metal = mkVoice 6 "metal"
+  lead  = mkVoice 7 "lead"
+  hiss  = mkVoice 8 "hiss"
+  chip  = mkVoice 9 "chip"
+  flare = mkVoice 10 "flare"
+  --
+  -- The rows. mPlay lists optionals and mutes them with the row's transition;
+  -- the calls below bring chosen ones back in.
+  count = mkMovement "count" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (3, Score (bassVoice riffA))
+        , (8, Score hissPat)
+        , (9, Optional chipPat)
+        ]
+  --
+  scatter = mkMovement "scatter" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (3, Score (bassVoice riffA))
+        , (4, Score hatPat)
+        , (5, Optional (stabVoice shapeA))
+        , (9, Optional chipPat)
+        , (10, Optional flarePat)
+        ]
+  --
+  clatter = mkMovement "clatter" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (3, Score (bassVoice riffB))
+        , (6, Score metalPat)
+        , (4, Optional hatPat)
+        , (5, Optional (stabVoice shapeA))
+        , (9, Optional chipPat)
+        ]
+  --
+  answer = mkMovement "answer" labels
+        [ (1, Score tillPat)
+        , (3, Score (bassVoice riffB))
+        , (5, Score (stabVoice shapeA))
+        , (8, Score hissPat)
+        , (2, Optional kickPat)
+        , (6, Optional metalPat)
+        , (10, Optional flarePat)
+        ]
+  --
+  glare = mkMovement "glare" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (4, Score hatPat)
+        , (7, Score (leadVoice leadPat))
+        , (8, Score hissPat)
+        , (3, Optional (bassVoice riffA))
+        , (10, Optional flarePat)
+        ]
+  --
+  mirror = mkMovement "mirror" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (3, Score (bassVoice riffMirror))
+        , (4, Score hatPat)
+        , (6, Score metalPat)
+        , (5, Optional (stabVoice shapeB))
+        , (9, Optional chipPat)
+        , (10, Optional flarePat)
+        ]
+  --
+  tangle = mkMovement "tangle" labels
+        [ (1, Score tillPat)
+        , (2, Score kickPat)
+        , (3, Score (bassVoice riffA))
+        , (4, Score hatPat)
+        , (5, Score (stabVoice shapeB))
+        , (6, Score metalPat)
+        , (7, Score (leadVoice leadPat))
+        , (8, Optional hissPat)
+        , (9, Optional chipPat)
+        , (10, Optional flarePat)
+        ]
+  --
+  unwind = mkMovement "unwind" labels
+        [ (1, Score tillPat)
+        , (8, Score hissPat)
+        , (3, Optional (bassVoice riffA))
+        , (6, Optional metalPat)
+        , (9, Optional chipPat)
+        , (10, Optional flarePat)
+        ]
+  --
+  -- The bundle exists for tooling; the local rows above are the live names.
+  grid = mkMovements [count, scatter, clatter, answer, glare, mirror, tangle, unwind]
+
+
+-- count — till, kick, seven-step bass and cymbal air. Chip is offered.
+mPlay count >>= multi clutchIn 16
+clutchIn 9 8 (chip count)
+
+
+-- Landing: the riddle can hold before the hats split it.
+
+-- scatter — hats split the clatter; stabs and flare wait.
+mPlay scatter >>= multi clutchIn 16
+attacks [(5, stab scatter)]
+
+-- clatter — metal answers the hats; bass shifts to the second riff.
+mPlay clatter >>= multi clutchIn 16
+xfadeIn 4 8 (hat clatter)
+
+
+-- Landing: the full clatter band can hold here.
+
+-- answer — kick drops; stab and hiss carry the question.
+mPlay answer >>= multi clutchIn 16
+clutchIn 2 8 (kick answer)
+xfadeIn 6 8 (metal answer)
+
+-- glare — kick and high noise; bass and flare wait.
+mPlay glare >>= multi clutchIn 16
+xfadeIn 3 8 (bass glare)
+
+-- mirror — the riff turns backwards over metal and hats.
+mPlay mirror >>= multi clutchIn 16
+clutchIn 5 8 (stab mirror)
+
+
+-- Landing: the mirrored band can hold.
+
+-- tangle — everything except hiss; chip and flare are on the table.
+mPlay tangle >>= multi clutchIn 16
+attacks [(9, chip tangle), (10, flare tangle)]
+
+-- unwind — only till and hiss remain. Other seats wait.
+mPlay unwind >>= multi xfadeIn 16
+xfadeIn 3 8 (bass unwind)
+
+
+-- End — let the clatter ring, then fade every seat.
+fadeSilence 24 [1,2,3,4,5,6,7,8,9,10]
